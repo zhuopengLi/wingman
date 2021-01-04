@@ -1,0 +1,24 @@
+{
+  "id": "aachen",
+  "name": "Aachen",
+  "models": [
+    {
+      "id": "aachen",
+      "name": "Aachen city"
+    }
+  ],
+  "viewerConfigs": {
+    "cameraNear": "0.05",
+    "cameraFar": "3000.0",
+    "saoEnabled": "true",
+    "saoBias": "0.5",
+    "saoIntensity": "0.5",
+    "saoScale": "1200.0",
+    "saoKernelRadius": "100"
+  },
+  "viewerContent": {
+    "modelsLoaded": [
+      "aachen"
+    ]
+  }
+}

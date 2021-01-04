@@ -1,6 +1,10 @@
 {
   "projects": [
     {
+      "id": "aachen",
+      "name": "Aachen city"
+    },    
+    {
       "id": "Duplex",
       "name": "Duplex"
     },
