@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Wingman</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #f2f2f2;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            line-height: 1.50;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .column {
+            float: left;
+            width: 100%;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        iframe {
+            width: 80%;
+            height: 100%;
+            float: left;
+            border: white solid 0;
+        }
+
+        /* Below page redesign by Zhuopeng*/
+        div.header {
+            width: 100%;
+            height: 10%;
+            font-style: italic;
+            color: white;
+            background-color: #03103f;
+            margin: 0;
+            padding: 0;
+        }
+
+        div.header h1 {
+            margin: 0;
+            padding: 0.5em 1em 0;
+        }
+
+        div.header p {
+            margin: 0;
+            padding: 0.5em 2em 0;
+        }
+
+        .container {
+            display: flex;
+            height: 88%;
+            clear: left;
+        }
+
+        div.info {
+            width: 20%;
+            height: 100%;
+            float: left;
+            background-color: white;
+            color: #03103f;
+            display: flex;
+            flex-direction: column;
+            border-left: #03103f solid 0.5em;
+        }
+
+        div.info h2 {
+            margin: 0;
+            padding: 0.5em 1em 0;
+            color: #03103f;
+        }
+
+        div.news {
+            float: left;
+            clear: left;
+            width: 100%;
+            height: 2%;
+            border: #03103f solid 0.5em;
+            color: black;
+        }
+
+        div.news p {
+            margin: 0;
+            padding: 0 1em 0;
+        }
+    </style>
+
+</head>
+
+<body onload="init()">
+
+    <script>
+
+        function init() {
+
+            const iframeBaseURL = "./../app/index.html?projectId=aachen";
+
+            const iframeElement = document.getElementById("embeddedViewer");
+            if (!iframeElement) {
+                throw "IFRAME not found";
+            }
+
+            iframeElement.src = iframeBaseURL;
+
+            const objectIdsUsed = {};
+
+            window.selectObject = function (checkbox) {
+
+                const objectId = checkbox.name;
+
+                if (checkbox.checked) {
+                    objectIdsUsed[objectId] = true;
+                } else {
+                    delete objectIdsUsed[objectId];
+                }
+
+                const objectIds = Object.keys(objectIdsUsed);
+
+                if (objectIds.length === 0) {
+                    iframeElement.src = iframeBaseURL + "#actions=clearFocusObjects";
+                } else {
+                    const objectIdsParam = objectIds.join(",");
+                    iframeElement.src = iframeBaseURL + "#actions=focusObjects,openTab&objectIds=" + objectIdsParam + "&tabId=objects";
+                }
+            }
+
+        }
+
+    </script>
+
+    <div class="header">
+        <h1>Wingman - Construction Project Platform</h1>
+        <p>by <b>Lemonade</b>, under construction</p>
+    </div>
+
+    <div class="news">
+        <p>Eilnachricht</p>
+    </div>
+
+    <div class="container">
+        <iframe id="embeddedViewer"></iframe>
+        <div class="info">
+            <h2>Information</h2>
+            <ul>
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>...</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+
+</html>
