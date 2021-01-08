@@ -11,7 +11,7 @@
             height: 100%;
             background: #f2f2f2;
         }
-
+        
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 14px;
@@ -20,26 +20,26 @@
             margin: 0;
             overflow: hidden;
         }
-
+        
         .column {
             float: left;
             width: 100%;
         }
-
+        
         .row:after {
             content: "";
             display: table;
             clear: both;
         }
-
+        
         iframe {
             width: 80%;
             height: 100%;
             float: left;
             border: white solid 0;
         }
-
         /* Below page redesign by Zhuopeng*/
+        
         div.header {
             width: 100%;
             height: 10%;
@@ -49,23 +49,23 @@
             margin: 0;
             padding: 0;
         }
-
+        
         div.header h1 {
             margin: 0;
             padding: 0.5em 1em 0;
         }
-
+        
         div.header p {
             margin: 0;
             padding: 0.5em 2em 0;
         }
-
+        
         .container {
             display: flex;
             height: 88%;
             clear: left;
         }
-
+        
         div.info {
             width: 20%;
             height: 100%;
@@ -76,13 +76,13 @@
             flex-direction: column;
             border-left: #03103f solid 0.5em;
         }
-
+        
         div.info h2 {
             margin: 0;
             padding: 0.5em 1em 0;
             color: #03103f;
         }
-
+        
         div.news {
             float: left;
             clear: left;
@@ -91,7 +91,7 @@
             border: #03103f solid 0.5em;
             color: black;
         }
-
+        
         div.news p {
             margin: 0;
             padding: 0 1em 0;
@@ -103,10 +103,9 @@
 <body onload="init()">
 
     <script>
-
         function init() {
 
-            const iframeBaseURL = "./../app/index.html?projectId=aachen&modelId=aachen";
+            const iframeBaseURL = "https://hannesreuther.github.io/app/index.html?projectId=AachenCity";
 
             const iframeElement = document.getElementById("embeddedViewer");
             if (!iframeElement) {
@@ -117,7 +116,7 @@
 
             const objectIdsUsed = {};
 
-            window.selectObject = function (checkbox) {
+            window.selectObject = function(checkbox) {
 
                 const objectId = checkbox.name;
 
@@ -138,7 +137,6 @@
             }
 
         }
-
     </script>
 
     <div class="header">
