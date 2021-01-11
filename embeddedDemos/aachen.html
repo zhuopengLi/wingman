@@ -117,7 +117,7 @@
             margin: 0;
             padding: 0 1em 0;
             height: 1em;
-            color: #03103f; 
+            color: #03103f;
         }
 
         /* body */
@@ -160,8 +160,6 @@
             font-size: 10pt;
             text-align: center;
             margin-right: 1em
-
-
         }
 
         div.buttomcontainer img {
@@ -171,12 +169,117 @@
 
 </head>
 
-<body onload="init()">
+<body onload="initAachen()">
 
     <script>
-        function init() {
+        function initAachen() {
 
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=Aachen";
+
+            const iframeElement = document.getElementById("embeddedViewer");
+            if (!iframeElement) {
+                throw "IFRAME not found";
+            }
+
+            iframeElement.src = iframeBaseURL;
+
+            const objectIdsUsed = {};
+
+            window.selectObject = function (checkbox) {
+
+                const objectId = checkbox.name;
+
+                if (checkbox.checked) {
+                    objectIdsUsed[objectId] = true;
+                } else {
+                    delete objectIdsUsed[objectId];
+                }
+
+                const objectIds = Object.keys(objectIdsUsed);
+
+                if (objectIds.length === 0) {
+                    iframeElement.src = iframeBaseURL + "#actions=clearFocusObjects";
+                } else {
+                    const objectIdsParam = objectIds.join(",");
+                    iframeElement.src = iframeBaseURL + "#actions=focusObjects,openTab&objectIds=" + objectIdsParam + "&tabId=objects";
+                }
+            }
+
+        }
+
+        function initWaterlock() {
+
+            const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=WaterLock";
+
+            const iframeElement = document.getElementById("embeddedViewer");
+            if (!iframeElement) {
+                throw "IFRAME not found";
+            }
+
+            iframeElement.src = iframeBaseURL;
+
+            const objectIdsUsed = {};
+
+            window.selectObject = function (checkbox) {
+
+                const objectId = checkbox.name;
+
+                if (checkbox.checked) {
+                    objectIdsUsed[objectId] = true;
+                } else {
+                    delete objectIdsUsed[objectId];
+                }
+
+                const objectIds = Object.keys(objectIdsUsed);
+
+                if (objectIds.length === 0) {
+                    iframeElement.src = iframeBaseURL + "#actions=clearFocusObjects";
+                } else {
+                    const objectIdsParam = objectIds.join(",");
+                    iframeElement.src = iframeBaseURL + "#actions=focusObjects,openTab&objectIds=" + objectIdsParam + "&tabId=objects";
+                }
+            }
+
+        }
+
+        function initSchependomlaan() {
+
+            const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=Schependomlaan";
+
+            const iframeElement = document.getElementById("embeddedViewer");
+            if (!iframeElement) {
+                throw "IFRAME not found";
+            }
+
+            iframeElement.src = iframeBaseURL;
+
+            const objectIdsUsed = {};
+
+            window.selectObject = function (checkbox) {
+
+                const objectId = checkbox.name;
+
+                if (checkbox.checked) {
+                    objectIdsUsed[objectId] = true;
+                } else {
+                    delete objectIdsUsed[objectId];
+                }
+
+                const objectIds = Object.keys(objectIdsUsed);
+
+                if (objectIds.length === 0) {
+                    iframeElement.src = iframeBaseURL + "#actions=clearFocusObjects";
+                } else {
+                    const objectIdsParam = objectIds.join(",");
+                    iframeElement.src = iframeBaseURL + "#actions=focusObjects,openTab&objectIds=" + objectIdsParam + "&tabId=objects";
+                }
+            }
+
+        }
+
+        function initWestRiversideHospital() {
+
+            const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=WestRiversideHospital";
 
             const iframeElement = document.getElementById("embeddedViewer");
             if (!iframeElement) {
@@ -218,14 +321,16 @@
             <h1>Wingman - Construction Project Platform</h1>
 
             <div class="nav">
+
                 <!-- Project selector/Drop down list -->
                 <div class="nav project">
                     <br />
                     <p>Project: <select>
-                            <option value="Aachen">Aachen</option>
-                            <option value="Waterlock">Waterlock</option>
-                            <option value="Schependomlaan">Schependomlaan</option>
-                            <option value="West riverside hospital">West riverside hospital</option>
+                            <option value="Aachen" onclick="initAachen()" selected>Aachen</option>
+                            <option value="Waterlock" onclick="initWaterlock()">Waterlock</option>
+                            <option value="Schependomlaan" onclick="initSchependomlaan()">Schependomlaan</option>
+                            <option value="West riverside hospital" onclick="initWestRiversideHospital()">West riverside
+                                hospital</option>
                         </select></p>
                 </div>
 
@@ -235,15 +340,15 @@
                     <button type="button">Early-term</button>
                     <button type="button">Mid-term</button>
                     <button type="button">End-term</button>
-
-
                 </div>
+
             </div>
 
         </div>
 
         <!-- Geo info -->
         <div class="geo">
+
             <p>
                 Geo: 50.7753° N, 6.0839° Aachen, Germany
                 <br />
@@ -253,6 +358,7 @@
                     <i>14 days forecast</i>
                 </a>
             </p>
+
         </div>
 
     </div>
