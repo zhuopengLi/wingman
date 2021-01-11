@@ -39,7 +39,7 @@
             border: white solid 0;
         }
 
-        /* Below page redesign by Zhuopeng*/
+        /* Below page redesign by zhuopeng */
         .container {
             display: flex;
             flex-direction: column;
@@ -52,19 +52,32 @@
             height: 10%;
             background-color: #03103f;
             color: white;
-
         }
 
         div.header {
             margin: 0;
             padding: 0;
-            flex-grow: 2;
         }
 
-        div.header h1 {
+        div.header.title {
+            display: flex;
+            align-items: baseline;
+        }
+
+        div.header.title h1 {
             margin: 0;
-            padding: 0.5em 1em 0.8em;
+            padding: 0.5em 0 0.8em 1em;
             font-style: italic;
+        }
+
+        div.header.title i {
+            border: white 1px solid;
+            border-radius: 15px;
+            background-color: white;
+            padding: 0 1em 0;
+            margin: 0 1em 0;
+            font-size: xx-small;
+            color: black;
         }
 
         div.header p {
@@ -318,7 +331,10 @@
         <div class="header">
 
             <!-- Title -->
-            <h1>Wingman - Construction Project Platform</h1>
+            <div class="header title">
+                <h1>Wingman - Construction Project Platform</h1>
+                <i>Internal Testing | v0.21.1.11</i>
+            </div>
 
             <div class="nav">
 
@@ -388,7 +404,7 @@
         <img src="..\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
         <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP">
         <img src="..\images\itnrw_logo.png" width="8%" alt="IT NRW">
-        
+
 
 
     </div>
