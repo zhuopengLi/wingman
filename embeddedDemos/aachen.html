@@ -11,7 +11,7 @@
             height: 100%;
             background: #f2f2f2;
         }
-
+        
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 14px;
@@ -20,56 +20,56 @@
             margin: 0;
             overflow: hidden;
         }
-
+        
         .column {
             float: left;
             width: 100%;
         }
-
+        
         .row:after {
             content: "";
             display: table;
             clear: both;
         }
-
+        
         iframe {
             width: 80%;
             height: 100%;
             float: left;
             border: white solid 0;
         }
-
         /* Below page redesign by zhuopeng */
+        
         .container {
             display: flex;
             flex-direction: column;
         }
-
         /* header */
+        
         div.headcontainer {
             display: flex;
             width: 100%;
-            height: 10%;
             background-color: #03103f;
             color: white;
+            flex-grow: 1;
         }
-
+        
         div.header {
             margin: 0;
             padding: 0;
         }
-
+        
         div.header.title {
             display: flex;
             align-items: baseline;
         }
-
+        
         div.header.title h1 {
             margin: 0;
             padding: 0.5em 0 0.8em 1em;
             font-style: italic;
         }
-
+        
         div.header.title i {
             border: white 1px solid;
             border-radius: 15px;
@@ -79,29 +79,30 @@
             font-size: xx-small;
             color: black;
         }
-
+        
         div.header p {
             margin: 0;
             padding: 0 2em 0;
         }
-
+        
         div.nav {
             display: flex;
             align-items: flex-end;
         }
-
+        
         div.nav.project {
             width: 29.5em;
         }
-
+        
         div.nav.project select {
             border-radius: 15px;
         }
-
+        
         div.nav.phase {
             display: flex;
+            justify-content: flex-start;
         }
-
+        
         div.nav.phase button {
             width: 100px;
             color: #03103f;
@@ -110,14 +111,14 @@
             border-radius: 25px;
             margin-right: 0.5em;
         }
-
+        
         div.geo {
             text-align: right;
             flex-grow: 1;
             min-width: 18em;
             margin-right: 2em;
         }
-
+        
         div.news {
             clear: left;
             width: 100%;
@@ -125,22 +126,22 @@
             border: #03103f solid 0.5em;
             color: black;
         }
-
+        
         div.news p {
             margin: 0;
             padding: 0 1em 0;
             height: 1em;
             color: #03103f;
         }
-
         /* body */
+        
         div.midcontainer {
             display: flex;
-            height: 80%;
+            height: 77%;
             clear: left;
-
+            flex-grow: 1;
         }
-
+        
         div.info {
             width: 20%;
             height: 100%;
@@ -150,14 +151,14 @@
             flex-direction: column;
             border-left: #03103f solid 0.5em;
         }
-
+        
         div.info h2 {
             margin: 0;
             padding: 0.5em 1em 0;
             color: #03103f;
         }
-
         /*footer*/
+        
         div.buttomcontainer {
             display: flex;
             align-items: center;
@@ -165,16 +166,15 @@
             color: white;
             background-color: #03103f;
             border-top: white 1px solid;
-
-
+            flex-grow: 2;
         }
-
+        
         div.buttomcontainer i {
             font-size: 10pt;
             text-align: center;
             margin-right: 1em
         }
-
+        
         div.buttomcontainer img {
             margin: 10px 1em 10px;
         }
@@ -198,7 +198,7 @@
 
             const objectIdsUsed = {};
 
-            window.selectObject = function (checkbox) {
+            window.selectObject = function(checkbox) {
 
                 const objectId = checkbox.name;
 
@@ -233,7 +233,7 @@
 
             const objectIdsUsed = {};
 
-            window.selectObject = function (checkbox) {
+            window.selectObject = function(checkbox) {
 
                 const objectId = checkbox.name;
 
@@ -268,7 +268,7 @@
 
             const objectIdsUsed = {};
 
-            window.selectObject = function (checkbox) {
+            window.selectObject = function(checkbox) {
 
                 const objectId = checkbox.name;
 
@@ -303,7 +303,7 @@
 
             const objectIdsUsed = {};
 
-            window.selectObject = function (checkbox) {
+            window.selectObject = function(checkbox) {
 
                 const objectId = checkbox.name;
 
@@ -367,10 +367,8 @@
 
             <p>
                 Geo: 50.7753° N, 6.0839° Aachen, Germany
-                <br />
-                Weather: 11℃ Cloudy,
-                <a target="blank" href="https://www.myweather2.com/City-Town/Germany/Aachen/14-Day-Forecast.aspx"
-                    style="color: white;" title="Open external website">
+                <br /> Weather: 11℃ Cloudy,
+                <a target="blank" href="https://www.myweather2.com/City-Town/Germany/Aachen/14-Day-Forecast.aspx" style="color: white;" title="Open external website">
                     <i>14 days forecast</i>
                 </a>
             </p>
