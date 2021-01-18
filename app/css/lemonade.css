@@ -1,0 +1,154 @@
+/* Below page redesign by zhuopeng */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+/* header */
+
+div.headcontainer {
+    display: flex;
+    width: 100%;
+    background-color: #03103f;
+    color: white;
+    flex-grow: 1;
+    min-height: 8%;
+}
+
+div.header {
+    margin: 0;
+    padding: 0;
+}
+
+div.header.title {
+    margin-bottom: 1em;
+}
+
+div.header.title h1 {
+    margin: 0;
+    padding: 0.5em 0 0.8em 1em;
+    font-style: italic;
+    display: inline;
+}
+
+div.header.title i {
+    border: white 1px solid;
+    border-radius: 15px;
+    background-color: white;
+    padding: 0 1em 0;
+    margin: 0 1em 0;
+    font-size: xx-small;
+    color: black;
+}
+
+div.header p {
+    margin: 0;
+    padding: 0 2em 0;
+}
+
+div.nav {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+div.nav.project {
+    min-width: 415px;
+    max-width: 415px;
+    min-height: 2em;
+}
+
+div.nav.project select {
+    border-radius: 15px;
+}
+
+div.nav.phase {
+    display: inline;
+}
+
+div.nav.phase button {
+    width: 100px;
+    color: #03103f;
+    background-color: white;
+    border: solid 1px;
+    border-radius: 25px;
+    margin-right: 0.5em;
+}
+
+div.geo {
+    text-align: right;
+    flex-grow: 1;
+    min-width: 18em;
+    margin-right: 2em;
+    flex-wrap: wrap;
+}
+
+div.geo>p {
+    white-space: nowrap;
+    overflow: auto;
+    text-overflow: clip;
+}
+
+div.news {
+    width: 100%;
+    height: 1.5em;
+    border: #03103f solid 0.5em;
+    color: black;
+}
+
+div.news p {
+    margin: 0;
+    padding: 0 1em 0;
+    height: 1em;
+    color: #03103f;
+}
+
+
+/* body */
+
+div.midcontainer {
+    display: flex;
+    flex-grow: 1000;
+}
+
+div.info {
+    width: 20%;
+    height: 100%;
+    background-color: white;
+    color: #03103f;
+    display: flex;
+    flex-direction: column;
+    border-left: #03103f solid 0.5em;
+}
+
+div.info h2 {
+    margin: 0;
+    padding: 0.5em 1em 0;
+    color: #03103f;
+}
+
+
+/*footer*/
+
+div.buttomcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: #03103f;
+    border-top: white 1px solid;
+    flex-grow: 1;
+}
+
+div.buttomcontainer i {
+    font-size: 10pt;
+    text-align: center;
+    margin-right: 1em
+}
+
+div.buttomcontainer img {
+    margin: 10px 1em 10px;
+}
