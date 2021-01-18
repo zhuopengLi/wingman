@@ -44,6 +44,8 @@
     "rollup-plugin-node-resolve": "^5.2.0"
   },
   "dependencies": {
-    "@xeokit/xeokit-sdk": "1.5.3"
+    "@xeokit/xeokit-sdk": "1.5.3",
+    "jsonfile": "^6.1.0",
+    "mqtt": "^4.2.6"
   }
 }
