@@ -1,24 +1,35 @@
 {
-  "id": "aachen",
-  "name": "Aachen",
-  "models": [
-    {
-      "id": "aachen",
-      "name": "Aachen city"
+    "id": "Aachen",
+    "name": "Aachen Center Area",
+    "models": [
+        {
+            "id": "Building",
+            "name": "Building"
+        },
+        {
+            "id": "Pipes",
+            "name": "Pipes"
+        },
+        {
+            "id": "Terrain_and_traffic",
+            "name": "Terrain and traffic"
+        }
+    ],
+    "viewerConfigs": {
+        "backgroundColor": [
+            0.9,
+            0.9,
+            1.0
+        ]
+    },
+    "viewerContent": {
+        "modelsLoaded": [
+            "Building"
+        ]
+    },
+    "viewerState": {
+        "viewCubeEnabled": true,
+        "threeDEnabled": true,
+        "tabOpen": "models"
     }
-  ],
-  "viewerConfigs": {
-    "cameraNear": "0.05",
-    "cameraFar": "3000.0",
-    "saoEnabled": "true",
-    "saoBias": "0.5",
-    "saoIntensity": "0.5",
-    "saoScale": "1200.0",
-    "saoKernelRadius": "100"
-  },
-  "viewerContent": {
-    "modelsLoaded": [
-      "aachen"
-    ]
-  }
 }
