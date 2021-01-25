@@ -54,9 +54,6 @@
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=Aachen";
 
             const iframeElement = document.getElementById("embeddedViewer");
-            if (!iframeElement) {
-                throw "IFRAME not found";
-            }
 
             iframeElement.src = iframeBaseURL;
 
@@ -82,6 +79,20 @@
                 }
             }
 
+            //load geo
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var weather = JSON.parse(this.responseText);
+                    document.getElementById("location").innerHTML =
+                        "Location: " + weather.coord.lat.toFixed(2) + "N, " + weather.coord.lon.toFixed(2) + "E, " + weather.name + ", " + weather.sys.country;
+                    document.getElementById("weather").innerHTML =
+                        "Weather: " + weather.weather[0].main + ", " + (weather.main.feels_like - 273.15).toFixed(2) + "°C ";
+                }
+            };
+
+            xmlhttp.open("GET", "http://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
         }
 
         function initWaterlock() {
@@ -89,9 +100,6 @@
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=WaterLock";
 
             const iframeElement = document.getElementById("embeddedViewer");
-            if (!iframeElement) {
-                throw "IFRAME not found";
-            }
 
             iframeElement.src = iframeBaseURL;
 
@@ -117,6 +125,20 @@
                 }
             }
 
+            //load geo
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var weather = JSON.parse(this.responseText);
+                    document.getElementById("location").innerHTML =
+                        "Location: " + weather.coord.lat.toFixed(2) + "N, " + weather.coord.lon.toFixed(2) + "E, " + weather.name + ", " + weather.sys.country;
+                    document.getElementById("weather").innerHTML =
+                        "Weather: " + weather.weather[0].main + ", " + (weather.main.feels_like - 273.15).toFixed(2) + "°C ";
+                }
+            };
+
+            xmlhttp.open("GET", "http://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
         }
 
         function initSchependomlaan() {
@@ -124,9 +146,6 @@
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=Schependomlaan";
 
             const iframeElement = document.getElementById("embeddedViewer");
-            if (!iframeElement) {
-                throw "IFRAME not found";
-            }
 
             iframeElement.src = iframeBaseURL;
 
@@ -152,6 +171,20 @@
                 }
             }
 
+            //load geo
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var weather = JSON.parse(this.responseText);
+                    document.getElementById("location").innerHTML =
+                        "Location: " + weather.coord.lat.toFixed(2) + "N, " + weather.coord.lon.toFixed(2) + "E, " + weather.name + ", " + weather.sys.country;
+                    document.getElementById("weather").innerHTML =
+                        "Weather: " + weather.weather[0].main + ", " + (weather.main.feels_like - 273.15).toFixed(2) + "°C ";
+                }
+            };
+
+            xmlhttp.open("GET", "http://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
         }
 
         function initWestRiversideHospital() {
@@ -159,9 +192,6 @@
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=WestRiversideHospital";
 
             const iframeElement = document.getElementById("embeddedViewer");
-            if (!iframeElement) {
-                throw "IFRAME not found";
-            }
 
             iframeElement.src = iframeBaseURL;
 
@@ -187,6 +217,20 @@
                 }
             }
 
+            //load geo
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var weather = JSON.parse(this.responseText);
+                    document.getElementById("location").innerHTML =
+                        "Location: " + weather.coord.lat.toFixed(2) + "N, " + -(weather.coord.lon.toFixed(2)) + "W, " + weather.name + ", " + weather.sys.country;
+                    document.getElementById("weather").innerHTML =
+                        "Weather: " + weather.weather[0].main + ", " + (weather.main.feels_like - 273.15).toFixed(2) + "°C ";
+                }
+            };
+
+            xmlhttp.open("GET", "http://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
         }
     </script>
     <div class="container">
@@ -197,7 +241,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Platform</h1>
-                    <i>Internal Testing | v0.21.1.22.1</i>
+                    <i>Internal Testing | v0.2021.1.25.1</i>
                 </div>
 
                 <div class="nav">
@@ -230,13 +274,11 @@
             <!-- Geo info -->
             <div class="geo">
 
-                <p>
-                    Geo: 50.7753° N, 6.0839° Aachen, Germany
-                    <br /> Weather: 7℃ Cloudy,
-                    <a target="blank" href="https://www.myweather2.com/City-Town/Germany/Aachen/14-Day-Forecast.aspx" style="color: white;" title="Open external website">
-                        <i>14 days forecast</i>
-                    </a>
-                </p>
+                <p id="location"></p>
+                <p id="weather"></p>
+                <!--a target="blank" href="https://www.myweather2.com/City-Town/Germany/Aachen/14-Day-Forecast.aspx" style="color: white;" title="Open external website">
+                    <i>14 days forecast</i>
+                </a-->
 
             </div>
 
