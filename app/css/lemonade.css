@@ -132,7 +132,9 @@ div.info h2 {
     color: #03103f;
 }
 
-
+li{
+    margin: 1em;
+}
 /*footer*/
 
 div.buttomcontainer {
