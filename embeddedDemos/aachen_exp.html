@@ -424,6 +424,9 @@
             document.getElementById("guid").innerHTML = "guid: " + entity.id;
             document.getElementById("name").innerHTML = "Name: " + metaObject.name;
             document.getElementById("type").innerHTML = "IfcType: " + metaObject.type;
+            document.getElementById("test1").innerHTML = "Test1: " + metaObject.test1;
+            document.getElementById("test2").innerHTML = "Test2: " + metaObject.test2;
+
             treeView.showNode(pickResult);
 
 
@@ -440,6 +443,8 @@
                 document.getElementById("guid").innerHTML = "guid: ";
                 document.getElementById("name").innerHTML = "Name: ";
                 document.getElementById("type").innerHTML = "IfcType: ";
+                document.getElementById("test1").innerHTML = "Test1: " ;
+                document.getElementById("test2").innerHTML = "Test2: " ;
             }
         });
 
@@ -530,7 +535,8 @@
                     <li id="guid">guid: </li>
                     <li id="name">Name: </li>
                     <li id="type">IfcType: </li>
-
+                    <li id="test1">Test1: </li>
+                    <li id="test2">Test2: </li>
                 </ul>
             </div>
         </div>

@@ -56,13 +56,13 @@
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKo8X",
-      "name": "M_RPC Baum - Laubbaum:Scharlacheiche - 12,5 Meter:406768",
+      "name": "Tree",
       "type": "IfcBuildingElementProxy",
       "parent": "2clzl$UuzDAAuy3WE60Xa6"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKo8Y",
-      "name": "M_RPC Baum - Laubbaum:Scharlacheiche - 12,5 Meter:406771",
+      "name": "Tree",
       "type": "IfcBuildingElementProxy",
       "parent": "2clzl$UuzDAAuy3WE60Xa6"
     },

@@ -22,7 +22,9 @@
       "id": "2clzl$UuzDAAuy3WDv$TNu",
       "name": "",
       "type": "IfcBuilding",
-      "parent": "2clzl$UuzDAAuy3WDv$TNx"
+      "parent": "2clzl$UuzDAAuy3WDv$TNx",
+      "test1": "test1",
+      "test2": "test2"
     },
     {
       "id": "2clzl$UuzDAAuy3WE60Xa6",
@@ -34,7 +36,10 @@
       "id": "1pphEOCTnCZwhV4$ZnI9Fm",
       "name": "Rathaus Aachen",
       "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "parent": "2clzl$UuzDAAuy3WE60Xa6",
+      "test1": "test1",
+      "test2": "test2"
+
     },
     {
       "id": "2_aHxlWpL9aedoJVIsgPFo",
