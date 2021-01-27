@@ -8,6 +8,10 @@
 
     <!-- Wingman Platform styles -->
     <link rel="stylesheet" href="../app/css/lemonade.css" type="text/css" />
+    <link rel="stylesheet" href="../app/css/treeview.css" type="text/css" />
+
+    <!-- TreeViewPlugin -->
+
 
     <style>
         html,
@@ -46,7 +50,7 @@
 
 </head>
 
-<body>
+<body onload="document.initAachen()">
     <script type="module">
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -54,6 +58,8 @@
         //------------------------------------------------------------------------------------------------------------------------------------------
         import { Viewer } from "../src/viewer/Viewer.js";
         import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
+        import { ContextMenu } from "../src/extras/ContextMenu/ContextMenu.js";
+        import { TreeViewPlugin } from "../src/plugins/TreeViewPlugin/TreeViewPlugin.js";
 
         const viewer = new Viewer({
             canvasId: "myCanvas"
@@ -70,43 +76,375 @@
         viewer.cameraControl.dollyInertia = 0;
 
         const xktLoader = new XKTLoaderPlugin(viewer);
+        var model = [];
 
-        xktLoader.load({
-            id: "Building",
-            src: "../app/data/projects/Aachen/models/Building/geometry.xkt",
-            metaModelSrc: "../app/data/projects/Aachen/models/Building/metadata.json",
-            edges: true,
+        //----------------------------------------------------------------------------------------------------------------------
+        // Create a tree view
+        //----------------------------------------------------------------------------------------------------------------------
+
+        const treeView = new TreeViewPlugin(viewer, {
+            containerElement: document.getElementById("treeViewContainer"),
+            autoExpandDepth: 3,
+            hierarchy: "containment"
         });
 
-        xktLoader.load({
-            id: "Pipes",
-            src: "../app/data/projects/Aachen/models/Pipes/geometry.xkt",
-            metaModelSrc: "../app/data/projects/Aachen/models/Pipes/metadata.json",
-            edges: true
+        const treeViewContextMenu = new ContextMenu({
+
+            items: [
+                [
+                    {
+                        title: "View Fit",
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            const objectIds = [];
+                            context.treeViewPlugin.withNodeTree(context.treeViewNode, (treeViewNode) => {
+                                if (treeViewNode.objectId) {
+                                    objectIds.push(treeViewNode.objectId);
+                                }
+                            });
+                            scene.setObjectsVisible(objectIds, true);
+                            scene.setObjectsHighlighted(objectIds, true);
+                            context.viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                aabb: scene.getAABB(objectIds),
+                                duration: 0.5
+                            }, () => {
+                                setTimeout(function () {
+                                    scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                                }, 500);
+                            });
+                        }
+                    },
+                    {
+                        title: "View Fit All",
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            context.viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                aabb: scene.getAABB({}),
+                                duration: 0.5
+                            });
+                        }
+                    }
+                ],
+                [
+                    {
+                        title: "X-Ray Others",
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            scene.setObjectsVisible(scene.objectIds, true);
+                            scene.setObjectsXRayed(scene.objectIds, true);
+                            scene.setObjectsSelected(scene.selectedObjectIds, false);
+                            scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                            context.treeViewPlugin.withNodeTree(context.treeViewNode, (treeViewNode) => {
+                                if (treeViewNode.objectId) {
+                                    const entity = scene.objects[treeViewNode.objectId];
+                                    if (entity) {
+                                        entity.xrayed = false;
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    {
+                        title: "Reset X-Ray",
+                        getEnabled: function (context) {
+                            return (context.viewer.scene.numXRayedObjects > 0);
+                        },
+                        doAction: function (context) {
+                            context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
+                        }
+                    }
+                ]
+            ]
         });
 
-        xktLoader.load({
-            id: "Terrain_and_traffic",
-            src: "../app/data/projects/Aachen/models/Terrain_and_traffic/geometry.xkt ",
-            metaModelSrc: "../app/data/projects/Aachen/models/Terrain_and_traffic/metadata.json",
-            edges: true
+        // Right-clicking on a tree node shows the context menu for that node
+
+        treeView.on("contextmenu", (e) => {
+
+            treeViewContextMenu.context = { // Must set context before opening menu
+                viewer: e.viewer,
+                treeViewPlugin: e.treeViewPlugin,
+                treeViewNode: e.treeViewNode,
+                entity: e.viewer.scene.objects[e.treeViewNode.objectId] // Only defined if tree node is a leaf node
+            };
+
+            treeViewContextMenu.show(e.event.pageX, e.event.pageY);
+        });
+
+        // Left-clicking on a tree node isolates that object in the 3D view
+
+        treeView.on("nodeTitleClicked", (e) => {
+            const scene = viewer.scene;
+            const objectIds = [];
+            e.treeViewPlugin.withNodeTree(e.treeViewNode, (treeViewNode) => {
+                if (treeViewNode.objectId) {
+                    objectIds.push(treeViewNode.objectId);
+                }
+            });
+            e.treeViewPlugin.unShowNode();
+            scene.setObjectsXRayed(scene.objectIds, true);
+            scene.setObjectsVisible(scene.objectIds, true);
+            scene.setObjectsXRayed(objectIds, false);
+            viewer.cameraFlight.flyTo({
+                aabb: scene.getAABB(objectIds),
+                duration: 0.5
+            }, () => {
+                setTimeout(function () {
+                    scene.setObjectsVisible(scene.xrayedObjectIds, true);
+                    scene.setObjectsXRayed(scene.xrayedObjectIds, true);
+                }, 500);
+            });
+
+            //show info and highlight target
+            var lastEntity = null;
+            var lastColorize = null;
+
+            //const metaObject = scene.objectIds
+            document.getElementById("guid").innerHTML = "guid: " + e.id;
+            document.getElementById("name").innerHTML = "Name: " + e.name;
+            document.getElementById("type").innerHTML = "IfcType: " + e.type;
+
+            if (!lastEntity || metaObject.id !== lastEntity.id) {
+                if (lastEntity) {
+                    lastEntity.colorize = lastColorize;
+                }
+                lastEntity = pickResult.entity;
+                lastColorize = pickResult.entity.colorize.slice();
+                pickResult.entity.colorize = [1, 130 / 255, 0];
+            } else if (entity.id == lastEntity.id) {
+                lastEntity = null;
+                pickResult.entity.colorize = lastColorize;
+                document.getElementById("guid").innerHTML = "guid: ";
+                document.getElementById("name").innerHTML = "Name: ";
+                document.getElementById("type").innerHTML = "IfcType: ";
+            }
+        });
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Create two ContextMenus - one for right-click on empty space, the other for right-click on an Entity
+        //------------------------------------------------------------------------------------------------------------------
+
+        const canvasContextMenu = new ContextMenu({
+            enabled: true,
+            context: {
+                viewer: viewer
+            },
+            items: [
+                [
+                    {
+                        title: "Hide All",
+                        getEnabled: function (context) {
+                            return (context.viewer.scene.numVisibleObjects > 0);
+                        },
+                        doAction: function (context) {
+                            context.viewer.scene.setObjectsVisible(context.viewer.scene.visibleObjectIds, false);
+                        }
+                    },
+                    {
+                        title: "Show All",
+                        getEnabled: function (context) {
+                            const scene = context.viewer.scene;
+                            return (scene.numVisibleObjects < scene.numObjects);
+                        },
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            scene.setObjectsVisible(scene.objectIds, true);
+                            scene.setObjectsXRayed(scene.xrayedObjectIds, false);
+                            scene.setObjectsSelected(scene.selectedObjectIds, false);
+                        }
+                    }
+                ],
+                [
+                    {
+                        title: "View Fit All",
+                        doAction: function (context) {
+                            context.viewer.cameraFlight.flyTo({
+                                aabb: context.viewer.scene.getAABB()
+                            });
+                        }
+                    }
+                ]
+            ]
+        });
+
+        const objectContextMenu = new ContextMenu({
+            items: [
+                [
+                    {
+                        title: "View Fit",
+                        doAction: function (context) {
+                            const viewer = context.viewer;
+                            const scene = viewer.scene;
+                            const entity = context.entity;
+                            viewer.cameraFlight.flyTo({
+                                aabb: entity.aabb,
+                                duration: 0.5
+                            }, () => {
+                                setTimeout(function () {
+                                    scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                                }, 500);
+                            });
+                        }
+                    },
+                    {
+                        title: "View Fit All",
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            context.viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                aabb: scene.getAABB(),
+                                duration: 0.5
+                            });
+                        }
+                    },
+                    {
+                        title: "Show in Tree",
+                        doAction: function (context) {
+                            const objectId = context.entity.id;
+                            context.treeViewPlugin.showNode(objectId);
+                        }
+                    }
+                ],
+                [
+                    {
+                        title: "X-Ray Others",
+                        doAction: function (context) {
+                            const viewer = context.viewer;
+                            const scene = viewer.scene;
+                            const entity = context.entity;
+                            const metaObject = viewer.metaScene.metaObjects[entity.id];
+                            if (!metaObject) {
+                                return;
+                            }
+                            scene.setObjectsVisible(scene.objectIds, true);
+                            scene.setObjectsXRayed(scene.objectIds, true);
+                            scene.setObjectsSelected(scene.selectedObjectIds, false);
+                            scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                            metaObject.withMetaObjectsInSubtree((metaObject) => {
+                                const entity = scene.objects[metaObject.id];
+                                if (entity) {
+                                    entity.xrayed = false;
+                                }
+                            });
+                        }
+                    },
+                    {
+                        title: "Reset X-Ray",
+                        getEnabled: function (context) {
+                            return (context.viewer.scene.numXRayedObjects > 0);
+                        },
+                        doAction: function (context) {
+                            context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
+                        }
+                    }
+                ]
+            ],
+            enabled: true
+        });
+
+        viewer.cameraControl.on("rightClick", function (e) {
+
+            var hit = viewer.scene.pick({
+                canvasPos: e.canvasPos
+            });
+
+            if (hit && hit.entity.isObject) {
+
+                objectContextMenu.context = { // Must set context before showing menu
+                    viewer: viewer,
+                    treeViewPlugin: treeView,
+                    entity: hit.entity
+                };
+
+                objectContextMenu.show(e.event.pageX, e.event.pageY);
+
+            } else {
+
+                canvasContextMenu.context = { // Must set context before showing menu
+                    viewer: viewer
+                };
+
+                canvasContextMenu.show(e.event.pageX, e.event.pageY);
+            }
+
+            e.event.preventDefault();
         });
 
 
         //------------------------------------------------------------------------------------------------------------------
-        // Mouse over Entities to get id
+        // Load models
         //------------------------------------------------------------------------------------------------------------------
+        document.initAachen = function () {
+            let model = [
+                xktLoader.load({
+                    id: "Building",
+                    src: "../app/data/projects/Aachen/models/Building/geometry.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/models/Building/metadata.json",
+                    edges: true
+                }),
+
+                xktLoader.load({
+                    id: "Pipes",
+                    src: "../app/data/projects/Aachen/models/Pipes/geometry.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/models/Pipes/metadata.json",
+                    edges: true
+                }),
+
+                xktLoader.load({
+                    id: "Terrain_and_traffic",
+                    src: "../app/data/projects/Aachen/models/Terrain_and_traffic/geometry.xkt ",
+                    metaModelSrc: "../app/data/projects/Aachen/models/Terrain_and_traffic/metadata.json",
+                    edges: true
+                })]
+        }
+
+        document.initDuplex = function () {
+
+            xktLoader.load({
+                id: "Building",
+                src: "../app/data/projects/Duplex/models/design/geometry.xkt",
+                metaModelSrc: "../app/data/projects/Duplex/models/design/metadata.json",
+                edges: true
+            });
+
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Click entity to get info and highlight it
+        //------------------------------------------------------------------------------------------------------------------
+        var lastEntity = null;
+        var lastColorize = null;
 
         viewer.cameraControl.on("picked", (pickResult) => {
             const entity = pickResult.entity;
-            const metaObject = viewer.metaScene.metaObjects[entity.id]
+            const metaObject = viewer.metaScene.metaObjects[entity.id];
+
             document.getElementById("guid").innerHTML = "guid: " + entity.id;
             document.getElementById("name").innerHTML = "Name: " + metaObject.name;
             document.getElementById("type").innerHTML = "IfcType: " + metaObject.type;
+            treeView.showNode(pickResult);
+
+
+            if (!lastEntity || entity.id !== lastEntity.id) {
+                if (lastEntity) {
+                    lastEntity.colorize = lastColorize;
+                }
+                lastEntity = pickResult.entity;
+                lastColorize = pickResult.entity.colorize.slice();
+                pickResult.entity.colorize = [1, 130 / 255, 0];
+            } else if (entity.id == lastEntity.id) {
+                lastEntity = null;
+                pickResult.entity.colorize = lastColorize;
+                document.getElementById("guid").innerHTML = "guid: ";
+                document.getElementById("name").innerHTML = "Name: ";
+                document.getElementById("type").innerHTML = "IfcType: ";
+            }
         });
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-        //request for geo data 
+        // Request for geo data 
         //------------------------------------------------------------------------------------------------------------------------------------------
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
@@ -131,7 +469,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Platform</h1>
-                    <i>Internal Testing | v0.2021.1.26.2</i>
+                    <i>Internal Testing | v0.2021.1.27.1</i>
                 </div>
 
                 <div class="nav">
@@ -140,12 +478,13 @@
                     <div class="nav project">
                         <br />
                         <p>Project: <select>
-                                <option value="Aachen" onclick="initAachen()" selected>Aachen</option>
-                                <option value="Waterlock" onclick="initWaterlock()">Waterlock</option>
-                                <option value="Schependomlaan" onclick="initSchependomlaan()">Schependomlaan</option>
-                                <option value="West riverside hospital" onclick="initWestRiversideHospital()">West
-                                    riverside
-                                    hospital</option>
+                                <option value="Aachen" onclick="document.initAachen()" selected>Aachen</option>
+                                <option value="Waterlock" onclick="document.initWaterlock()">Waterlock</option>
+                                <option value="Duplex" onclick="document.initDuplex()">
+                                    Duplex
+                                </option>
+                                <option value="West riverside hospital" onclick="document.initWestRiversideHospital()">
+                                    West riverside hospital</option>
                             </select></p>
                     </div>
 
@@ -180,7 +519,11 @@
 
         <!--middle-->
         <div class="midcontainer">
+
             <canvas id="myCanvas"></canvas>
+
+            <div id="treeViewContainer"></div>
+
             <div class="info">
                 <h2>Information</h2>
                 <ul>
