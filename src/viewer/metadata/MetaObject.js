@@ -16,7 +16,7 @@
  */
 class MetaObject {
 
-    constructor(metaModel, id, originalSystemId, name, type, properties, parent, children, external) {
+    constructor(metaModel, id, originalSystemId, name, type, test1, test2, properties, parent, children, external) {
 
         /**
          * Model metadata.
@@ -59,6 +59,10 @@ class MetaObject {
          * @type {String}
          */
         this.type = type;
+
+        this.test1 = test1;
+        this.test2 = test2;
+
 
         if (properties) {
 
@@ -203,7 +207,9 @@ class MetaObject {
         var json = {
             id: this.id,
             type: this.type,
-            name: this.name
+            name: this.name,
+            test1: this.test1,
+            test2: this.test2
         };
         if (this.parent) {
             json.parent = this.parent.id

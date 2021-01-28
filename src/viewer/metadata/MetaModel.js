@@ -115,7 +115,9 @@ class MetaModel {
                 id: metaObject.id,
                 extId: metaObject.extId,
                 type: metaObject.type,
-                name: metaObject.name
+                name: metaObject.name,
+                test1: metaObject.test1,
+                test2: metaObject.test2
             };
             if (metaObject.parent) {
                 metaObjectCfg.parent = metaObject.parent.id;

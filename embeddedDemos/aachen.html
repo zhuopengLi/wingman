@@ -15,7 +15,7 @@
             height: 100%;
             background: #f2f2f2;
         }
-        
+
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 14px;
@@ -24,18 +24,18 @@
             margin: 0;
             overflow: hidden;
         }
-        
+
         .column {
             float: left;
             width: 100%;
         }
-        
+
         .row:after {
             content: "";
             display: table;
             clear: both;
         }
-        
+
         iframe {
             width: 80%;
             height: 100%;
@@ -49,90 +49,46 @@
 <body onload="initAachen()">
 
     <script>
+        //load our project
         function initAachen() {
 
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=Aachen";
 
             const iframeElement = document.getElementById("embeddedViewer");
-            if (!iframeElement) {
-                throw "IFRAME not found";
-            }
 
             iframeElement.src = iframeBaseURL;
 
-            const objectIdsUsed = {};
-
-            window.selectObject = function(checkbox) {
-
-                const objectId = checkbox.name;
-
-                if (checkbox.checked) {
-                    objectIdsUsed[objectId] = true;
-                } else {
-                    delete objectIdsUsed[objectId];
-                }
-
-                const objectIds = Object.keys(objectIdsUsed);
-
-                if (objectIds.length === 0) {
-                    iframeElement.src = iframeBaseURL + "#actions=clearFocusObjects";
-                } else {
-                    const objectIdsParam = objectIds.join(",");
-                    iframeElement.src = iframeBaseURL + "#actions=focusObjects,openTab&objectIds=" + objectIdsParam + "&tabId=objects";
-                }
-            }
-
+            //load geo
+            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
         }
 
+        //load Tine's project
         function initWaterlock() {
 
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=WaterLock";
 
             const iframeElement = document.getElementById("embeddedViewer");
-            if (!iframeElement) {
-                throw "IFRAME not found";
-            }
 
             iframeElement.src = iframeBaseURL;
 
-            const objectIdsUsed = {};
-
-            window.selectObject = function(checkbox) {
-
-                const objectId = checkbox.name;
-
-                if (checkbox.checked) {
-                    objectIdsUsed[objectId] = true;
-                } else {
-                    delete objectIdsUsed[objectId];
-                }
-
-                const objectIds = Object.keys(objectIdsUsed);
-
-                if (objectIds.length === 0) {
-                    iframeElement.src = iframeBaseURL + "#actions=clearFocusObjects";
-                } else {
-                    const objectIdsParam = objectIds.join(",");
-                    iframeElement.src = iframeBaseURL + "#actions=focusObjects,openTab&objectIds=" + objectIdsParam + "&tabId=objects";
-                }
-            }
-
+            //load geo
+            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
         }
 
+        //load Dutch house
         function initSchependomlaan() {
 
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=Schependomlaan";
 
             const iframeElement = document.getElementById("embeddedViewer");
-            if (!iframeElement) {
-                throw "IFRAME not found";
-            }
 
             iframeElement.src = iframeBaseURL;
 
             const objectIdsUsed = {};
 
-            window.selectObject = function(checkbox) {
+            window.selectObject = function (checkbox) {
 
                 const objectId = checkbox.name;
 
@@ -152,22 +108,23 @@
                 }
             }
 
+            //load geo
+            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
         }
 
+        //load Hospital
         function initWestRiversideHospital() {
 
             const iframeBaseURL = "https://zhuopengli.github.io/xeokit-bim-viewer/app/index.html?projectId=WestRiversideHospital";
 
             const iframeElement = document.getElementById("embeddedViewer");
-            if (!iframeElement) {
-                throw "IFRAME not found";
-            }
 
             iframeElement.src = iframeBaseURL;
 
             const objectIdsUsed = {};
 
-            window.selectObject = function(checkbox) {
+            window.selectObject = function (checkbox) {
 
                 const objectId = checkbox.name;
 
@@ -187,7 +144,25 @@
                 }
             }
 
+            //load geo
+            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        //request for geo data 
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var weather = JSON.parse(this.responseText);
+                document.getElementById("location").innerHTML =
+                    "Location: " + weather.coord.lat.toFixed(2) + ", " + weather.coord.lon.toFixed(2) + ", " + weather.name + ", " + weather.sys.country;
+                document.getElementById("weather").innerHTML =
+                    "Weather: " + weather.weather[0].main + ", " + (weather.main.feels_like - 273.15).toFixed(2) + "°C ";
+            }
+        };
+
     </script>
     <div class="container">
         <div class="headcontainer">
@@ -197,7 +172,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Platform</h1>
-                    <i>Internal Testing | v0.21.1.12.3</i>
+                    <i>Internal Testing | v0.2021.1.26.1</i>
                 </div>
 
                 <div class="nav">
@@ -230,13 +205,11 @@
             <!-- Geo info -->
             <div class="geo">
 
-                <p>
-                    Geo: 50.7753° N, 6.0839° Aachen, Germany
-                    <br /> Weather: 7℃ Cloudy,
-                    <a target="blank" href="https://www.myweather2.com/City-Town/Germany/Aachen/14-Day-Forecast.aspx" style="color: white;" title="Open external website">
-                        <i>14 days forecast</i>
-                    </a>
-                </p>
+                <p id="location"></p>
+                <p id="weather"></p>
+                <!--a target="blank" href="https://www.myweather2.com/City-Town/Germany/Aachen/14-Day-Forecast.aspx" style="color: white;" title="Open external website">
+                    <i>14 days forecast</i>
+                </a-->
 
             </div>
 
