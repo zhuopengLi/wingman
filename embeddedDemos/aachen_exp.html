@@ -443,8 +443,8 @@
                 document.getElementById("guid").innerHTML = "guid: ";
                 document.getElementById("name").innerHTML = "Name: ";
                 document.getElementById("type").innerHTML = "IfcType: ";
-                document.getElementById("test1").innerHTML = "Test1: " ;
-                document.getElementById("test2").innerHTML = "Test2: " ;
+                document.getElementById("test1").innerHTML = "Test1: ";
+                document.getElementById("test2").innerHTML = "Test2: ";
             }
         });
 
@@ -466,6 +466,8 @@
         xmlhttp.send();
     </script>
 
+
+
     <div class="container">
         <div class="headcontainer">
 
@@ -474,7 +476,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Platform</h1>
-                    <i>Internal Testing | v0.2021.1.27.1</i>
+                    <i>Internal Testing | v0.2021.1.31.1</i>
                 </div>
 
                 <div class="nav">
@@ -505,16 +507,15 @@
 
             </div>
 
+
             <!-- Geo info -->
             <div class="geo">
 
                 <p id="location"></p>
                 <p id="weather"></p>
-                <!--a target="blank" href="https://www.myweather2.com/City-Town/Germany/Aachen/14-Day-Forecast.aspx" style="color: white;" title="Open external website">
-                    <i>14 days forecast</i>
-                </a-->
 
             </div>
+
 
         </div>
 
@@ -525,9 +526,11 @@
         <!--middle-->
         <div class="midcontainer">
 
-            <canvas id="myCanvas"></canvas>
+            <div id="treeViewContainer">
+                <h2>Info Layer</h2>
+            </div>
 
-            <div id="treeViewContainer"></div>
+            <canvas id="myCanvas"></canvas>
 
             <div class="info">
                 <h2>Information</h2>

@@ -5,18 +5,15 @@
 /* ----------------------------------------------------------------------------------------------------------*/
 
 #treeViewContainer {
-    padding-top: 25px;
     pointer-events: all;
-    height: 80%;
-    width: 200px;
+    height: 90%;
+    max-width: 300px;
     overflow-y: scroll;
-    overflow-x: hidden;
-    position: absolute;
+    overflow-x: scroll;
     background-color: rgba(255, 255, 255, 0.86);
     color: black;
     top: 0;
     z-index: 200000;
-    float: left;
     left: 0;
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
@@ -24,7 +21,7 @@
     -ms-user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
-    width: 550px;
+    flex-shrink: 1;
 }
 
 #treeViewContainer ul {
@@ -84,6 +81,11 @@
     padding-right: 5px;
 }
 
+#treeViewContainer h2 {
+    margin: 0.5em 1em 0;
+    color: #03103f;
+
+}
 /* ----------------------------------------------------------------------------------------------------------*/
 
 /* ContextMenu */
