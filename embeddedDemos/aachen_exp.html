@@ -14,8 +14,7 @@
 
 
     <style>
-        html,
-        body {
+        html,body {
             height: 100%;
             background: #f2f2f2;
         }
@@ -42,9 +41,8 @@
 
         canvas {
             width: 80%;
-            height: 100%;
+            flex-shrink: 1;
             float: left;
-            border: white solid 0;
         }
     </style>
 
@@ -486,7 +484,7 @@
         // Create a Navigation Cube
         //------------------------------------------------------------------------------------------------------------------
 
-        
+
         new NavCubePlugin(viewer, {
             canvasId: "myNavCubeCanvas",
             visible: true,           // Initially visible (default)
@@ -529,7 +527,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Internal Testing | v0.2021.1.31.3</i>
+                    <i>Internal Testing | v0.2021.2.01.1</i>
                 </div>
 
                 <div class="nav">
@@ -550,16 +548,17 @@
 
                     <!-- Phase selector -->
                     <div class="nav phase">
+
                         Phase: &nbsp;
                         <button type="button">Early-term</button>
                         <button type="button">Mid-term</button>
                         <button type="button">End-term</button>
+
                     </div>
 
                 </div>
 
             </div>
-
 
             <!-- Geo info -->
             <div class="geo">
@@ -567,14 +566,16 @@
                 <p id="location">Loading geo data...</p>
                 <p id="weather"></p>
                 <p>TALENT KEYHOLE//</p>
+
             </div>
 
+            <div class="news">
+                <marquee><i>Under construction!</i></marquee>
+            </div>
 
         </div>
 
-        <div class="news">
-            <marquee><i>Under construction!</i></marquee>
-        </div>
+
 
 
         <!--middle-->
