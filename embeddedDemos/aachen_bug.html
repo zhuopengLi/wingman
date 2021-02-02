@@ -97,10 +97,11 @@
 
 
         const xktLoader = new XKTLoaderPlugin(viewer);
-        var globalModel;
+        
+        var model;
 
         document.initAachen = function () {
-            //approach 1 
+            /*approach 1 
             xktLoader.load({
                 id: "Building",
                 src: "../app/data/projects/Aachen/models/Building/geometry.xkt",
@@ -128,18 +129,19 @@
             var pipesModel = viewer.scene.models["Pipes"];
             var terrainModel = viewer.scene.models["Terrain_and_traffic"];
 
+
             //
             // Try to remove the model right away..
             // 
 
-            //buildingModel.destroy();  //Canvas freezes after this line!
-            //pipesModel.destroy();
-            //terrainModel.destroy();
-            
+            buildingModel.destroy();  //Canvas freezes after this line!
+            pipesModel.destroy();
+            terrainModel.destroy();
+            */
 
 
-            /*approach 2
-            var localModel = xktLoader.load({
+            //approach 2
+            var modelLocal = xktLoader.load({
                 id: "Building",
                 src: "../app/data/projects/Aachen/models/Building/geometry.xkt",
                 metaModelSrc: "../app/data/projects/Aachen/models/Building/metadata.json",
@@ -147,7 +149,7 @@
             })
 
                 .on("loaded", () => {
-                    localModel += xktLoader.load({
+                    modelLocal += xktLoader.load({
                         id: "Pipes",
                         src: "../app/data/projects/Aachen/models/Pipes/geometry.xkt",
                         metaModelSrc: "../app/data/projects/Aachen/models/Pipes/metadata.json",
@@ -155,7 +157,7 @@
                     })
 
                         .on("loaded", () => {
-                            localModel += xktLoader.load({
+                            modelLocal += xktLoader.load({
                                 id: "Terrain_and_traffic",
                                 src: "../app/data/projects/Aachen/models/Terrain_and_traffic/geometry.xkt",
                                 metaModelSrc: "../app/data/projects/Aachen/models/Terrain_and_traffic/metadata.json",
@@ -164,26 +166,32 @@
                         });
                 });
 
-            globalModel = localModel
-
+            model = modelLocal; // Transfer the value to the global scope
+            
             //
             // Try to remove the model right away..
             //
 
-            globalModel.destroy() // Console says 'model.destroy is not a function', which works if you've loaded only one model or remove only one just as shown in approach 1. 
-            */
+            model.destroy() // Console says 'model.destroy is not a function'
+                            // which works if you've loaded only one model..
+                            // ..or remove only just one as shown in approach 1
+
         }
 
         document.initDuplex = function () {
-            //global.destroy(); // doesn't work
 
+
+            model.destroy(); // Console says 'can't access lexical declaration 'model' before initialization'
+                             // Line 169 has already made the transfer!
+                             
             const model = xktLoader.load({
-                id: "ab",
+                id: "Duplex",
                 src: "../app/data/projects/Duplex/models/design/geometry.xkt",
                 metaModelSrc: "../app/data/projects/Duplex/models/design/metadata.json",
                 edges: true
             });
 
+            
         }
 
 
