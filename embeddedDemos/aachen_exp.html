@@ -14,7 +14,8 @@
 
 
     <style>
-        html,body {
+        html,
+        body {
             height: 100%;
             background: #f2f2f2;
         }
@@ -56,11 +57,15 @@
         //------------------------------------------------------------------------------------------------------------------------------------------
         import { Viewer } from "../src/viewer/Viewer.js";
         import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
+
+        //import menu
         import { ContextMenu } from "../src/extras/ContextMenu/ContextMenu.js";
         import { TreeViewPlugin } from "../src/plugins/TreeViewPlugin/TreeViewPlugin.js";
+
+        //import nav cube
         import { NavCubePlugin } from "../src/plugins/NavCubePlugin/NavCubePlugin.js";
 
-        //import mesh
+        //import mesh 
         import { Mesh } from "../src/viewer/scene/mesh/Mesh.js";
         import { VBOGeometry } from "../src/viewer/scene/geometry/VBOGeometry.js";
         import { buildGridGeometry } from "../src/viewer/scene/geometry/builders/buildGridGeometry.js";
@@ -85,8 +90,56 @@
         viewer.cameraControl.rotationInertia = 0;
         viewer.cameraControl.dollyInertia = 0;
 
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Load models
+        //------------------------------------------------------------------------------------------------------------------
+
+
         const xktLoader = new XKTLoaderPlugin(viewer);
-        var model = [];
+
+        document.initAachen = function () {
+
+            var model = xktLoader.load({
+                id: "Building",
+                src: "../app/data/projects/Aachen/models/Building/geometry.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/models/Building/metadata.json",
+                edges: true
+            })
+
+                .on("loaded", () => {
+                    model += xktLoader.load({
+                        id: "Pipes",
+                        src: "../app/data/projects/Aachen/models/Pipes/geometry.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/models/Pipes/metadata.json",
+                        edges: true,
+                    })
+
+                        .on("loaded", () => {
+                            model += xktLoader.load({
+                                id: "Terrain_and_traffic",
+                                src: "../app/data/projects/Aachen/models/Terrain_and_traffic/geometry.xkt",
+                                metaModelSrc: "../app/data/projects/Aachen/models/Terrain_and_traffic/metadata.json",
+                                edges: true,
+                            })
+                        });
+                });
+
+
+            //model.destroy();
+        }
+
+        document.initDuplex = function () {
+
+            const model = xktLoader.load({
+                id: "ab",
+                src: "../app/data/projects/Duplex/models/design/geometry.xkt",
+                metaModelSrc: "../app/data/projects/Duplex/models/design/metadata.json",
+                edges: true
+            });
+
+        }
+
 
         //----------------------------------------------------------------------------------------------------------------------
         // Create a tree view
@@ -384,46 +437,10 @@
 
 
         //------------------------------------------------------------------------------------------------------------------
-        // Load models
-        //------------------------------------------------------------------------------------------------------------------
-        document.initAachen = function () {
-            let model = [
-                xktLoader.load({
-                    id: "Building",
-                    src: "../app/data/projects/Aachen/models/Building/geometry.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/models/Building/metadata.json",
-                    edges: true
-                }),
-
-                xktLoader.load({
-                    id: "Pipes",
-                    src: "../app/data/projects/Aachen/models/Pipes/geometry.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/models/Pipes/metadata.json",
-                    edges: true
-                }),
-
-                xktLoader.load({
-                    id: "Terrain_and_traffic",
-                    src: "../app/data/projects/Aachen/models/Terrain_and_traffic/geometry.xkt ",
-                    metaModelSrc: "../app/data/projects/Aachen/models/Terrain_and_traffic/metadata.json",
-                    edges: true
-                })]
-        }
-
-        document.initDuplex = function () {
-
-            xktLoader.load({
-                id: "Building",
-                src: "../app/data/projects/Duplex/models/design/geometry.xkt",
-                metaModelSrc: "../app/data/projects/Duplex/models/design/metadata.json",
-                edges: true
-            });
-
-        }
-
-        //------------------------------------------------------------------------------------------------------------------
         // Click entity to get info and highlight it
         //------------------------------------------------------------------------------------------------------------------
+
+
         var lastEntity = null;
         var lastColorize = null;
 
@@ -466,6 +483,7 @@
         // Create a mesh with grid
         //------------------------------------------------------------------------------------------------------------------
 
+
         new Mesh(viewer.scene, {
             geometry: new VBOGeometry(viewer.scene, buildGridGeometry({
                 size: 1500,
@@ -502,6 +520,8 @@
         //------------------------------------------------------------------------------------------------------------------------------------------
         // Request for geo data 
         //------------------------------------------------------------------------------------------------------------------------------------------
+
+
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -515,6 +535,8 @@
 
         xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8", true);
         xmlhttp.send();
+
+
     </script>
 
 
