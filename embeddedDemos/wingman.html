@@ -123,31 +123,36 @@
                 globalModel.forEach(element => element.destroy());
                 globalModel.length = 0;
                 lastEntity = null;
-                document.getElementById("guid").innerHTML = "guid: ";
-                document.getElementById("name").innerHTML = "Name: ";
-                document.getElementById("type").innerHTML = "IfcType: ";
-                document.getElementById("test1").innerHTML = "Test1: ";
-                document.getElementById("test2").innerHTML = "Test2: ";
+                document.getElementById("info1").innerHTML = "";
+                document.getElementById("info2").innerHTML = "";
+                document.getElementById("info3").innerHTML = "";
+                document.getElementById("info4").innerHTML = "";
+                document.getElementById("info5").innerHTML = "";
+                document.getElementById("info6").innerHTML = "";
+                document.getElementById("info7").innerHTML = "";
+                document.getElementById("info8").innerHTML = "";
+                document.getElementById("info9").innerHTML = "";
+
             }
 
             globalModel.push(xktLoader.load({
                 id: "Building",
-                src: "../app/data/projects/Aachen/models/Building/geometry.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/Building/metadata.json",
+                src: "../app/data/projects/Aachen/models/building/building.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/models/building/building.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
                 id: "Pipes",
-                src: "../app/data/projects/Aachen/models/Pipes/geometry.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/Pipes/metadata.json",
+                src: "../app/data/projects/Aachen/models/pipes/pipes.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/models/pipes/pipes.json",
                 edges: true,
             }));
 
             globalModel.push(xktLoader.load({
                 id: "Terrain_and_traffic",
-                src: "../app/data/projects/Aachen/models/Terrain_and_traffic/geometry.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/Terrain_and_traffic/metadata.json",
+                src: "../app/data/projects/Aachen/models/terrain/terrain.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/models/terrain/terrain.json",
                 edges: true,
             }));
 
@@ -162,11 +167,15 @@
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0
             lastEntity = null;
-            document.getElementById("guid").innerHTML = "guid: ";
-            document.getElementById("name").innerHTML = "Name: ";
-            document.getElementById("type").innerHTML = "IfcType: ";
-            document.getElementById("test1").innerHTML = "Test1: ";
-            document.getElementById("test2").innerHTML = "Test2: ";
+            document.getElementById("info1").innerHTML = "";
+            document.getElementById("info2").innerHTML = "";
+            document.getElementById("info3").innerHTML = "";
+            document.getElementById("info4").innerHTML = "";
+            document.getElementById("info5").innerHTML = "";
+            document.getElementById("info6").innerHTML = "";
+            document.getElementById("info7").innerHTML = "";
+            document.getElementById("info8").innerHTML = "";
+            document.getElementById("info9").innerHTML = "";
 
 
             globalModel.push(xktLoader.load({
@@ -187,11 +196,15 @@
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0
             lastEntity = null;
-            document.getElementById("guid").innerHTML = "guid: ";
-            document.getElementById("name").innerHTML = "Name: ";
-            document.getElementById("type").innerHTML = "IfcType: ";
-            document.getElementById("test1").innerHTML = "Test1: ";
-            document.getElementById("test2").innerHTML = "Test2: ";
+            document.getElementById("info1").innerHTML = "";
+            document.getElementById("info2").innerHTML = "";
+            document.getElementById("info3").innerHTML = "";
+            document.getElementById("info4").innerHTML = "";
+            document.getElementById("info5").innerHTML = "";
+            document.getElementById("info6").innerHTML = "";
+            document.getElementById("info7").innerHTML = "";
+            document.getElementById("info8").innerHTML = "";
+            document.getElementById("info9").innerHTML = "";
 
 
             globalModel.push(xktLoader.load({
@@ -212,11 +225,15 @@
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0
             lastEntity = null;
-            document.getElementById("guid").innerHTML = "guid: ";
-            document.getElementById("name").innerHTML = "Name: ";
-            document.getElementById("type").innerHTML = "IfcType: ";
-            document.getElementById("test1").innerHTML = "Test1: ";
-            document.getElementById("test2").innerHTML = "Test2: ";
+            document.getElementById("info1").innerHTML = "";
+            document.getElementById("info2").innerHTML = "";
+            document.getElementById("info3").innerHTML = "";
+            document.getElementById("info4").innerHTML = "";
+            document.getElementById("info5").innerHTML = "";
+            document.getElementById("info6").innerHTML = "";
+            document.getElementById("info7").innerHTML = "";
+            document.getElementById("info8").innerHTML = "";
+            document.getElementById("info9").innerHTML = "";
 
 
             globalModel.push(xktLoader.load({
@@ -282,7 +299,7 @@
 
         const treeView = new TreeViewPlugin(viewer, {
             containerElement: document.getElementById("treeViewContainer"),
-            autoExpandDepth: 3,
+            autoExpandDepth: 0,
             hierarchy: "containment"
         });
 
@@ -351,11 +368,15 @@
                         },
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
-                            document.getElementById("guid").innerHTML = "guid: ";
-                            document.getElementById("name").innerHTML = "Name: ";
-                            document.getElementById("type").innerHTML = "IfcType: ";
-                            document.getElementById("test1").innerHTML = "Test1: ";
-                            document.getElementById("test2").innerHTML = "Test2: ";
+                            document.getElementById("info1").innerHTML = "";
+                            document.getElementById("info2").innerHTML = "";
+                            document.getElementById("info3").innerHTML = "";
+                            document.getElementById("info4").innerHTML = "";
+                            document.getElementById("info5").innerHTML = "";
+                            document.getElementById("info6").innerHTML = "";
+                            document.getElementById("info7").innerHTML = "";
+                            document.getElementById("info8").innerHTML = "";
+                            document.getElementById("info9").innerHTML = "";
                         }
                     }
                 ]
@@ -408,11 +429,13 @@
 
 
             // customize ModelTreeView.js & TreeViewNode.js to add more properties
-            document.getElementById("guid").innerHTML = "guid: " + e.treeViewNode.objectId;
-            document.getElementById("name").innerHTML = "Name: " + e.treeViewNode.title;
-            document.getElementById("type").innerHTML = "IfcType: " + e.treeViewNode.type;
-            document.getElementById("test1").innerHTML = "Test1: " + e.treeViewNode.test1;
-            document.getElementById("test2").innerHTML = "Test2: " + e.treeViewNode.test2;
+            document.getElementById("info1").innerHTML = "<b>Address: </b>" + e.treeViewNode.address;
+            document.getElementById("info2").innerHTML = "<b>Name: </b>" + e.treeViewNode.title;
+            document.getElementById("info3").innerHTML = "<b>Type: </b>" + e.treeViewNode.type;
+            document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + e.treeViewNode.date;
+            document.getElementById("info5").innerHTML = "<b>Historic: </b>" + e.treeViewNode.historic;
+            document.getElementById("info6").innerHTML = "<b>Base area: </b>" + e.treeViewNode.area;
+            document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + e.treeViewNode.owner;
 
 
         });
@@ -532,11 +555,15 @@
                         },
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
-                            document.getElementById("guid").innerHTML = "guid: ";
-                            document.getElementById("name").innerHTML = "Name: ";
-                            document.getElementById("type").innerHTML = "IfcType: ";
-                            document.getElementById("test1").innerHTML = "Test1: ";
-                            document.getElementById("test2").innerHTML = "Test2: ";
+                            document.getElementById("info1").innerHTML = "";
+                            document.getElementById("info2").innerHTML = "";
+                            document.getElementById("info3").innerHTML = "";
+                            document.getElementById("info4").innerHTML = "";
+                            document.getElementById("info5").innerHTML = "";
+                            document.getElementById("info6").innerHTML = "";
+                            document.getElementById("info7").innerHTML = "";
+                            document.getElementById("info8").innerHTML = "";
+                            document.getElementById("info9").innerHTML = "";
                         }
                     }
                 ]
@@ -585,11 +612,16 @@
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
 
-            document.getElementById("guid").innerHTML = "guid: " + entity.id;
-            document.getElementById("name").innerHTML = "Name: " + metaObject.name;
-            document.getElementById("type").innerHTML = "IfcType: " + metaObject.type;
-            document.getElementById("test1").innerHTML = "Test1: " + metaObject.test1;
-            document.getElementById("test2").innerHTML = "Test2: " + metaObject.test2;
+            if (metaObject.parent = "2clzl$UuzDAAuy3WDv$TNv") {
+                document.getElementById("info1").innerHTML = "<b>Address: </b>" + metaObject.address;
+                document.getElementById("info2").innerHTML = "<b>Name: </b>" + metaObject.name;
+                document.getElementById("info3").innerHTML = "<b>Type: </b>" + metaObject.type;
+                document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + metaObject.date;
+                document.getElementById("info5").innerHTML = "<b>Historic: </b>" + metaObject.historic;
+                document.getElementById("info6").innerHTML = "<b>Base area: </b>" + metaObject.area;
+                document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + metaObject.owner;
+            } else { }
+
 
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -606,11 +638,15 @@
             } else if (entity.id == lastEntity.id || globalModel.length == 0) {
                 lastEntity = null;
                 pickResult.entity.colorize = lastColorize;
-                document.getElementById("guid").innerHTML = "guid: ";
-                document.getElementById("name").innerHTML = "Name: ";
-                document.getElementById("type").innerHTML = "IfcType: ";
-                document.getElementById("test1").innerHTML = "Test1: ";
-                document.getElementById("test2").innerHTML = "Test2: ";
+                document.getElementById("info1").innerHTML = ""; //edit metascene.js metaobject.js and metamodel.js
+                document.getElementById("info2").innerHTML = "";
+                document.getElementById("info3").innerHTML = "";
+                document.getElementById("info4").innerHTML = "";
+                document.getElementById("info5").innerHTML = "";
+                document.getElementById("info6").innerHTML = "";
+                document.getElementById("info7").innerHTML = "";
+                document.getElementById("info8").innerHTML = "";
+                document.getElementById("info9").innerHTML = "";
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
 
             }
@@ -667,7 +703,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Internal Testing | v0.2021.2.07.1</i>
+                    <i>Internal Testing | v0.2021.2.07.2</i>
                 </div>
 
                 <div class="nav">
@@ -736,11 +772,16 @@
             <div class="info">
                 <h2>Information</h2>
                 <ul>
-                    <li id="guid">guid: </li>
-                    <li id="name">Name: </li>
-                    <li id="type">IfcType: </li>
-                    <li id="test1">Test1: </li>
-                    <li id="test2">Test2: </li>
+                    <li id="info1">info1: </li>
+                    <li id="info2">info2: </li>
+                    <li id="info3">info3: </li>
+                    <li id="info4">info4: </li>
+                    <li id="info5">info5: </li>
+                    <li id="info6">info6: </li>
+                    <li id="info7">info7: </li>
+                    <li id="info8">info8: </li>
+                    <li id="info9">info9: </li>
+
                 </ul>
             </div>
         </div>

@@ -84,13 +84,26 @@ class TreeViewNode {
 
     }
 
-    get test1() {
+    get date() {
 
     }
 
-    get test2() {
+    get address() {
 
     }
+
+    get historic() {
+
+    }
+
+    get area() {
+
+    }
+
+    get owner() {
+
+    }
+
 }
 
 export { TreeViewNode };

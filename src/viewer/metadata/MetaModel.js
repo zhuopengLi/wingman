@@ -116,9 +116,12 @@ class MetaModel {
                 extId: metaObject.extId,
                 type: metaObject.type,
                 name: metaObject.name,
-                test1: metaObject.test1,
-                test2: metaObject.test2
-            };
+                address:  metaObject.address,
+                date: metaObject.date,
+                historic: metaObject.historic,
+                area: metaObject.area,
+                owner: metaObject.owner
+                };
             if (metaObject.parent) {
                 metaObjectCfg.parent = metaObject.parent.id;
             }
