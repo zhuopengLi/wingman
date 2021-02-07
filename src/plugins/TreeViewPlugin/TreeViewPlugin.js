@@ -307,7 +307,7 @@ import {Plugin} from "../../viewer/Plugin.js";
  *<br><br>
  *
  * Let's register a callback to isolate and fit-to-view the {@link Entity}(s) represented by the node. This callback is
- * going to X-ray all the other Entitys, fly the camera to fit the Entity(s) for the clicked node, then hide the other Entitys.
+ * going to X-ray all the other Entities, fly the camera to fit the Entity(s) for the clicked node, then hide the other Entitys.
  *
  * [[Run an example](https://xeokit.github.io/xeokit-sdk/examples/#ContextMenu_Canvas_TreeViewPlugin_Custom)]
  *

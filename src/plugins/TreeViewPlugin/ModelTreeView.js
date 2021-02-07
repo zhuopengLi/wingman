@@ -239,6 +239,9 @@ class ModelTreeView {
         const metaObjectName = metaObject.name;
         const children = metaObject.children;
         const objectId = metaObject.id;
+        const metaObjectTest1 = metaObject.test1;
+        const metaObjectTest2 = metaObject.test2;
+
         if (metaObjectType === "IfcBuilding") {
             buildingNode = {
                 nodeId: this._objectToNodeID(objectId),
@@ -249,7 +252,9 @@ class ModelTreeView {
                 numEntities: 0,
                 numVisibleEntities: 0,
                 checked: false,
-                children: []
+                children: [],
+                test1: metaObjectTest1,
+                test2: metaObjectTest2
             };
             this._rootNodes.push(buildingNode);
             this._objectNodes[buildingNode.objectId] = buildingNode;
@@ -267,7 +272,9 @@ class ModelTreeView {
                 numEntities: 0,
                 numVisibleEntities: 0,
                 checked: false,
-                children: []
+                children: [],
+                test1: metaObjectTest1,
+                test2: metaObjectTest2
             };
             buildingNode.children.push(storeyNode);
             this._objectNodes[storeyNode.objectId] = storeyNode;
@@ -291,7 +298,9 @@ class ModelTreeView {
                             numEntities: 0,
                             numVisibleEntities: 0,
                             checked: false,
-                            children: []
+                            children: [],
+                            test1: metaObjectTest1,
+                            test2: metaObjectTest2
                         };
                         storeyNode.children.push(typeNode);
                         this._objectNodes[typeNodeObjectId] = typeNode;
@@ -306,7 +315,9 @@ class ModelTreeView {
                         numEntities: 0,
                         numVisibleEntities: 0,
                         checked: false,
-                        children: []
+                        children: [],
+                        test1: metaObjectTest1,
+                        test2: metaObjectTest2
                     };
                     typeNode.children.push(node);
                     this._objectNodes[node.objectId] = node;
@@ -329,6 +340,9 @@ class ModelTreeView {
         const metaObjectName = metaObject.name;
         const children = metaObject.children;
         const objectId = metaObject.id;
+        const metaObjectTest1 = metaObject.test1;
+        const metaObjectTest2 = metaObject.test2;
+
         if (metaObjectType === "IfcBuilding") {
             buildingNode = {
                 nodeId: this._objectToNodeID(objectId),
@@ -339,7 +353,9 @@ class ModelTreeView {
                 numEntities: 0,
                 numVisibleEntities: 0,
                 checked: false,
-                children: []
+                children: [],
+                test1: metaObjectTest1,
+                test2: metaObjectTest2
             };
             this._rootNodes.push(buildingNode);
             this._objectNodes[buildingNode.objectId] = buildingNode;
@@ -360,7 +376,9 @@ class ModelTreeView {
                             numEntities: 0,
                             numVisibleEntities: 0,
                             checked: false,
-                            children: []
+                            children: [],
+                            test1: metaObjectTest1,
+                            test2: metaObjectTest2
                         };
                         buildingNode.children.push(typeNode);
                         this._objectNodes[typeNode.objectId] = typeNode;
@@ -375,7 +393,9 @@ class ModelTreeView {
                         numEntities: 0,
                         numVisibleEntities: 0,
                         checked: false,
-                        children: []
+                        children: [],
+                        test1: metaObjectTest1,
+                        test2: metaObjectTest2
                     };
                     typeNode.children.push(node);
                     this._objectNodes[node.objectId] = node;
@@ -398,6 +418,9 @@ class ModelTreeView {
         const metaObjectName = metaObject.name || metaObjectType;
         const children = metaObject.children;
         const objectId = metaObject.id;
+        const metaObjectTest1 = metaObject.test1;
+        const metaObjectTest2 = metaObject.test2;
+
         const node = {
             nodeId: this._objectToNodeID(objectId),
             objectId: objectId,
@@ -407,7 +430,9 @@ class ModelTreeView {
             numEntities: 0,
             numVisibleEntities: 0,
             checked: false,
-            children: []
+            children: [],
+            test1: metaObjectTest1,
+            test2: metaObjectTest2
         };
         if (parent) {
             parent.children.push(node);

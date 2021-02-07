@@ -122,6 +122,12 @@
             if (typeof (globalModel) !== "undefined") {
                 globalModel.forEach(element => element.destroy());
                 globalModel.length = 0;
+                lastEntity = null;
+                document.getElementById("guid").innerHTML = "guid: ";
+                document.getElementById("name").innerHTML = "Name: ";
+                document.getElementById("type").innerHTML = "IfcType: ";
+                document.getElementById("test1").innerHTML = "Test1: ";
+                document.getElementById("test2").innerHTML = "Test2: ";
             }
 
             globalModel.push(xktLoader.load({
@@ -155,6 +161,13 @@
 
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0
+            lastEntity = null;
+            document.getElementById("guid").innerHTML = "guid: ";
+            document.getElementById("name").innerHTML = "Name: ";
+            document.getElementById("type").innerHTML = "IfcType: ";
+            document.getElementById("test1").innerHTML = "Test1: ";
+            document.getElementById("test2").innerHTML = "Test2: ";
+
 
             globalModel.push(xktLoader.load({
                 id: "Duplex",
@@ -173,6 +186,13 @@
 
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0
+            lastEntity = null;
+            document.getElementById("guid").innerHTML = "guid: ";
+            document.getElementById("name").innerHTML = "Name: ";
+            document.getElementById("type").innerHTML = "IfcType: ";
+            document.getElementById("test1").innerHTML = "Test1: ";
+            document.getElementById("test2").innerHTML = "Test2: ";
+
 
             globalModel.push(xktLoader.load({
                 id: "Schependomlaan",
@@ -191,6 +211,13 @@
 
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0
+            lastEntity = null;
+            document.getElementById("guid").innerHTML = "guid: ";
+            document.getElementById("name").innerHTML = "Name: ";
+            document.getElementById("type").innerHTML = "IfcType: ";
+            document.getElementById("test1").innerHTML = "Test1: ";
+            document.getElementById("test2").innerHTML = "Test2: ";
+
 
             globalModel.push(xktLoader.load({
                 id: "WestRiversideHospital",
@@ -324,6 +351,11 @@
                         },
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
+                            document.getElementById("guid").innerHTML = "guid: ";
+                            document.getElementById("name").innerHTML = "Name: ";
+                            document.getElementById("type").innerHTML = "IfcType: ";
+                            document.getElementById("test1").innerHTML = "Test1: ";
+                            document.getElementById("test2").innerHTML = "Test2: ";
                         }
                     }
                 ]
@@ -349,12 +381,15 @@
         treeView.on("nodeTitleClicked", (e) => {
             const scene = viewer.scene;
             const objectIds = [];
+
             e.treeViewPlugin.withNodeTree(e.treeViewNode, (treeViewNode) => {
                 if (treeViewNode.objectId) {
                     objectIds.push(treeViewNode.objectId);
                 }
+
             });
             e.treeViewPlugin.unShowNode();
+
             scene.setObjectsXRayed(scene.objectIds, true);
             scene.setObjectsVisible(scene.objectIds, true);
             scene.setObjectsXRayed(objectIds, false);
@@ -368,29 +403,18 @@
                 }, 500);
             });
 
-            //show info and highlight target
-            var lastEntity = null;
-            var lastColorize = null;
+            lastEntity = null;
+            lastColorize = null;
 
-            //const metaObject = scene.objectIds
-            document.getElementById("guid").innerHTML = "guid: " + e.id;
-            document.getElementById("name").innerHTML = "Name: " + e.name;
-            document.getElementById("type").innerHTML = "IfcType: " + e.type;
 
-            if (!lastEntity || metaObject.id !== lastEntity.id) {
-                if (lastEntity) {
-                    lastEntity.colorize = lastColorize;
-                }
-                lastEntity = pickResult.entity;
-                lastColorize = pickResult.entity.colorize.slice();
-                pickResult.entity.colorize = [1, 130 / 255, 0];
-            } else if (entity.id == lastEntity.id) {
-                lastEntity = null;
-                pickResult.entity.colorize = lastColorize;
-                document.getElementById("guid").innerHTML = "guid: ";
-                document.getElementById("name").innerHTML = "Name: ";
-                document.getElementById("type").innerHTML = "IfcType: ";
-            }
+            // customize ModelTreeView.js & TreeViewNode.js to add more properties
+            document.getElementById("guid").innerHTML = "guid: " + e.treeViewNode.objectId;
+            document.getElementById("name").innerHTML = "Name: " + e.treeViewNode.title;
+            document.getElementById("type").innerHTML = "IfcType: " + e.treeViewNode.type;
+            document.getElementById("test1").innerHTML = "Test1: " + e.treeViewNode.test1;
+            document.getElementById("test2").innerHTML = "Test2: " + e.treeViewNode.test2;
+
+
         });
 
         //------------------------------------------------------------------------------------------------------------------
@@ -508,6 +532,11 @@
                         },
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
+                            document.getElementById("guid").innerHTML = "guid: ";
+                            document.getElementById("name").innerHTML = "Name: ";
+                            document.getElementById("type").innerHTML = "IfcType: ";
+                            document.getElementById("test1").innerHTML = "Test1: ";
+                            document.getElementById("test2").innerHTML = "Test2: ";
                         }
                     }
                 ]
@@ -566,11 +595,15 @@
             if (!lastEntity || entity.id !== lastEntity.id) {
                 if (lastEntity) {
                     lastEntity.colorize = lastColorize;
+                    viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
                 }
                 lastEntity = pickResult.entity;
                 lastColorize = pickResult.entity.colorize.slice();
                 pickResult.entity.colorize = [1, 130 / 255, 0];
-            } else if (entity.id == lastEntity.id) {
+                viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
+
+
+            } else if (entity.id == lastEntity.id || globalModel.length == 0) {
                 lastEntity = null;
                 pickResult.entity.colorize = lastColorize;
                 document.getElementById("guid").innerHTML = "guid: ";
@@ -578,6 +611,8 @@
                 document.getElementById("type").innerHTML = "IfcType: ";
                 document.getElementById("test1").innerHTML = "Test1: ";
                 document.getElementById("test2").innerHTML = "Test2: ";
+                viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
+
             }
         });
 
@@ -632,7 +667,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Internal Testing | v0.2021.2.06.1</i>
+                    <i>Internal Testing | v0.2021.2.07.1</i>
                 </div>
 
                 <div class="nav">

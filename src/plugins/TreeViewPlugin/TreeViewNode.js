@@ -83,6 +83,14 @@ class TreeViewNode {
     get checked() {
 
     }
+
+    get test1() {
+
+    }
+
+    get test2() {
+
+    }
 }
 
-export {TreeViewNode};
+export { TreeViewNode };
