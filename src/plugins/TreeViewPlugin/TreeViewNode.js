@@ -83,6 +83,27 @@ class TreeViewNode {
     get checked() {
 
     }
+
+    get date() {
+
+    }
+
+    get address() {
+
+    }
+
+    get historic() {
+
+    }
+
+    get area() {
+
+    }
+
+    get owner() {
+
+    }
+
 }
 
-export {TreeViewNode};
+export { TreeViewNode };

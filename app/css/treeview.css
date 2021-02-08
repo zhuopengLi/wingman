@@ -5,36 +5,39 @@
 /* ----------------------------------------------------------------------------------------------------------*/
 
 #treeViewContainer {
-    padding-top: 25px;
     pointer-events: all;
-    height: 80%;
-    width: 200px;
+    height: 100%;
+    width: 300px;
+    max-width: 100%;
+    min-width: 300px;
     overflow-y: scroll;
-    overflow-x: hidden;
-    position: absolute;
+    overflow-x: scroll;
     background-color: rgba(255, 255, 255, 0.86);
-    color: black;
-    top: 0;
+    color: #03103f;
     z-index: 200000;
-    float: left;
-    left: 0;
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
     user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
-    width: 550px;
+    box-sizing: content-box;
+    resize: horizontal;
+    overflow: auto;
+
+    scrollbar-color: #03103f #03103f9d;
+    scrollbar-track-color: #03103f;
+    -ms-scrollbar-track-color: #03103f;
 }
 
 #treeViewContainer ul {
     list-style: none;
-    padding-left: 1.75em;
+    padding-left: 2.5em;
 }
 
 #treeViewContainer ul li {
     position: relative;
-    width: 500px;
+    width: 300px;
 }
 
 #treeViewContainer ul li a {
@@ -65,7 +68,7 @@
 #treeViewContainer ul li span:hover {
     color: white;
     cursor: pointer;
-    background: black;
+    background: #03103f;
     padding-left: 2px;
 }
 
@@ -83,6 +86,7 @@
     padding-left: 1px;
     padding-right: 5px;
 }
+
 
 /* ----------------------------------------------------------------------------------------------------------*/
 

@@ -1,4 +1,4 @@
-import {Map} from "./../../viewer/scene/utils/Map.js";
+import { Map } from "./../../viewer/scene/utils/Map.js";
 
 const idMap = new Map();
 
@@ -239,6 +239,13 @@ class ModelTreeView {
         const metaObjectName = metaObject.name;
         const children = metaObject.children;
         const objectId = metaObject.id;
+        const metaObjectAddress = metaObject.address;
+        const metaObjectDate = metaObject.date;
+        const metaObjectHistoric = metaObject.historic;
+        const metaObjectArea = metaObject.area;
+        const metaObjectOwner = metaObject.owner;
+
+
         if (metaObjectType === "IfcBuilding") {
             buildingNode = {
                 nodeId: this._objectToNodeID(objectId),
@@ -249,7 +256,13 @@ class ModelTreeView {
                 numEntities: 0,
                 numVisibleEntities: 0,
                 checked: false,
-                children: []
+                children: [],
+                address: metaObjectAddress,
+                date: metaObjectDate,
+                historic: metaObjectHistoric,
+                area: metaObjectArea,
+                owner: metaObjectOwner
+
             };
             this._rootNodes.push(buildingNode);
             this._objectNodes[buildingNode.objectId] = buildingNode;
@@ -267,7 +280,12 @@ class ModelTreeView {
                 numEntities: 0,
                 numVisibleEntities: 0,
                 checked: false,
-                children: []
+                children: [],
+                address: metaObjectAddress,
+                date: metaObjectDate,
+                historic: metaObjectHistoric,
+                area: metaObjectArea,
+                owner: metaObjectOwner
             };
             buildingNode.children.push(storeyNode);
             this._objectNodes[storeyNode.objectId] = storeyNode;
@@ -291,7 +309,12 @@ class ModelTreeView {
                             numEntities: 0,
                             numVisibleEntities: 0,
                             checked: false,
-                            children: []
+                            children: [],
+                            address: metaObjectAddress,
+                            date: metaObjectDate,
+                            historic: metaObjectHistoric,
+                            area: metaObjectArea,
+                            owner: metaObjectOwner
                         };
                         storeyNode.children.push(typeNode);
                         this._objectNodes[typeNodeObjectId] = typeNode;
@@ -306,7 +329,12 @@ class ModelTreeView {
                         numEntities: 0,
                         numVisibleEntities: 0,
                         checked: false,
-                        children: []
+                        children: [],
+                        address: metaObjectAddress,
+                        date: metaObjectDate,
+                        historic: metaObjectHistoric,
+                        area: metaObjectArea,
+                        owner: metaObjectOwner
                     };
                     typeNode.children.push(node);
                     this._objectNodes[node.objectId] = node;
@@ -329,6 +357,12 @@ class ModelTreeView {
         const metaObjectName = metaObject.name;
         const children = metaObject.children;
         const objectId = metaObject.id;
+        const metaObjectAddress = metaObject.address;
+        const metaObjectDate = metaObject.date;
+        const metaObjectHistoric = metaObject.historic;
+        const metaObjectArea = metaObject.area;
+        const metaObjectOwner = metaObject.owner;
+
         if (metaObjectType === "IfcBuilding") {
             buildingNode = {
                 nodeId: this._objectToNodeID(objectId),
@@ -339,7 +373,12 @@ class ModelTreeView {
                 numEntities: 0,
                 numVisibleEntities: 0,
                 checked: false,
-                children: []
+                children: [],
+                address: metaObjectAddress,
+                date: metaObjectDate,
+                historic: metaObjectHistoric,
+                area: metaObjectArea,
+                owner: metaObjectOwner
             };
             this._rootNodes.push(buildingNode);
             this._objectNodes[buildingNode.objectId] = buildingNode;
@@ -360,7 +399,12 @@ class ModelTreeView {
                             numEntities: 0,
                             numVisibleEntities: 0,
                             checked: false,
-                            children: []
+                            children: [],
+                            address: metaObjectAddress,
+                            date: metaObjectDate,
+                            historic: metaObjectHistoric,
+                            area: metaObjectArea,
+                            owner: metaObjectOwner
                         };
                         buildingNode.children.push(typeNode);
                         this._objectNodes[typeNode.objectId] = typeNode;
@@ -375,7 +419,12 @@ class ModelTreeView {
                         numEntities: 0,
                         numVisibleEntities: 0,
                         checked: false,
-                        children: []
+                        children: [],
+                        address: metaObjectAddress,
+                        date: metaObjectDate,
+                        historic: metaObjectHistoric,
+                        area: metaObjectArea,
+                        owner: metaObjectOwner
                     };
                     typeNode.children.push(node);
                     this._objectNodes[node.objectId] = node;
@@ -398,6 +447,12 @@ class ModelTreeView {
         const metaObjectName = metaObject.name || metaObjectType;
         const children = metaObject.children;
         const objectId = metaObject.id;
+        const metaObjectAddress = metaObject.address;
+        const metaObjectDate = metaObject.date;
+        const metaObjectHistoric = metaObject.historic;
+        const metaObjectArea = metaObject.area;
+        const metaObjectOwner = metaObject.owner;
+
         const node = {
             nodeId: this._objectToNodeID(objectId),
             objectId: objectId,
@@ -407,8 +462,13 @@ class ModelTreeView {
             numEntities: 0,
             numVisibleEntities: 0,
             checked: false,
-            children: []
-        };
+            children: [],
+            address: metaObjectAddress,
+            date: metaObjectDate,
+            historic: metaObjectHistoric,
+            area: metaObjectArea,
+            owner: metaObjectOwner
+    };
         if (parent) {
             parent.children.push(node);
         } else {
@@ -666,7 +726,7 @@ class ModelTreeView {
         }
         const listItemElementId = 'node-' + nodeId;
         const listItemElement = document.getElementById(listItemElementId);
-        listItemElement.scrollIntoView({block: "center"});
+        listItemElement.scrollIntoView({ block: "center" });
         listItemElement.classList.add("highlighted-node");
         this._showListItemElementId = listItemElementId;
     }
@@ -749,4 +809,4 @@ class ModelTreeView {
     }
 }
 
-export {ModelTreeView};
+export { ModelTreeView };

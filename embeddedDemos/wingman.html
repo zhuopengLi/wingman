@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Wingman</title>
+
+    <!-- Wingman Platform styles -->
+    <link rel="stylesheet" href="../app/css/lemonade.css" type="text/css" />
+    <link rel="stylesheet" href="../app/css/treeview.css" type="text/css" />
+
+    <!-- TreeViewPlugin -->
+
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #f2f2f2;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            line-height: 1.50;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .column {
+            float: left;
+            width: 100%;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        canvas {
+            width: 80%;
+            flex-shrink: 1;
+            float: left;
+        }
+    </style>
+
+</head>
+
+<body onload="document.initAachen()">
+    
+    <script type="module">
+
+        
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        // Request for geo data and sensorValue
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var weather = JSON.parse(this.responseText);
+                document.getElementById("location").innerHTML =
+                    "Location: " + weather.coord.lat.toFixed(2) + ", " + weather.coord.lon.toFixed(2) + ", " + weather.name + ", " + weather.sys.country;
+                document.getElementById("weather").innerHTML =
+                    "Weather: " + weather.weather[0].main + ", " + (weather.main.feels_like - 273.15).toFixed(2) + "°C ";
+            }
+        };
+
+        xmlhttp.open("GET", "https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", true);
+            xmlhttp.send();
+
+            
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        //create viewer
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        
+        
+        import { Viewer } from "../src/viewer/Viewer.js";
+        import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
+
+        //import menu
+        import { ContextMenu } from "../src/extras/ContextMenu/ContextMenu.js";
+        import { TreeViewPlugin } from "../src/plugins/TreeViewPlugin/TreeViewPlugin.js";
+
+        //import nav cube
+        import { NavCubePlugin } from "../src/plugins/NavCubePlugin/NavCubePlugin.js";
+
+        //import mesh 
+        import { Mesh } from "../src/viewer/scene/mesh/Mesh.js";
+        import { VBOGeometry } from "../src/viewer/scene/geometry/VBOGeometry.js";
+        import { buildGridGeometry } from "../src/viewer/scene/geometry/builders/buildGridGeometry.js";
+        import { PhongMaterial } from "../src/viewer/scene/materials/PhongMaterial.js";
+
+        const viewer = new Viewer({
+            canvasId: "myCanvas"
+        });
+
+        viewer.camera.eye = [25, 150, 75];
+        viewer.camera.look = [0, 5, 0];
+        viewer.camera.up = [-0.01, 0.99, 0.039];
+
+
+        viewer.cameraControl.doublePickFlyTo = true;
+        viewer.cameraControl.panRightClick = true;
+        viewer.cameraControl.followPointer = true;
+
+        viewer.cameraControl.touchDollyRate = 1;
+        viewer.cameraControl.mouseWheelDollyRate = 60;
+        viewer.cameraControl.keyboardDollyRate = 20;
+        viewer.cameraControl.rotationInertia = 0;
+        viewer.cameraControl.dollyInertia = 0;
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Load models
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        const xktLoader = new XKTLoaderPlugin(viewer);
+
+        var globalModel = [];
+
+        document.initAachen = function () {
+
+            if (typeof (globalModel) !== "undefined") {
+                globalModel.forEach(element => element.destroy());
+                globalModel.length = 0;
+                lastEntity = null;
+                document.getElementById("info1").innerHTML = "";
+                document.getElementById("info2").innerHTML = "";
+                document.getElementById("info3").innerHTML = "";
+                document.getElementById("info4").innerHTML = "";
+                document.getElementById("info5").innerHTML = "";
+                document.getElementById("info6").innerHTML = "";
+                document.getElementById("info7").innerHTML = "";
+                document.getElementById("info8").innerHTML = "";
+                document.getElementById("info9").innerHTML = "";
+
+            }
+
+            globalModel.push(xktLoader.load({
+                id: "Building",
+                src: "../app/data/projects/Aachen/models/Building/building.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/models/Building/building.json",
+                edges: true
+            }));
+
+            globalModel.push(xktLoader.load({
+                id: "Pipes",
+                src: "../app/data/projects/Aachen/models/Pipes/pipes.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/models/Pipes/pipes.json",
+                edges: true,
+            }));
+
+            globalModel.push(xktLoader.load({
+                id: "Terrain_and_traffic",
+                src: "../app/data/projects/Aachen/models/terrain/terrain.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/models/terrain/terrain.json",
+                edges: true,
+            }));
+
+            //load geo
+            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
+
+        }
+
+        document.initWaterlock = function () {
+
+            globalModel.forEach(element => element.destroy());
+            globalModel.length = 0
+            lastEntity = null;
+            document.getElementById("info1").innerHTML = "";
+            document.getElementById("info2").innerHTML = "";
+            document.getElementById("info3").innerHTML = "";
+            document.getElementById("info4").innerHTML = "";
+            document.getElementById("info5").innerHTML = "";
+            document.getElementById("info6").innerHTML = "";
+            document.getElementById("info7").innerHTML = "";
+            document.getElementById("info8").innerHTML = "";
+            document.getElementById("info9").innerHTML = "";
+
+
+            globalModel.push(xktLoader.load({
+                id: "Duplex",
+                src: "../app/data/projects/WaterLock/models/design/geometry.xkt",
+                metaModelSrc: "../app/data/projects/WaterLock/models/design/metadata.json",
+                edges: true
+            }));
+
+            //load geo
+            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
+
+        }
+
+        document.initSchependomlaan = function () {
+
+            globalModel.forEach(element => element.destroy());
+            globalModel.length = 0
+            lastEntity = null;
+            document.getElementById("info1").innerHTML = "";
+            document.getElementById("info2").innerHTML = "";
+            document.getElementById("info3").innerHTML = "";
+            document.getElementById("info4").innerHTML = "";
+            document.getElementById("info5").innerHTML = "";
+            document.getElementById("info6").innerHTML = "";
+            document.getElementById("info7").innerHTML = "";
+            document.getElementById("info8").innerHTML = "";
+            document.getElementById("info9").innerHTML = "";
+
+
+            globalModel.push(xktLoader.load({
+                id: "Schependomlaan",
+                src: "../app/data/projects/Schependomlaan/models/design/geometry.xkt",
+                metaModelSrc: "../app/data/projects/Schependomlaan/models/design/metadata.json",
+                edges: true
+            }));
+
+            //load geo
+            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
+
+        }
+
+        document.initWestRiversideHospital = function () {
+
+            globalModel.forEach(element => element.destroy());
+            globalModel.length = 0
+            lastEntity = null;
+            document.getElementById("info1").innerHTML = "";
+            document.getElementById("info2").innerHTML = "";
+            document.getElementById("info3").innerHTML = "";
+            document.getElementById("info4").innerHTML = "";
+            document.getElementById("info5").innerHTML = "";
+            document.getElementById("info6").innerHTML = "";
+            document.getElementById("info7").innerHTML = "";
+            document.getElementById("info8").innerHTML = "";
+            document.getElementById("info9").innerHTML = "";
+
+
+            globalModel.push(xktLoader.load({
+                id: "WestRiversideHospital",
+                src: "../app/data/projects/WestRiversideHospital/models/architectural/geometry.xkt",
+                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/architectural/metadata.json",
+                edges: true
+            }));
+
+            globalModel.push(xktLoader.load({
+                id: "WestRiversideHospital",
+                src: "../app/data/projects/WestRiversideHospital/models/electrical/geometry.xkt",
+                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/electrical/metadata.json",
+                edges: true
+            }));
+
+            globalModel.push(xktLoader.load({
+                id: "WestRiversideHospital",
+                src: "../app/data/projects/WestRiversideHospital/models/fireAlarms/geometry.xkt",
+                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/fireAlarms/metadata.json",
+                edges: true
+            }));
+
+            globalModel.push(xktLoader.load({
+                id: "WestRiversideHospital",
+                src: "../app/data/projects/WestRiversideHospital/models/mechanical/geometry.xkt",
+                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/mechanical/metadata.json",
+                edges: true
+            }));
+
+            globalModel.push(xktLoader.load({
+                id: "WestRiversideHospital",
+                src: "../app/data/projects/WestRiversideHospital/models/plumbing/geometry.xkt",
+                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/plumbing/metadata.json",
+                edges: true
+            }));
+
+            globalModel.push(xktLoader.load({
+                id: "WestRiversideHospital",
+                src: "../app/data/projects/WestRiversideHospital/models/sprinklers/geometry.xkt",
+                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/sprinklers/metadata.json",
+                edges: true
+            }));
+
+
+            globalModel.push(xktLoader.load({
+                id: "WestRiversideHospital",
+                src: "../app/data/projects/WestRiversideHospital/models/structure/geometry.xkt",
+                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/structure/metadata.json",
+                edges: true
+            }));
+
+            //load geo
+            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            xmlhttp.send();
+
+        }
+
+
+        //----------------------------------------------------------------------------------------------------------------------
+        // Create a tree view
+        //----------------------------------------------------------------------------------------------------------------------
+
+        const treeView = new TreeViewPlugin(viewer, {
+            containerElement: document.getElementById("treeViewContainer"),
+            autoExpandDepth: 0,
+            hierarchy: "containment"
+        });
+
+        const treeViewContextMenu = new ContextMenu({
+
+            items: [
+                [
+                    {
+                        title: "View Fit",
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            const objectIds = [];
+                            context.treeViewPlugin.withNodeTree(context.treeViewNode, (treeViewNode) => {
+                                if (treeViewNode.objectId) {
+                                    objectIds.push(treeViewNode.objectId);
+                                }
+                            });
+                            scene.setObjectsVisible(objectIds, true);
+                            scene.setObjectsHighlighted(objectIds, true);
+                            context.viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                aabb: scene.getAABB(objectIds),
+                                duration: 0.5
+                            }, () => {
+                                setTimeout(function () {
+                                    scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                                }, 500);
+                            });
+                        }
+                    },
+                    {
+                        title: "View Fit All",
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            context.viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                aabb: scene.getAABB({}),
+                                duration: 0.5
+                            });
+                        }
+                    }
+                ],
+                [
+                    {
+                        title: "X-Ray Others",
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            scene.setObjectsVisible(scene.objectIds, true);
+                            scene.setObjectsXRayed(scene.objectIds, true);
+                            scene.setObjectsSelected(scene.selectedObjectIds, false);
+                            scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                            context.treeViewPlugin.withNodeTree(context.treeViewNode, (treeViewNode) => {
+                                if (treeViewNode.objectId) {
+                                    const entity = scene.objects[treeViewNode.objectId];
+                                    if (entity) {
+                                        entity.xrayed = false;
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    {
+                        title: "Reset X-Ray",
+                        getEnabled: function (context) {
+                            return (context.viewer.scene.numXRayedObjects > 0);
+                        },
+                        doAction: function (context) {
+                            context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
+                            document.getElementById("info1").innerHTML = "";
+                            document.getElementById("info2").innerHTML = "";
+                            document.getElementById("info3").innerHTML = "";
+                            document.getElementById("info4").innerHTML = "";
+                            document.getElementById("info5").innerHTML = "";
+                            document.getElementById("info6").innerHTML = "";
+                            document.getElementById("info7").innerHTML = "";
+                            document.getElementById("info8").innerHTML = "";
+                            document.getElementById("info9").innerHTML = "";
+                        }
+                    }
+                ]
+            ]
+        });
+
+        // Right-clicking on a tree node shows the context menu for that node
+
+        treeView.on("contextmenu", (e) => {
+
+            treeViewContextMenu.context = { // Must set context before opening menu
+                viewer: e.viewer,
+                treeViewPlugin: e.treeViewPlugin,
+                treeViewNode: e.treeViewNode,
+                entity: e.viewer.scene.objects[e.treeViewNode.objectId] // Only defined if tree node is a leaf node
+            };
+
+            treeViewContextMenu.show(e.event.pageX, e.event.pageY);
+        });
+
+        // Left-clicking on a tree node isolates that object in the 3D view
+
+        treeView.on("nodeTitleClicked", (e) => {
+            const scene = viewer.scene;
+            const objectIds = [];
+
+            e.treeViewPlugin.withNodeTree(e.treeViewNode, (treeViewNode) => {
+                if (treeViewNode.objectId) {
+                    objectIds.push(treeViewNode.objectId);
+                }
+
+            });
+            e.treeViewPlugin.unShowNode();
+
+            scene.setObjectsXRayed(scene.objectIds, true);
+            scene.setObjectsVisible(scene.objectIds, true);
+            scene.setObjectsXRayed(objectIds, false);
+            viewer.cameraFlight.flyTo({
+                aabb: scene.getAABB(objectIds),
+                duration: 0.5
+            }, () => {
+                setTimeout(function () {
+                    scene.setObjectsVisible(scene.xrayedObjectIds, true);
+                    scene.setObjectsXRayed(scene.xrayedObjectIds, true);
+                }, 500);
+            });
+
+            lastEntity = null;
+            lastColorize = null;
+
+
+            // customize ModelTreeView.js & TreeViewNode.js to add more properties
+            if (objectIds == "3rFeaDCe58Ph8ptbjJL$5m" ||
+                objectIds == "3rFeaDCe58Ph8ptbjJL$vK" ||
+                objectIds == "3rFeaDCe58Ph8ptbjJL$vQ" ||
+                objectIds == "3rFeaDCe58Ph8ptbjJL$v1" ||
+                objectIds == "3rFeaDCe58Ph8ptbjJL$vo"
+            ) {
+                document.getElementById("info1").innerHTML = "<b>Temperatures: </b>";
+                document.getElementById("info2").innerHTML = "<b>Moisture: </b>";
+                document.getElementById("info3").innerHTML = "<b>Windspeed: </b>";
+                document.getElementById("info4").innerHTML = "<b>Winddirection: </b>";
+                document.getElementById("info5").innerHTML = "<b>Ozone: </b>";
+                document.getElementById("info6").innerHTML = "";
+                document.getElementById("info7").innerHTML = "";
+            } else {
+                document.getElementById("info1").innerHTML = "<b>Address: </b>" + e.treeViewNode.address;
+                document.getElementById("info2").innerHTML = "<b>Name: </b>" + e.treeViewNode.title;
+                document.getElementById("info3").innerHTML = "<b>Type: </b>" + e.treeViewNode.type;
+                document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + e.treeViewNode.date;
+                document.getElementById("info5").innerHTML = "<b>Historic: </b>" + e.treeViewNode.historic;
+                document.getElementById("info6").innerHTML = "<b>Base area: </b>" + e.treeViewNode.area;
+                document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + e.treeViewNode.owner;
+            }
+
+
+        });
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Create two ContextMenus - one for right-click on empty space, the other for right-click on an Entity
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        const canvasContextMenu = new ContextMenu({
+            enabled: true,
+            context: {
+                viewer: viewer
+            },
+            items: [
+                [
+                    {
+                        title: "Hide All",
+                        getEnabled: function (context) {
+                            return (context.viewer.scene.numVisibleObjects > 0);
+                        },
+                        doAction: function (context) {
+                            context.viewer.scene.setObjectsVisible(context.viewer.scene.visibleObjectIds, false);
+                        }
+                    },
+                    {
+                        title: "Show All",
+                        getEnabled: function (context) {
+                            const scene = context.viewer.scene;
+                            return (scene.numVisibleObjects < scene.numObjects);
+                        },
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            scene.setObjectsVisible(scene.objectIds, true);
+                            scene.setObjectsXRayed(scene.xrayedObjectIds, false);
+                            scene.setObjectsSelected(scene.selectedObjectIds, false);
+                        }
+                    }
+                ],
+                [
+                    {
+                        title: "View Fit All",
+                        doAction: function (context) {
+                            context.viewer.cameraFlight.flyTo({
+                                aabb: context.viewer.scene.getAABB()
+                            });
+                        }
+                    }
+                ]
+            ]
+        });
+
+        const objectContextMenu = new ContextMenu({
+            items: [
+                [
+                    {
+                        title: "View Fit",
+                        doAction: function (context) {
+                            const viewer = context.viewer;
+                            const scene = viewer.scene;
+                            const entity = context.entity;
+                            viewer.cameraFlight.flyTo({
+                                aabb: entity.aabb,
+                                duration: 0.5
+                            }, () => {
+                                setTimeout(function () {
+                                    scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                                }, 500);
+                            });
+                        }
+                    },
+                    {
+                        title: "View Fit All",
+                        doAction: function (context) {
+                            const scene = context.viewer.scene;
+                            context.viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                aabb: scene.getAABB(),
+                                duration: 0.5
+                            });
+                        }
+                    },
+                    {
+                        title: "Show in Tree",
+                        doAction: function (context) {
+                            const objectId = context.entity.id;
+                            context.treeViewPlugin.showNode(objectId);
+                        }
+                    }
+                ],
+                [
+                    {
+                        title: "X-Ray Others",
+                        doAction: function (context) {
+                            const viewer = context.viewer;
+                            const scene = viewer.scene;
+                            const entity = context.entity;
+                            const metaObject = viewer.metaScene.metaObjects[entity.id];
+                            if (!metaObject) {
+                                return;
+                            }
+                            scene.setObjectsVisible(scene.objectIds, true);
+                            scene.setObjectsXRayed(scene.objectIds, true);
+                            scene.setObjectsSelected(scene.selectedObjectIds, false);
+                            scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                            metaObject.withMetaObjectsInSubtree((metaObject) => {
+                                const entity = scene.objects[metaObject.id];
+                                if (entity) {
+                                    entity.xrayed = false;
+                                }
+                            });
+                        }
+                    },
+                    {
+                        title: "Reset X-Ray",
+                        getEnabled: function (context) {
+                            return (context.viewer.scene.numXRayedObjects > 0);
+                        },
+                        doAction: function (context) {
+                            context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
+                            document.getElementById("info1").innerHTML = "";
+                            document.getElementById("info2").innerHTML = "";
+                            document.getElementById("info3").innerHTML = "";
+                            document.getElementById("info4").innerHTML = "";
+                            document.getElementById("info5").innerHTML = "";
+                            document.getElementById("info6").innerHTML = "";
+                            document.getElementById("info7").innerHTML = "";
+                            document.getElementById("info8").innerHTML = "";
+                            document.getElementById("info9").innerHTML = "";
+                        }
+                    }
+                ]
+            ],
+            enabled: true
+        });
+
+        viewer.cameraControl.on("rightClick", function (e) {
+
+            var hit = viewer.scene.pick({
+                canvasPos: e.canvasPos
+            });
+
+            if (hit && hit.entity.isObject) {
+
+                objectContextMenu.context = { // Must set context before showing menu
+                    viewer: viewer,
+                    treeViewPlugin: treeView,
+                    entity: hit.entity
+                };
+
+                objectContextMenu.show(e.event.pageX, e.event.pageY);
+
+            } else {
+
+                canvasContextMenu.context = { // Must set context before showing menu
+                    viewer: viewer
+                };
+
+                canvasContextMenu.show(e.event.pageX, e.event.pageY);
+            }
+
+            e.event.preventDefault();
+        });
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Click entity to get info and highlight it
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        var lastEntity = null;
+        var lastColorize = null;
+
+        viewer.cameraControl.on("picked", (pickResult) => {
+            const entity = pickResult.entity;
+            const metaObject = viewer.metaScene.metaObjects[entity.id];
+
+            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m" ||
+                entity.id == "3rFeaDCe58Ph8ptbjJL$vK" ||
+                entity.id == "3rFeaDCe58Ph8ptbjJL$vQ" ||
+                entity.id == "3rFeaDCe58Ph8ptbjJL$v1" ||
+                entity.id == "3rFeaDCe58Ph8ptbjJL$vo"
+            ) {
+                document.getElementById("info1").innerHTML = "<b>Temperatures: </b>";
+                document.getElementById("info2").innerHTML = "<b>Moisture: </b>";
+                document.getElementById("info3").innerHTML = "<b>Windspeed: </b>";
+                document.getElementById("info4").innerHTML = "<b>Winddirection: </b>";
+                document.getElementById("info5").innerHTML = "<b>Ozone: </b>";
+                document.getElementById("info6").innerHTML = "";
+                document.getElementById("info7").innerHTML = "";
+            } else {
+                document.getElementById("info1").innerHTML = "<b>Address: </b>" + metaObject.address;
+                document.getElementById("info2").innerHTML = "<b>Name: </b>" + metaObject.name;
+                document.getElementById("info3").innerHTML = "<b>Type: </b>" + metaObject.type;
+                document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + metaObject.date;
+                document.getElementById("info5").innerHTML = "<b>Historic: </b>" + metaObject.historic;
+                document.getElementById("info6").innerHTML = "<b>Base area: </b>" + metaObject.area;
+                document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + metaObject.owner;
+            }
+
+
+            if (!lastEntity || entity.id !== lastEntity.id) {
+                if (lastEntity) {
+                    lastEntity.colorize = lastColorize;
+                    viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
+                }
+                lastEntity = pickResult.entity;
+                lastColorize = pickResult.entity.colorize.slice();
+                pickResult.entity.colorize = [1, 130 / 255, 0];
+                viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
+
+
+            } else if (entity.id == lastEntity.id || globalModel.length == 0) {
+                lastEntity = null;
+                pickResult.entity.colorize = lastColorize;
+                document.getElementById("info1").innerHTML = ""; //edit metascene.js metaobject.js and metamodel.js
+                document.getElementById("info2").innerHTML = "";
+                document.getElementById("info3").innerHTML = "";
+                document.getElementById("info4").innerHTML = "";
+                document.getElementById("info5").innerHTML = "";
+                document.getElementById("info6").innerHTML = "";
+                document.getElementById("info7").innerHTML = "";
+                document.getElementById("info8").innerHTML = "";
+                document.getElementById("info9").innerHTML = "";
+                viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
+
+            }
+        });
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Create a mesh with grid
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        new Mesh(viewer.scene, {
+            geometry: new VBOGeometry(viewer.scene, buildGridGeometry({
+                size: 1500,
+                divisions: 150
+            })),
+            material: new PhongMaterial(viewer.scene, {
+                color: [0.0, 0.0, 0.0],
+                emissive: [0.4, 0.4, 0.4]
+            }),
+            position: [0, -5, 0],
+            collidable: false
+        });
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Create a Navigation Cube
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        new NavCubePlugin(viewer, {
+            canvasId: "myNavCubeCanvas",
+            visible: true,           // Initially visible (default)
+            size: 200,               // NavCube size in pixels (default is 200)
+            alignment: "topLeft",   // Align NavCube to top-left of Viewer canvas
+            topMargin: 50,          // 170 pixels margin from top of Viewer canvas
+            cameraFly: true,       // Fly camera to each selected axis/diagonal
+            cameraFitFOV: 45,        // How much field-of-view the scene takes once camera has fitted it to view
+            cameraFlyDuration: 0.5, // How long (in seconds) camera takes to fly to each new axis/diagonal
+            color: "#FFFFFF",
+            synchProjection: true
+        });
+
+
+    </script>
+
+
+
+    <div class="container">
+        <div class="headcontainer">
+
+            <div class="header">
+
+                <!-- Title -->
+                <div class="header title">
+                    <h1>Wingman - Construction Project Info Platform</h1>
+                    <i>Internal Testing | v0.2021.2.08.1</i>
+                </div>
+
+                <div class="nav">
+
+                    <!-- Project selector/Drop down list -->
+                    <div class="nav project">
+                        <br />
+                        <p>Project: <select>
+                                <option value="Aachen" onclick="document.initAachen()" selected>Aachen</option>
+                                <option value="Waterlock" onclick="document.initWaterlock()">Waterlock</option>
+                                <option value="Schependomlaan" onclick="document.initSchependomlaan()">
+                                    Schependomlaan
+                                </option>
+                                <option value="West riverside hospital" onclick="document.initWestRiversideHospital()">
+                                    West riverside hospital</option>
+                            </select></p>
+                    </div>
+
+                    <!-- Phase selector -->
+                    <div class="nav phase">
+
+                        Phase: &nbsp;
+                        <button type="button">Early-term</button>
+                        <button type="button">Mid-term</button>
+                        <button type="button">End-term</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Geo info -->
+            <div class="geo">
+
+                <p id="location">Loading geo data...</p>
+                <p id="weather"></p>
+
+            </div>
+
+            <div class="news">
+                <marquee><i>Under construction!</i></marquee>
+            </div>
+
+        </div>
+
+
+
+
+        <!--middle-->
+        <div class="midcontainer">
+
+            <div class="layer">
+                <h2>Info Layer</h2>
+
+                <div id="treeViewContainer">
+
+
+                </div>
+            </div>
+
+            <canvas id="myCanvas"></canvas>
+
+            <canvas id="myNavCubeCanvas"></canvas>
+
+            <div class="info">
+                <h2>Information</h2>
+                <ul>
+                    <li id="info1">info1: </li>
+                    <li id="info2">info2: </li>
+                    <li id="info3">info3: </li>
+                    <li id="info4">info4: </li>
+                    <li id="info5">info5: </li>
+                    <li id="info6">info6: </li>
+                    <li id="info7">info7: </li>
+                    <li id="info8">info8: </li>
+                    <li id="info9">info9: </li>
+
+                </ul>
+            </div>
+        </div>
+
+
+        <!--buttom-->
+        <div class="buttomcontainer">
+            <i>Copyright</i>
+            <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
+            <img src="..\images\Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
+            <img src="..\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
+            <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP">
+            <img src="..\images\itnrw_logo.png" width="8%" alt="IT NRW">
+
+
+
+        </div>
+    </div>
+
+
+</body>
+
+
+
+</html>

@@ -16,7 +16,7 @@
  */
 class MetaObject {
 
-    constructor(metaModel, id, originalSystemId, name, type, test1, test2, properties, parent, children, external) {
+    constructor(metaModel, id, originalSystemId, name, type, address, date, historic, area, owner, properties, parent, children, external) {
 
         /**
          * Model metadata.
@@ -60,8 +60,11 @@ class MetaObject {
          */
         this.type = type;
 
-        this.test1 = test1;
-        this.test2 = test2;
+        this.address = address;
+        this.date = date;
+        this.historic = historic;
+        this.area = area;
+        this.owner = owner;
 
 
         if (properties) {
@@ -208,9 +211,12 @@ class MetaObject {
             id: this.id,
             type: this.type,
             name: this.name,
-            test1: this.test1,
-            test2: this.test2
-        };
+            address: this.address = address,
+            date: this.date = date,
+            historic: this.historic = historic,
+            area: this.area = area,
+            owner: this.owner = owner
+            };
         if (this.parent) {
             json.parent = this.parent.id
         }

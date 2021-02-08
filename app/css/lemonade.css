@@ -1,21 +1,30 @@
+/* ----------------------------------------------------------------------------------------------------------*/
+
 /* Below page redesign by zhuopeng */
+
+/* ----------------------------------------------------------------------------------------------------------*/
 
 .container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    align-self: auto;
 }
 
+/* ----------------------------------------------------------------------------------------------------------*/
 
 /* header */
+
+/* ----------------------------------------------------------------------------------------------------------*/
 
 div.headcontainer {
     display: flex;
     width: 100%;
     background-color: #03103f;
     color: white;
-    flex-grow: 1;
-    min-height: 8%;
+    height: 120px;
+    flex-wrap: wrap;
+    order: 1;
 }
 
 div.header {
@@ -82,8 +91,10 @@ div.geo {
     text-align: right;
     flex-grow: 1;
     min-width: 18em;
-    margin-right: 2em;
+    margin: 0.5em;
     flex-wrap: wrap;
+    padding: 0 1em 0;
+    border-right: white 4px solid;
 }
 
 div.geo>p {
@@ -98,7 +109,9 @@ div.news {
     width: 100%;
     height: 1.5em;
     border: #03103f solid 0.5em;
-    color: black;
+    color: #03103f;
+    z-index: 200000;
+    background-color: white;
 }
 
 div.news p {
@@ -108,22 +121,57 @@ div.news p {
     color: #03103f;
 }
 
+/* ----------------------------------------------------------------------------------------------------------*/
 
 /* body */
 
+/* ----------------------------------------------------------------------------------------------------------*/
+
 div.midcontainer {
     display: flex;
-    flex-grow: 1000;
+    flex: 1 0 79%;
+    max-height: 79%;
+    order: 2;
+}
+
+div.layer {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    max-width: 500px;
+    border-left: #03103f solid 0.5em;
+    border-right: #03103f solid 0.5em;
+}
+
+div.layer h2 {
+    padding: 0.5em 1em 0;
+    margin: 0;
+    color: #03103f;
+    display: inline;
+    white-space: nowrap;
+    background-color: white;
+}
+
+#myNavCubeCanvas {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 125px;
+    right: 20%;
+    z-index: 200000;
 }
 
 div.info {
-    width: 20%;
+    width: 17.5%;
     height: 100%;
     background-color: white;
     color: #03103f;
     display: flex;
     flex-direction: column;
     border-left: #03103f solid 0.5em;
+    border-right: #03103f solid 0.5em;
+    max-width: 17.5%;
+    min-width: 17.5%;
 }
 
 div.info h2 {
@@ -132,25 +180,44 @@ div.info h2 {
     color: #03103f;
 }
 
-.info li{
-    margin: 1em;
+.info ul{
+    margin:0 0 0 2em;
+    padding:0;
 }
+
+.info li {
+    margin: 1em 0.25em 0;
+    padding-left: 0.5em;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    border-left: #03103f 0.25em solid;
+    list-style-type: none;
+}
+
+/* ----------------------------------------------------------------------------------------------------------*/
+
 /*footer*/
+
+/* ----------------------------------------------------------------------------------------------------------*/
 
 div.buttomcontainer {
     display: flex;
+    flex: 1 0 50px;
     align-items: center;
     justify-content: center;
+    font-family: 'Roboto', sans-serif;
     color: white;
     background-color: #03103f;
-    border-top: white 1px solid;
-    flex-grow: 1;
+    height: 50px;
+    min-height: 50px;
+    order:3;
+    margin-top: auto;
 }
 
 div.buttomcontainer i {
     font-size: 10pt;
     text-align: center;
-    margin-right: 1em
+    margin-right: 1em;
 }
 
 div.buttomcontainer img {
