@@ -50,9 +50,12 @@
 </head>
 
 <body onload="document.initAachen()">
+    
     <script type="module">
+
+        
         //------------------------------------------------------------------------------------------------------------------------------------------
-        // Request for geo data 
+        // Request for geo data and sensorValue
         //------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -67,11 +70,15 @@
             }
         };
 
+        xmlhttp.open("GET", "https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", true);
+            xmlhttp.send();
 
-
+            
         //------------------------------------------------------------------------------------------------------------------------------------------
         //create viewer
         //------------------------------------------------------------------------------------------------------------------------------------------
+        
+        
         import { Viewer } from "../src/viewer/Viewer.js";
         import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
 
@@ -429,13 +436,28 @@
 
 
             // customize ModelTreeView.js & TreeViewNode.js to add more properties
-            document.getElementById("info1").innerHTML = "<b>Address: </b>" + e.treeViewNode.address;
-            document.getElementById("info2").innerHTML = "<b>Name: </b>" + e.treeViewNode.title;
-            document.getElementById("info3").innerHTML = "<b>Type: </b>" + e.treeViewNode.type;
-            document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + e.treeViewNode.date;
-            document.getElementById("info5").innerHTML = "<b>Historic: </b>" + e.treeViewNode.historic;
-            document.getElementById("info6").innerHTML = "<b>Base area: </b>" + e.treeViewNode.area;
-            document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + e.treeViewNode.owner;
+            if (objectIds == "3rFeaDCe58Ph8ptbjJL$5m" ||
+                objectIds == "3rFeaDCe58Ph8ptbjJL$vK" ||
+                objectIds == "3rFeaDCe58Ph8ptbjJL$vQ" ||
+                objectIds == "3rFeaDCe58Ph8ptbjJL$v1" ||
+                objectIds == "3rFeaDCe58Ph8ptbjJL$vo"
+            ) {
+                document.getElementById("info1").innerHTML = "<b>Temperatures: </b>";
+                document.getElementById("info2").innerHTML = "<b>Moisture: </b>";
+                document.getElementById("info3").innerHTML = "<b>Windspeed: </b>";
+                document.getElementById("info4").innerHTML = "<b>Winddirection: </b>";
+                document.getElementById("info5").innerHTML = "<b>Ozone: </b>";
+                document.getElementById("info6").innerHTML = "";
+                document.getElementById("info7").innerHTML = "";
+            } else {
+                document.getElementById("info1").innerHTML = "<b>Address: </b>" + e.treeViewNode.address;
+                document.getElementById("info2").innerHTML = "<b>Name: </b>" + e.treeViewNode.title;
+                document.getElementById("info3").innerHTML = "<b>Type: </b>" + e.treeViewNode.type;
+                document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + e.treeViewNode.date;
+                document.getElementById("info5").innerHTML = "<b>Historic: </b>" + e.treeViewNode.historic;
+                document.getElementById("info6").innerHTML = "<b>Base area: </b>" + e.treeViewNode.area;
+                document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + e.treeViewNode.owner;
+            }
 
 
         });
@@ -443,6 +465,7 @@
         //------------------------------------------------------------------------------------------------------------------
         // Create two ContextMenus - one for right-click on empty space, the other for right-click on an Entity
         //------------------------------------------------------------------------------------------------------------------
+
 
         const canvasContextMenu = new ContextMenu({
             enabled: true,
@@ -612,7 +635,20 @@
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
 
-            if (metaObject.parent = "2clzl$UuzDAAuy3WDv$TNv") {
+            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m" ||
+                entity.id == "3rFeaDCe58Ph8ptbjJL$vK" ||
+                entity.id == "3rFeaDCe58Ph8ptbjJL$vQ" ||
+                entity.id == "3rFeaDCe58Ph8ptbjJL$v1" ||
+                entity.id == "3rFeaDCe58Ph8ptbjJL$vo"
+            ) {
+                document.getElementById("info1").innerHTML = "<b>Temperatures: </b>";
+                document.getElementById("info2").innerHTML = "<b>Moisture: </b>";
+                document.getElementById("info3").innerHTML = "<b>Windspeed: </b>";
+                document.getElementById("info4").innerHTML = "<b>Winddirection: </b>";
+                document.getElementById("info5").innerHTML = "<b>Ozone: </b>";
+                document.getElementById("info6").innerHTML = "";
+                document.getElementById("info7").innerHTML = "";
+            } else {
                 document.getElementById("info1").innerHTML = "<b>Address: </b>" + metaObject.address;
                 document.getElementById("info2").innerHTML = "<b>Name: </b>" + metaObject.name;
                 document.getElementById("info3").innerHTML = "<b>Type: </b>" + metaObject.type;
@@ -620,8 +656,7 @@
                 document.getElementById("info5").innerHTML = "<b>Historic: </b>" + metaObject.historic;
                 document.getElementById("info6").innerHTML = "<b>Base area: </b>" + metaObject.area;
                 document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + metaObject.owner;
-            } else { }
-
+            }
 
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -703,7 +738,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Internal Testing | v0.2021.2.07.2</i>
+                    <i>Internal Testing | v0.2021.2.08.1</i>
                 </div>
 
                 <div class="nav">
