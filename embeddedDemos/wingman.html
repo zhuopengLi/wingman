@@ -132,13 +132,13 @@
                 loadXMLDoc("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
                     if (sensor.readyState == 4 && sensor.status == 200) {
                         var data = JSON.parse(sensor.responseText);
-                        document.getElementById("info1").innerHTML = "<b>Temperatures: </b>" + data[param].temperatures.$numberDouble;
-                        document.getElementById("info2").innerHTML = "<b>Moisture: </b>" + data[param].moisture.$numberDouble;
-                        document.getElementById("info3").innerHTML = "<b>Windspeed: </b>" + data[param].windspeed.$numberDouble;
-                        document.getElementById("info4").innerHTML = "<b>Winddirection: </b>" + data[param].winddirection.$numberDouble;
-                        document.getElementById("info5").innerHTML = "<b>Ozone: </b>" + data[param].ozone.$numberDouble;
-                        document.getElementById("info6").innerHTML = "<b>Noise level: </b>" + data[param].NoiseLevel.$numberDouble;
-                        document.getElementById("info7").innerHTML = "<b>Last update at: </b>" + data[param].timestamp;
+                        document.getElementById("info1").innerHTML = "<b>Temperatures: </b>" + data[param].temperatures.$numberDouble + "°C";
+                        document.getElementById("info2").innerHTML = "<b>Moisture: </b>" + data[param].moisture.$numberDouble + "%";
+                        document.getElementById("info3").innerHTML = "<b>Windspeed: </b>" + data[param].windspeed.$numberDouble + "m/s";
+                        document.getElementById("info4").innerHTML = "<b>Winddirection: </b>" + data[param].winddirection.$numberDouble + "°";
+                        document.getElementById("info5").innerHTML = "<b>Ozone: </b>" + data[param].ozone.$numberDouble + "µg/m³";
+                        document.getElementById("info6").innerHTML = "<b>Noise level: </b>" + data[param].NoiseLevel.$numberDouble + "dB" ;
+                        document.getElementById("info7").innerHTML = "<b>Last update at: </b>" + data[param].timestamp + " (CET)";
                     }
                 })
             }, 5000);
@@ -679,11 +679,11 @@
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh();
-            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44) } else {
+            if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40) }
+            else if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41) }
+            else if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42) }
+            else if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43) }
+            else if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44) } else {
                 document.getElementById("info1").innerHTML = "<b>Address: </b>" + metaObject.address;
                 document.getElementById("info2").innerHTML = "<b>Name: </b>" + metaObject.name;
                 document.getElementById("info3").innerHTML = "<b>Type: </b>" + metaObject.type;
@@ -774,7 +774,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Internal Testing | v0.2021.2.09.3</i>
+                    <i>Alpha Testing | v0.9</i>
                 </div>
 
                 <div class="nav">
@@ -816,7 +816,7 @@
             </div>
 
             <div class="news">
-                <marquee><i>Under construction!</i></marquee>
+                <marquee><i>Welcome to <b>Wingman</b></i></marquee>
             </div>
 
         </div>
