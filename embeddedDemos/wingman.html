@@ -127,28 +127,45 @@
             sensor.send();
         }
 
-        function loadSensor(param) {
+        function loadSensor(param, name) {
             var localRefresh = setInterval(function () {
                 loadXMLDoc("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
                     if (sensor.readyState == 4 && sensor.status == 200) {
                         var data = JSON.parse(sensor.responseText);
-                        document.getElementById("info1").innerHTML = "<b>Temperatures: </b>" + data[param].temperatures.$numberDouble + "°C";
-                        document.getElementById("info2").innerHTML = "<b>Moisture: </b>" + data[param].moisture.$numberDouble + "%";
-                        document.getElementById("info3").innerHTML = "<b>Windspeed: </b>" + data[param].windspeed.$numberDouble + "m/s";
-                        document.getElementById("info4").innerHTML = "<b>Winddirection: </b>" + data[param].winddirection.$numberDouble + "°";
-                        document.getElementById("info5").innerHTML = "<b>Ozone: </b>" + data[param].ozone.$numberDouble + "µg/m³";
-                        document.getElementById("info6").innerHTML = "<b>Noise level: </b>" + data[param].NoiseLevel.$numberDouble + "dB" ;
-                        document.getElementById("info7").innerHTML = "<b>Last update at: </b>" + data[param].timestamp + " (CET)";
+                        document.getElementById("info1").innerHTML = "<b>Name: </b>" + name;
+                        document.getElementById("info2").innerHTML = "<b>Temperatures: </b>" + data[param].temperatures.$numberDouble + "°C";
+                        document.getElementById("info3").innerHTML = "<b>Moisture: </b>" + data[param].moisture.$numberDouble + "%";
+                        document.getElementById("info4").innerHTML = "<b>Windspeed: </b>" + data[param].windspeed.$numberDouble + "m/s";
+                        document.getElementById("info5").innerHTML = "<b>Winddirection: </b>" + data[param].winddirection.$numberDouble + "°";
+                        document.getElementById("info6").innerHTML = "<b>Ozone: </b>" + data[param].ozone.$numberDouble + "µg/m³";
+                        document.getElementById("info7").innerHTML = "<b>Noise level: </b>" + data[param].NoiseLevel.$numberDouble + "dB";
+                        document.getElementById("info8").innerHTML = "<b>Last update at: </b>" + data[param].timestamp + " (CET)";
                     }
                 })
             }, 5000);
 
-            globalRefresh=localRefresh;
+            globalRefresh = localRefresh;
         }
 
         function stopRefresh() {
             clearInterval(globalRefresh);
         }
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // declare the sensor data query function
+        //------------------------------------------------------------------------------------------------------------------
+
+        var timerInterval = setInterval(function () { timer() }, 1000);
+
+        function timer() {
+            var d = new Date();
+            d.setHours(d.getHours() - 7);
+            var hours = d.toLocaleTimeString();
+            var day = d.toDateString();
+            document.getElementById("time").innerHTML = hours + ", " + day + " (CET)";
+        }
+
 
         //------------------------------------------------------------------------------------------------------------------
         // Load models
@@ -484,11 +501,11 @@
             lastColorize = null;
 
             // customize ModelTreeView.js & TreeViewNode.js to add more properties
-            if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40) }
-            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41) }
-            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42) }
-            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43) }
-            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44) } else {
+            if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, e.treeViewNode.title) }
+            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, e.treeViewNode.title) }
+            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, e.treeViewNode.title) }
+            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, e.treeViewNode.title) }
+            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, e.treeViewNode.title) } else {
                 document.getElementById("info1").innerHTML = "<b>Address: </b>" + e.treeViewNode.address;
                 document.getElementById("info2").innerHTML = "<b>Name: </b>" + e.treeViewNode.title;
                 document.getElementById("info3").innerHTML = "<b>Type: </b>" + e.treeViewNode.type;
@@ -679,11 +696,11 @@
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh();
-            if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40) }
-            else if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41) }
-            else if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42) }
-            else if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43) }
-            else if (entity.id[0] == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44) } else {
+            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) } else {
                 document.getElementById("info1").innerHTML = "<b>Address: </b>" + metaObject.address;
                 document.getElementById("info2").innerHTML = "<b>Name: </b>" + metaObject.name;
                 document.getElementById("info3").innerHTML = "<b>Type: </b>" + metaObject.type;
@@ -774,7 +791,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9</i>
+                    <i>Alpha Testing | v0.9.1</i>
                 </div>
 
                 <div class="nav">
@@ -812,6 +829,7 @@
 
                 <p id="location">Loading geo data...</p>
                 <p id="weather"></p>
+                <p id="time"></p>
 
             </div>
 
