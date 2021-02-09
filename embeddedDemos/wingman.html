@@ -59,8 +59,8 @@
         //------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
+        var geoData = new XMLHttpRequest();
+        geoData.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 var weather = JSON.parse(this.responseText);
                 document.getElementById("location").innerHTML =
@@ -70,8 +70,6 @@
             }
         };
 
-        xmlhttp.open("GET", "https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", true);
-        xmlhttp.send();
 
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -113,6 +111,35 @@
         viewer.cameraControl.keyboardDollyRate = 20;
         viewer.cameraControl.rotationInertia = 0;
         viewer.cameraControl.dollyInertia = 0;
+
+        
+        //------------------------------------------------------------------------------------------------------------------
+        // declare the sensor data query function
+        //------------------------------------------------------------------------------------------------------------------
+        
+        
+        var sensor = new XMLHttpRequest();
+
+        function loadXMLDoc(url, cfunc) {
+            sensor.onreadystatechange = cfunc;
+            sensor.open("GET", url, true);
+            sensor.send();
+        }
+
+        function loadSenor(param) {
+            loadXMLDoc("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
+                if (sensor.readyState == 4 && sensor.status == 200) {
+                    var data = JSON.parse(sensor.responseText);
+                    document.getElementById("info1").innerHTML = "<b>Temperatures: </b>" + data[param].temperatures.$numberDouble;
+                    document.getElementById("info2").innerHTML = "<b>Moisture: </b>" + data[param].moisture.$numberDouble;
+                    document.getElementById("info3").innerHTML = "<b>Windspeed: </b>" + data[param].windspeed.$numberDouble;
+                    document.getElementById("info4").innerHTML = "<b>Winddirection: </b>" + data[param].winddirection.$numberDouble;
+                    document.getElementById("info5").innerHTML = "<b>Ozone: </b>" + data[param].ozone.$numberDouble;
+                    document.getElementById("info6").innerHTML = "<b>Noise level: </b>" + data[param].NoiseLevel.$numberDouble;
+                    document.getElementById("info7").innerHTML = "<b>Last update at: </b>" + data[param].timestamp;
+                }
+            });
+        }
 
 
         //------------------------------------------------------------------------------------------------------------------
@@ -164,8 +191,8 @@
             }));
 
             //load geo
-            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            xmlhttp.send();
+            geoData.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            geoData.send();
 
         }
 
@@ -193,8 +220,8 @@
             }));
 
             //load geo
-            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            xmlhttp.send();
+            geoData.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            geoData.send();
 
         }
 
@@ -222,8 +249,8 @@
             }));
 
             //load geo
-            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            xmlhttp.send();
+            geoData.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            geoData.send();
 
         }
 
@@ -294,8 +321,8 @@
             }));
 
             //load geo
-            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            xmlhttp.send();
+            geoData.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8", true);
+            geoData.send();
 
         }
 
@@ -353,6 +380,11 @@
                     {
                         title: "X-Ray Others",
                         doAction: function (context) {
+                            if (lastEntity !== null) {
+                                lastEntity.colorize = lastColorize;
+                            }
+                            lastEntity = null;
+                            lastColorize = null;
                             const scene = context.viewer.scene;
                             scene.setObjectsVisible(scene.objectIds, true);
                             scene.setObjectsXRayed(scene.objectIds, true);
@@ -431,25 +463,19 @@
                 }, 500);
             });
 
+            if (lastEntity !== null) {
+                lastEntity.colorize = lastColorize;
+            }
             lastEntity = null;
             lastColorize = null;
 
-
+            console.log(objectIds);
             // customize ModelTreeView.js & TreeViewNode.js to add more properties
-            if (objectIds == "3rFeaDCe58Ph8ptbjJL$5m" ||
-                objectIds == "3rFeaDCe58Ph8ptbjJL$vK" ||
-                objectIds == "3rFeaDCe58Ph8ptbjJL$vQ" ||
-                objectIds == "3rFeaDCe58Ph8ptbjJL$v1" ||
-                objectIds == "3rFeaDCe58Ph8ptbjJL$vo"
-            ) {
-                document.getElementById("info1").innerHTML = "<b>Temperatures: </b>";
-                document.getElementById("info2").innerHTML = "<b>Moisture: </b>";
-                document.getElementById("info3").innerHTML = "<b>Windspeed: </b>";
-                document.getElementById("info4").innerHTML = "<b>Winddirection: </b>";
-                document.getElementById("info5").innerHTML = "<b>Ozone: </b>";
-                document.getElementById("info6").innerHTML = "";
-                document.getElementById("info7").innerHTML = "";
-            } else {
+            if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$5m") { loadSenor(40) }
+            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vK") { loadSenor(41) }
+            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSenor(42) }
+            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$v1") { loadSenor(43) }
+            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vo") { loadSenor(44) } else {
                 document.getElementById("info1").innerHTML = "<b>Address: </b>" + e.treeViewNode.address;
                 document.getElementById("info2").innerHTML = "<b>Name: </b>" + e.treeViewNode.title;
                 document.getElementById("info3").innerHTML = "<b>Type: </b>" + e.treeViewNode.type;
@@ -552,6 +578,10 @@
                     {
                         title: "X-Ray Others",
                         doAction: function (context) {
+                            lastEntity.colorize = lastColorize;
+                            lastEntity = null;
+                            lastColorize = null;
+
                             const viewer = context.viewer;
                             const scene = viewer.scene;
                             const entity = context.entity;
@@ -635,20 +665,11 @@
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
 
-            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m" ||
-                entity.id == "3rFeaDCe58Ph8ptbjJL$vK" ||
-                entity.id == "3rFeaDCe58Ph8ptbjJL$vQ" ||
-                entity.id == "3rFeaDCe58Ph8ptbjJL$v1" ||
-                entity.id == "3rFeaDCe58Ph8ptbjJL$vo"
-            ) {
-                document.getElementById("info1").innerHTML = "<b>Temperatures: </b>";
-                document.getElementById("info2").innerHTML = "<b>Moisture: </b>";
-                document.getElementById("info3").innerHTML = "<b>Windspeed: </b>";
-                document.getElementById("info4").innerHTML = "<b>Winddirection: </b>";
-                document.getElementById("info5").innerHTML = "<b>Ozone: </b>";
-                document.getElementById("info6").innerHTML = "";
-                document.getElementById("info7").innerHTML = "";
-            } else {
+            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSenor(40) }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSenor(41) }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSenor(42) }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSenor(43) }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSenor(44) } else {
                 document.getElementById("info1").innerHTML = "<b>Address: </b>" + metaObject.address;
                 document.getElementById("info2").innerHTML = "<b>Name: </b>" + metaObject.name;
                 document.getElementById("info3").innerHTML = "<b>Type: </b>" + metaObject.type;
@@ -738,7 +759,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Internal Testing | v0.2021.2.08.1</i>
+                    <i>Internal Testing | v0.2021.2.09.1</i>
                 </div>
 
                 <div class="nav">
@@ -807,15 +828,15 @@
             <div class="info">
                 <h2>Information</h2>
                 <ul>
-                    <li id="info1">info1: </li>
-                    <li id="info2">info2: </li>
-                    <li id="info3">info3: </li>
-                    <li id="info4">info4: </li>
-                    <li id="info5">info5: </li>
-                    <li id="info6">info6: </li>
-                    <li id="info7">info7: </li>
-                    <li id="info8">info8: </li>
-                    <li id="info9">info9: </li>
+                    <li id="info1"></li>
+                    <li id="info2"></li>
+                    <li id="info3"></li>
+                    <li id="info4"></li>
+                    <li id="info5"></li>
+                    <li id="info6"></li>
+                    <li id="info7"></li>
+                    <li id="info8"></li>
+                    <li id="info9"></li>
 
                 </ul>
             </div>

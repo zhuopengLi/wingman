@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <p id="demo1">Loading...</p>
+
+    <script>
+        var sensor = new XMLHttpRequest();
+
+        function loadXMLDoc(url, cfunc) {
+            sensor.onreadystatechange = cfunc;
+            sensor.open("GET", url, true);
+            sensor.send();
+        }
+
+        function loadSenor(param) {
+            loadXMLDoc("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
+                if (sensor.readyState == 4 && sensor.status == 200) {
+                    var data = JSON.parse(sensor.responseText);
+                    document.getElementById("demo1").innerHTML = data[param].temperatures.$numberDouble;
+                }
+            });
+        }
+
+        loadSenor(41)
+    </script>
+
+</body>
+
+</html>

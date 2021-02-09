@@ -248,34 +248,40 @@
       "parent": "2clzl$UuzDAAuy3WE60Xa6"
     },
     {
+      "id": "sensor",
+      "name": "Sensors",
+      "type": "IfcBuildingStorey",
+      "parent": "2clzl$UuzDAAuy3WDv$TNv"
+    },
+    {
       "id": "3rFeaDCe58Ph8ptbjJL$5m",
-      "name": "Pfostenbeleuchtung:Sensor 2:406823",
+      "name": "Sensor 2",
       "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "parent": "sensor"
     },
     {
       "id": "3rFeaDCe58Ph8ptbjJL$vK",
-      "name": "Pfostenbeleuchtung:Sensor 1:408067",
+      "name": "Sensor 1",
       "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "parent": "sensor"
     },
     {
       "id": "3rFeaDCe58Ph8ptbjJL$vQ",
-      "name": "Pfostenbeleuchtung:Sensor 5:408077",
+      "name": "Sensor 5",
       "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "parent": "sensor"
     },
     {
       "id": "3rFeaDCe58Ph8ptbjJL$v1",
-      "name": "Pfostenbeleuchtung:Sensor 4:408086",
+      "name": "Sensor 4",
       "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "parent": "sensor"
     },
     {
       "id": "3rFeaDCe58Ph8ptbjJL$vo",
-      "name": "Pfostenbeleuchtung:Sensor 3:408101",
+      "name": "Sensor 3",
       "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "parent": "sensor"
     }
   ]
 }
