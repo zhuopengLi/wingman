@@ -50,10 +50,10 @@
 </head>
 
 <body onload="document.initAachen()">
-    
+
     <script type="module">
 
-        
+
         //------------------------------------------------------------------------------------------------------------------------------------------
         // Request for geo data and sensorValue
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -71,14 +71,14 @@
         };
 
         xmlhttp.open("GET", "https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", true);
-            xmlhttp.send();
+        xmlhttp.send();
 
-            
+
         //------------------------------------------------------------------------------------------------------------------------------------------
         //create viewer
         //------------------------------------------------------------------------------------------------------------------------------------------
-        
-        
+
+
         import { Viewer } from "../src/viewer/Viewer.js";
         import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
 
