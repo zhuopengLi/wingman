@@ -179,10 +179,6 @@ function temper(indices, hour, minute) {
         let oldHour = parseInt(hour);
         let newHour = parseInt(hour) + 1;
 
-        console.log(oldHour)
-
-        console.log(newHour)
-
         let oldCurrentTemperature = currentTemperature[oldHour].split(",");
         let freshCurrentTemperature = currentTemperature[newHour].split(",");
 
