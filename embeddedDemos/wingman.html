@@ -112,7 +112,7 @@
         viewer.cameraControl.rotationInertia = 0;
         viewer.cameraControl.dollyInertia = 0;
 
-        
+
         //------------------------------------------------------------------------------------------------------------------
         // declare the sensor data query function
         //------------------------------------------------------------------------------------------------------------------
@@ -127,7 +127,7 @@
         }
 
         function loadSenor(param) {
-            loadXMLDoc("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
+            var refresh = setInterval(function(){loadXMLDoc("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
                 if (sensor.readyState == 4 && sensor.status == 200) {
                     var data = JSON.parse(sensor.responseText);
                     document.getElementById("info1").innerHTML = "<b>Temperatures: </b>" + data[param].temperatures.$numberDouble;
@@ -138,7 +138,8 @@
                     document.getElementById("info6").innerHTML = "<b>Noise level: </b>" + data[param].NoiseLevel.$numberDouble;
                     document.getElementById("info7").innerHTML = "<b>Last update at: </b>" + data[param].timestamp;
                 }
-            });
+            })}, 5000);
+
         }
 
 
@@ -469,7 +470,6 @@
             lastEntity = null;
             lastColorize = null;
 
-            console.log(objectIds);
             // customize ModelTreeView.js & TreeViewNode.js to add more properties
             if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$5m") { loadSenor(40) }
             else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vK") { loadSenor(41) }
@@ -759,7 +759,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Internal Testing | v0.2021.2.09.1</i>
+                    <i>Internal Testing | v0.2021.2.09.2</i>
                 </div>
 
                 <div class="nav">

@@ -4,6 +4,7 @@
 <body>
 
     <p id="demo1">Loading...</p>
+    <p id="demo2">Loading...</p>
 
     <script>
         var sensor = new XMLHttpRequest();
@@ -26,6 +27,15 @@
         loadSenor(41)
     </script>
 
+    <script>
+        var myVar = setInterval(myTimer(), 1000);
+
+        function myTimer() {
+            var d = new Date();
+            var t = d.toLocaleTimeString();
+            document.getElementById("demo2").innerHTML = t;
+        }
+    </script>
 </body>
 
 </html>
