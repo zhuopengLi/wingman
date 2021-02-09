@@ -70,7 +70,10 @@
             }
         };
 
-
+        function getGeo(url) {
+            geoData.open("GET", url, true);
+            geoData.send();
+        }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
         //create viewer
@@ -132,6 +135,10 @@
                 loadXMLDoc("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
                     if (sensor.readyState == 4 && sensor.status == 200) {
                         var data = JSON.parse(sensor.responseText);
+                        document.getElementById("info1").style.borderLeft = "#03103f solid 0.25em";
+                        document.getElementById("info1").style.margin = "1em 0.25em 0";
+                        document.getElementById("info1").style.paddingLeft = "0.5em";
+
                         document.getElementById("info1").innerHTML = "<b>Name: </b>" + name;
                         document.getElementById("info2").innerHTML = "<b>Temperatures: </b>" + data[param].temperatures.$numberDouble + "°C";
                         document.getElementById("info3").innerHTML = "<b>Moisture: </b>" + data[param].moisture.$numberDouble + "%";
@@ -153,7 +160,7 @@
 
 
         //------------------------------------------------------------------------------------------------------------------
-        // declare the sensor data query function
+        // set up the clock
         //------------------------------------------------------------------------------------------------------------------
 
         var timerInterval = setInterval(function () { timer() }, 1000);
@@ -168,6 +175,47 @@
 
 
         //------------------------------------------------------------------------------------------------------------------
+        // set up the property query function
+        //------------------------------------------------------------------------------------------------------------------
+
+        function clearProperty() {
+            document.getElementById("info1").style.border = "0px"
+            document.getElementById("info1").style.paddingLeft = "0"
+            document.getElementById("info1").style.marginLeft = "0"
+
+            document.getElementById("info1").innerHTML = '<i>Click on objects for more info</i>';
+            document.getElementById("info2").innerHTML = "";
+            document.getElementById("info3").innerHTML = "";
+            document.getElementById("info4").innerHTML = "";
+            document.getElementById("info5").innerHTML = "";
+            document.getElementById("info6").innerHTML = "";
+            document.getElementById("info7").innerHTML = "";
+            document.getElementById("info8").innerHTML = "";
+            document.getElementById("info9").innerHTML = "";
+        }
+
+        function getProperty(param) { //edit metascene.js metaobject.js and metamodel.js
+            document.getElementById("info1").style.borderLeft = "#03103f solid 0.25em";
+            document.getElementById("info1").style.margin = "1em 0.25em 0";
+            document.getElementById("info1").style.paddingLeft = "0.5em";
+
+            document.getElementById("info1").innerHTML = "<b>Address: </b>" + param.address;
+
+            if (param.title !== undefined) {
+                document.getElementById("info2").innerHTML = "<b>Name: </b>" + param.title;
+            } else {
+                document.getElementById("info2").innerHTML = "<b>Name: </b>" + param.name;
+            }
+
+            document.getElementById("info3").innerHTML = "<b>Type: </b>" + param.type;
+            document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + param.date;
+            document.getElementById("info5").innerHTML = "<b>Historic: </b>" + param.historic;
+            document.getElementById("info6").innerHTML = "<b>Base area: </b>" + param.area;
+            document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + param.owner;
+            document.getElementById("info8").innerHTML = "";
+
+        }
+        //------------------------------------------------------------------------------------------------------------------
         // Load models
         //------------------------------------------------------------------------------------------------------------------
 
@@ -176,24 +224,17 @@
 
         var globalModel = [];
 
+        function clearCanvas() {
+            globalModel.forEach(element => element.destroy());
+            globalModel.length = 0;
+            stopRefresh();
+            lastEntity = null;
+            clearProperty();
+        }
+
         document.initAachen = function () {
 
-            if (typeof (globalModel) !== "undefined") {
-                globalModel.forEach(element => element.destroy());
-                globalModel.length = 0;
-                stopRefresh();
-                lastEntity = null;
-                document.getElementById("info1").innerHTML = "";
-                document.getElementById("info2").innerHTML = "";
-                document.getElementById("info3").innerHTML = "";
-                document.getElementById("info4").innerHTML = "";
-                document.getElementById("info5").innerHTML = "";
-                document.getElementById("info6").innerHTML = "";
-                document.getElementById("info7").innerHTML = "";
-                document.getElementById("info8").innerHTML = "";
-                document.getElementById("info9").innerHTML = "";
-
-            }
+            if (globalModel !== "undefined") { clearCanvas() }
 
             globalModel.push(xktLoader.load({
                 id: "Building",
@@ -217,27 +258,13 @@
             }));
 
             //load geo
-            geoData.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            geoData.send();
+            getGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
 
         document.initWaterlock = function () {
 
-            globalModel.forEach(element => element.destroy());
-            globalModel.length = 0
-            stopRefresh();
-            lastEntity = null;
-            document.getElementById("info1").innerHTML = "";
-            document.getElementById("info2").innerHTML = "";
-            document.getElementById("info3").innerHTML = "";
-            document.getElementById("info4").innerHTML = "";
-            document.getElementById("info5").innerHTML = "";
-            document.getElementById("info6").innerHTML = "";
-            document.getElementById("info7").innerHTML = "";
-            document.getElementById("info8").innerHTML = "";
-            document.getElementById("info9").innerHTML = "";
-
+            clearCanvas();
 
             globalModel.push(xktLoader.load({
                 id: "Duplex",
@@ -247,27 +274,13 @@
             }));
 
             //load geo
-            geoData.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            geoData.send();
+            getGeo("https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
 
         document.initSchependomlaan = function () {
 
-            globalModel.forEach(element => element.destroy());
-            globalModel.length = 0;
-            stopRefresh();
-            lastEntity = null;
-            document.getElementById("info1").innerHTML = "";
-            document.getElementById("info2").innerHTML = "";
-            document.getElementById("info3").innerHTML = "";
-            document.getElementById("info4").innerHTML = "";
-            document.getElementById("info5").innerHTML = "";
-            document.getElementById("info6").innerHTML = "";
-            document.getElementById("info7").innerHTML = "";
-            document.getElementById("info8").innerHTML = "";
-            document.getElementById("info9").innerHTML = "";
-
+            clearCanvas();
 
             globalModel.push(xktLoader.load({
                 id: "Schependomlaan",
@@ -277,27 +290,13 @@
             }));
 
             //load geo
-            geoData.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            geoData.send();
+            getGeo("https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
 
-        document.initWestRiversideHospital = function () {
+        document.initHospital = function () {
 
-            globalModel.forEach(element => element.destroy());
-            globalModel.length = 0;
-            stopRefresh();
-            lastEntity = null;
-            document.getElementById("info1").innerHTML = "";
-            document.getElementById("info2").innerHTML = "";
-            document.getElementById("info3").innerHTML = "";
-            document.getElementById("info4").innerHTML = "";
-            document.getElementById("info5").innerHTML = "";
-            document.getElementById("info6").innerHTML = "";
-            document.getElementById("info7").innerHTML = "";
-            document.getElementById("info8").innerHTML = "";
-            document.getElementById("info9").innerHTML = "";
-
+            clearCanvas();
 
             globalModel.push(xktLoader.load({
                 id: "WestRiversideHospital",
@@ -350,8 +349,7 @@
             }));
 
             //load geo
-            geoData.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            geoData.send();
+            getGeo("https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
 
@@ -411,11 +409,25 @@
                         doAction: function (context) {
                             if (lastEntity !== null) {
                                 lastEntity.colorize = lastColorize;
+                                lastEntity = null;
+                                lastColorize = null;
+                                stopRefresh();
                             }
-                            stopRefresh();
-                            lastEntity = null;
-                            lastColorize = null;
-                            const scene = context.viewer.scene;
+
+
+                            var entity = context.treeViewNode;
+                            const viewer = context.viewer;
+                            const scene = viewer.scene;
+                            const metaObject = viewer.metaScene.metaObjects[entity.objectId];
+
+                            if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
+                            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
+                            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
+                            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
+                            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
+                            else { getProperty(metaObject) }
+
+
                             scene.setObjectsVisible(scene.objectIds, true);
                             scene.setObjectsXRayed(scene.objectIds, true);
                             scene.setObjectsSelected(scene.selectedObjectIds, false);
@@ -437,15 +449,7 @@
                         },
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
-                            document.getElementById("info1").innerHTML = "";
-                            document.getElementById("info2").innerHTML = "";
-                            document.getElementById("info3").innerHTML = "";
-                            document.getElementById("info4").innerHTML = "";
-                            document.getElementById("info5").innerHTML = "";
-                            document.getElementById("info6").innerHTML = "";
-                            document.getElementById("info7").innerHTML = "";
-                            document.getElementById("info8").innerHTML = "";
-                            document.getElementById("info9").innerHTML = "";
+                            clearProperty();
                         }
                     }
                 ]
@@ -500,24 +504,19 @@
             lastEntity = null;
             lastColorize = null;
 
-            // customize ModelTreeView.js & TreeViewNode.js to add more properties
-            if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, e.treeViewNode.title) }
-            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, e.treeViewNode.title) }
-            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, e.treeViewNode.title) }
-            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, e.treeViewNode.title) }
-            else if (objectIds[0] == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, e.treeViewNode.title) } else {
-                document.getElementById("info1").innerHTML = "<b>Address: </b>" + e.treeViewNode.address;
-                document.getElementById("info2").innerHTML = "<b>Name: </b>" + e.treeViewNode.title;
-                document.getElementById("info3").innerHTML = "<b>Type: </b>" + e.treeViewNode.type;
-                document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + e.treeViewNode.date;
-                document.getElementById("info5").innerHTML = "<b>Historic: </b>" + e.treeViewNode.historic;
-                document.getElementById("info6").innerHTML = "<b>Base area: </b>" + e.treeViewNode.area;
-                document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + e.treeViewNode.owner;
-            }
+            const metaObject = e.viewer.metaScene.metaObjects[objectIds[0]];
+
+            if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
+            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
+            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
+            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
+            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
+            else { getProperty(metaObject) }
 
 
         });
 
+        
         //------------------------------------------------------------------------------------------------------------------
         // Create two ContextMenus - one for right-click on empty space, the other for right-click on an Entity
         //------------------------------------------------------------------------------------------------------------------
@@ -608,15 +607,25 @@
                     {
                         title: "X-Ray Others",
                         doAction: function (context) {
-                            lastEntity.colorize = lastColorize;
-                            stopRefresh();
-                            lastEntity = null;
-                            lastColorize = null;
+                            if (lastEntity !== null) {
+                                lastEntity.colorize = lastColorize;
+                                lastEntity = null;
+                                lastColorize = null;
+                                stopRefresh();
+                            }
 
                             const viewer = context.viewer;
                             const scene = viewer.scene;
                             const entity = context.entity;
                             const metaObject = viewer.metaScene.metaObjects[entity.id];
+
+                            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
+                            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
+                            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
+                            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
+                            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
+                            else { getProperty(metaObject) }
+
                             if (!metaObject) {
                                 return;
                             }
@@ -639,15 +648,7 @@
                         },
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
-                            document.getElementById("info1").innerHTML = "";
-                            document.getElementById("info2").innerHTML = "";
-                            document.getElementById("info3").innerHTML = "";
-                            document.getElementById("info4").innerHTML = "";
-                            document.getElementById("info5").innerHTML = "";
-                            document.getElementById("info6").innerHTML = "";
-                            document.getElementById("info7").innerHTML = "";
-                            document.getElementById("info8").innerHTML = "";
-                            document.getElementById("info9").innerHTML = "";
+                            clearProperty();
                         }
                     }
                 ]
@@ -696,19 +697,13 @@
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh();
+
             if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
             else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
             else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
             else if (entity.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) } else {
-                document.getElementById("info1").innerHTML = "<b>Address: </b>" + metaObject.address;
-                document.getElementById("info2").innerHTML = "<b>Name: </b>" + metaObject.name;
-                document.getElementById("info3").innerHTML = "<b>Type: </b>" + metaObject.type;
-                document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + metaObject.date;
-                document.getElementById("info5").innerHTML = "<b>Historic: </b>" + metaObject.historic;
-                document.getElementById("info6").innerHTML = "<b>Base area: </b>" + metaObject.area;
-                document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + metaObject.owner;
-            }
+            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
+            else { getProperty(metaObject) }
 
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -726,15 +721,7 @@
                 stopRefresh();
                 lastEntity = null;
                 pickResult.entity.colorize = lastColorize;
-                document.getElementById("info1").innerHTML = ""; //edit metascene.js metaobject.js and metamodel.js
-                document.getElementById("info2").innerHTML = "";
-                document.getElementById("info3").innerHTML = "";
-                document.getElementById("info4").innerHTML = "";
-                document.getElementById("info5").innerHTML = "";
-                document.getElementById("info6").innerHTML = "";
-                document.getElementById("info7").innerHTML = "";
-                document.getElementById("info8").innerHTML = "";
-                document.getElementById("info9").innerHTML = "";
+                clearProperty();
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
 
             }
@@ -791,7 +778,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.1</i>
+                    <i>Alpha Testing | v0.9.2</i>
                 </div>
 
                 <div class="nav">
@@ -805,7 +792,7 @@
                                 <option value="Schependomlaan" onclick="document.initSchependomlaan()">
                                     Schependomlaan
                                 </option>
-                                <option value="West riverside hospital" onclick="document.initWestRiversideHospital()">
+                                <option value="West riverside hospital" onclick="document.initHospital()">
                                     West riverside hospital</option>
                             </select></p>
                     </div>
@@ -879,8 +866,8 @@
         <!--buttom-->
         <div class="buttomcontainer">
             <i>Copyright</i>
-            <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
             <img src="..\images\Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
+            <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
             <img src="..\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
             <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP">
             <img src="..\images\itnrw_logo.png" width="8%" alt="IT NRW">

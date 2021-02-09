@@ -33,7 +33,7 @@ div.header {
 }
 
 div.header.title {
-    margin-bottom: 1em;
+    margin-bottom: 2em;
 }
 
 div.header.title h1 {
@@ -144,7 +144,7 @@ div.layer {
 }
 
 div.layer h2 {
-    padding: 0.5em 1em 0;
+    padding: 1.5em 1em 0;
     margin: 0;
     color: #03103f;
     display: inline;
@@ -176,13 +176,13 @@ div.info {
 
 div.info h2 {
     margin: 0;
-    padding: 0.5em 1em 0;
+    padding: 1.5em 1em 0;
     color: #03103f;
 }
 
-.info ul{
-    margin:0 0 0 2em;
-    padding:0;
+.info ul {
+    margin: 0 0 0 2em;
+    padding: 0;
 }
 
 .info li {
@@ -192,6 +192,11 @@ div.info h2 {
     font-size: 15px;
     border-left: #03103f 0.25em solid;
     list-style-type: none;
+}
+
+.info li i {
+    color: #03103f63;
+    font-size: 14pt;
 }
 
 /* ----------------------------------------------------------------------------------------------------------*/
@@ -210,7 +215,7 @@ div.buttomcontainer {
     background-color: #03103f;
     height: 50px;
     min-height: 50px;
-    order:3;
+    order: 3;
     margin-top: auto;
 }
 
