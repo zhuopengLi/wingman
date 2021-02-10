@@ -61,6 +61,7 @@
 
 
         var geoData = new XMLHttpRequest();
+        var globalGeoRefresh;
 
         function loadGeoData(url, cfunc) {
             geoData.onreadystatechange = cfunc;
@@ -69,19 +70,31 @@
         }
 
         function loadGeo(url) {
-            var geoRefresh = setInterval(function () {
+            var localGeoRefresh = setInterval(function () {
                 loadGeoData(url, function () {
                     if (geoData.readyState == 4 && geoData.status == 200) {
                         var weather = JSON.parse(geoData.responseText);
-                        document.getElementById("location").innerHTML =
-                            "Location: " + weather.coord.lat.toFixed(2) + ", " + weather.coord.lon.toFixed(2) + ", " + weather.name + ", " + weather.sys.country;
+                        if (weather.coord.lon.toFixed(2) > 0) {
+                            document.getElementById("location").innerHTML =
+                                "Location: " + weather.coord.lat.toFixed(2) + "N, " + weather.coord.lon.toFixed(2) + "E, " + weather.name + ", " + weather.sys.country;
+                        }
+                        else if ((weather.coord.lon.toFixed(2) < 0)) {
+                            document.getElementById("location").innerHTML =
+                                "Location: " + weather.coord.lat.toFixed(2) + "N, " + Math.abs(weather.coord.lon.toFixed(2)) + "W, " + weather.name + ", " + weather.sys.country;
+                        }
                         document.getElementById("weather").innerHTML =
-                            "Weather: " + weather.weather[0].main + ", " + (weather.main.feels_like - 273.15).toFixed(2) + "°C ";
+                            "Weather: " + weather.weather[0].main + ", " + (weather.main.temp - 273.15).toFixed(2) + "°C ";
                     }
                 })
             }, 5000)
+            
+            globalGeoRefresh = localGeoRefresh;
+
         }
 
+        function stopGeoRefresh() {
+            clearInterval(globalGeoRefresh);
+        }
 
         //------------------------------------------------------------------------------------------------------------------
         // set up the clock
@@ -239,13 +252,16 @@
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0;
             stopRefresh();
+            stopGeoRefresh();
             lastEntity = null;
             clearProperty();
+            document.getElementById("location").innerHTML = "Loading geo data...";
+            document.getElementById("weather").innerHTML = "";
         }
 
         document.initAachen = function () {
 
-            if (globalModel !== "undefined") { clearCanvas() }
+            if (globalModel != undefined) { clearCanvas() }
 
             globalModel.push(xktLoader.load({
                 id: "Building",
@@ -415,14 +431,6 @@
                     {
                         title: "X-Ray Others",
                         doAction: function (context) {
-                            if (lastEntity !== null) {
-                                lastEntity.colorize = lastColorize;
-                                lastEntity = null;
-                                lastColorize = null;
-                                stopRefresh();
-                            }
-
-
                             var entity = context.treeViewNode;
                             const viewer = context.viewer;
                             const scene = viewer.scene;
@@ -435,6 +443,22 @@
                             else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
                             else { getProperty(metaObject) }
 
+                            if (lastEntity != null) {
+                                lastEntity.colorize = lastColorize;
+                                lastEntity = null;
+                                lastColorize = null;
+                                stopRefresh();
+                            }
+                            if (context.entity != undefined) {
+                                lastEntity = context.entity;
+                                lastColorize = context.entity.colorize.slice();
+                                context.entity.colorize = [1, 130 / 255, 0];
+                            }
+                            context.viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                aabb: scene.getAABB(entity.objectId),
+                                duration: 0.5
+                            });
 
                             scene.setObjectsVisible(scene.objectIds, true);
                             scene.setObjectsXRayed(scene.objectIds, true);
@@ -458,6 +482,10 @@
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
                             clearProperty();
+                            lastEntity.colorize = lastColorize;
+                            lastEntity = null;
+                            lastColorize = null;
+
                         }
                     }
                 ]
@@ -482,6 +510,7 @@
 
         treeView.on("nodeTitleClicked", (e) => {
             const scene = viewer.scene;
+            const entity = e.viewer.scene.objects[e.treeViewNode.objectId];
             const objectIds = [];
 
             e.treeViewPlugin.withNodeTree(e.treeViewNode, (treeViewNode) => {
@@ -491,6 +520,8 @@
 
             });
             e.treeViewPlugin.unShowNode();
+
+            const metaObject = e.viewer.metaScene.metaObjects[objectIds[0]];
 
             scene.setObjectsXRayed(scene.objectIds, true);
             scene.setObjectsVisible(scene.objectIds, true);
@@ -505,14 +536,19 @@
                 }, 500);
             });
 
-            if (lastEntity !== null) {
-                lastEntity.colorize = lastColorize;
-            }
-            stopRefresh();
-            lastEntity = null;
-            lastColorize = null;
 
-            const metaObject = e.viewer.metaScene.metaObjects[objectIds[0]];
+            if (lastEntity != null) {
+                lastEntity.colorize = lastColorize;
+                lastEntity = null;
+                lastColorize = null;
+                stopRefresh();
+            }
+            if (entity != undefined) {
+                lastEntity = entity;
+                lastColorize = entity.colorize.slice();
+                entity.colorize = [1, 130 / 255, 0];
+            }
+
 
             if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
             else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
@@ -615,16 +651,10 @@
                     {
                         title: "X-Ray Others",
                         doAction: function (context) {
-                            if (lastEntity !== null) {
-                                lastEntity.colorize = lastColorize;
-                                lastEntity = null;
-                                lastColorize = null;
-                                stopRefresh();
-                            }
 
+                            const entity = context.entity;
                             const viewer = context.viewer;
                             const scene = viewer.scene;
-                            const entity = context.entity;
                             const metaObject = viewer.metaScene.metaObjects[entity.id];
 
                             if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
@@ -637,6 +667,24 @@
                             if (!metaObject) {
                                 return;
                             }
+
+                            if (lastEntity != null) {
+                                lastEntity.colorize = lastColorize;
+                                lastEntity = null;
+                                lastColorize = null;
+                                stopRefresh();
+                            }
+                            if (entity != undefined) {
+                                lastEntity = entity;
+                                lastColorize = entity.colorize.slice();
+                                entity.colorize = [1, 130 / 255, 0];
+                            }
+
+                            viewer.cameraFlight.flyTo({
+                                aabb: entity.aabb,
+                                duration: 0.5
+                            });
+
                             scene.setObjectsVisible(scene.objectIds, true);
                             scene.setObjectsXRayed(scene.objectIds, true);
                             scene.setObjectsSelected(scene.selectedObjectIds, false);
@@ -657,6 +705,10 @@
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
                             clearProperty();
+                            lastEntity.colorize = lastColorize;
+                            lastEntity = null;
+                            lastColorize = null;
+
                         }
                     }
                 ]
@@ -786,7 +838,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.3</i>
+                    <i>Alpha Testing | v0.9.3.1</i>
                 </div>
 
                 <div class="nav">
