@@ -74,11 +74,11 @@
                 loadGeoData(url, function () {
                     if (geoData.readyState == 4 && geoData.status == 200) {
                         var weather = JSON.parse(geoData.responseText);
-                        if (weather.coord.lon.toFixed(2) > 0) {
+                        if (weather.coord.lon > 0) {
                             document.getElementById("location").innerHTML =
                                 "Location: " + weather.coord.lat.toFixed(2) + "N, " + weather.coord.lon.toFixed(2) + "E, " + weather.name + ", " + weather.sys.country;
                         }
-                        else if ((weather.coord.lon.toFixed(2) < 0)) {
+                        else if ((weather.coord.lon < 0)) {
                             document.getElementById("location").innerHTML =
                                 "Location: " + weather.coord.lat.toFixed(2) + "N, " + Math.abs(weather.coord.lon.toFixed(2)) + "W, " + weather.name + ", " + weather.sys.country;
                         }
@@ -87,7 +87,7 @@
                     }
                 })
             }, 5000)
-            
+
             globalGeoRefresh = localGeoRefresh;
 
         }
@@ -113,9 +113,9 @@
 
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        //
         //create viewer
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        //
         //------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -154,9 +154,103 @@
         viewer.cameraControl.rotationInertia = 0;
         viewer.cameraControl.dollyInertia = 0;
 
+        //------------------------------------------------------------------------------------------------------------------
+        // declare the info query list
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        const buildingPro = [
+            "Address: ",
+            "Name: ",
+            "Type: ",
+            "Date of built: ",
+            "Historic building: ",
+            "Base area: ",
+            "Owner of the premises: "
+        ];
+
+        const buildingProJSON = [
+            "address",
+            "name",
+            "type",
+            "date",
+            "historic",
+            "area",
+            "owner"
+        ]
+
+        const pipePro = [
+            "Type: ",
+            "Depth: ",
+            "Diameter: ",
+            "Owner: "
+        ];
+
+        const pipeProJSON = [
+            "type",
+            "depth",
+            "diameter",
+            "owner"
+        ]
+
+        const treePro = [
+            "Type: ",
+            "Diameter at breast height: ",
+            "Height: ",
+            "Age: "
+        ];
+
+        const treeProJSON = [
+            "type",
+            "diameter",
+            "height",
+            "age"
+        ]
+
+        const roadPro = [
+            "Name: ",
+            "Type: ",
+            "Width: "
+        ];
+
+        const roadProJSON = [
+            "name",
+            "type",
+            "width"
+        ]
+
+        const sensorPro = [
+            "Temperature: ",
+            "Moisture: ",
+            "Windspeed: ",
+            "Wind-direction: ",
+            "Ozone: ",
+            "Noise level: ",
+            "Last update at: "
+        ];
+
+        const sensorProJSON = [
+            "temperatures",
+            "moisture",
+            "windspeed",
+            "winddirection",
+            "ozone",
+            "NoiseLevel",
+            "timestamp"
+        ]
+
+        const sensorProUnit = [
+            "°C",
+            "%",
+            "m/s",
+            "°",
+            "µg/m³",
+            "dB",
+            " (CET)"
+        ]
 
         //------------------------------------------------------------------------------------------------------------------
-        // declare the sensor data query function
+        // declare sensor data query function
         //------------------------------------------------------------------------------------------------------------------
 
 
@@ -169,23 +263,41 @@
             sensor.send();
         }
 
-        function loadSensor(param, name) {
+
+        //------------------------------------------------------------------------------------------------------------------
+        // declare the property query functions
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        function clearProperty() {
+            document.getElementById("info").style.margin = "1em";
+            document.getElementById("info").style.fontSize = "14pt";
+            document.getElementById("info").style.color = "#03103f63";
+            document.getElementById("info").innerHTML = '<i>Click on objects for more info</i>';
+        }
+
+        function stopRefresh() {
+            clearInterval(globalRefresh);
+        }
+
+        function getSensorPro(param, name) {
+            document.getElementById("info").style.margin = "1em 1.2em 0";
+            document.getElementById("info").innerHTML = "Loading sensor data...";
+
             var localRefresh = setInterval(function () {
                 loadSensorData("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
                     if (sensor.readyState == 4 && sensor.status == 200) {
-                        var data = JSON.parse(sensor.responseText);
-                        document.getElementById("info1").style.borderLeft = "#03103f solid 0.25em";
-                        document.getElementById("info1").style.margin = "1em 0.25em 0";
-                        document.getElementById("info1").style.paddingLeft = "0.5em";
+                        document.getElementById("info").style.margin = "0";
 
-                        document.getElementById("info1").innerHTML = "<b>Name: </b>" + name;
-                        document.getElementById("info2").innerHTML = "<b>Temperatures: </b>" + data[param].temperatures.$numberDouble + "°C";
-                        document.getElementById("info3").innerHTML = "<b>Moisture: </b>" + data[param].moisture.$numberDouble + "%";
-                        document.getElementById("info4").innerHTML = "<b>Windspeed: </b>" + data[param].windspeed.$numberDouble + "m/s";
-                        document.getElementById("info5").innerHTML = "<b>Winddirection: </b>" + data[param].winddirection.$numberDouble + "°";
-                        document.getElementById("info6").innerHTML = "<b>Ozone: </b>" + data[param].ozone.$numberDouble + "µg/m³";
-                        document.getElementById("info7").innerHTML = "<b>Noise level: </b>" + data[param].NoiseLevel.$numberDouble + "dB";
-                        document.getElementById("info8").innerHTML = "<b>Last update at: </b>" + data[param].timestamp + " (CET)";
+                        var data = JSON.parse(sensor.responseText);
+
+                        var info = "<ul>" + "<li>" + "<b>Name: </b>" + name + "</li>";
+                        for (let i = 0; i < sensorPro.length - 1; i++) {
+                            info += "<li>" + "<b>" + sensorPro[i] + "</b>" + data[param][sensorProJSON[i]].$numberDouble + sensorProUnit[i] + "</li>";
+                        }
+                        info += "<li>" + "<b>Last update at: </b>" + data[param][sensorProJSON[6]] + sensorProUnit[6] + "</li>" + "</ul>";
+                        document.getElementById("info").innerHTML = info
+
                     }
                 })
             }, 5000);
@@ -193,49 +305,24 @@
             globalRefresh = localRefresh;
         }
 
-        function stopRefresh() {
-            clearInterval(globalRefresh);
-        }
+        function getBuildingPro(param) { //edit metascene.js metaobject.js and metamodel.js
+            document.getElementById("info").style.margin = "0";
 
-
-        //------------------------------------------------------------------------------------------------------------------
-        // set up the property query function
-        //------------------------------------------------------------------------------------------------------------------
-
-        function clearProperty() {
-            document.getElementById("info1").style.border = "0px"
-            document.getElementById("info1").style.paddingLeft = "0"
-            document.getElementById("info1").style.marginLeft = "0"
-
-            document.getElementById("info1").innerHTML = '<i>Click on objects for more info</i>';
-            document.getElementById("info2").innerHTML = "";
-            document.getElementById("info3").innerHTML = "";
-            document.getElementById("info4").innerHTML = "";
-            document.getElementById("info5").innerHTML = "";
-            document.getElementById("info6").innerHTML = "";
-            document.getElementById("info7").innerHTML = "";
-            document.getElementById("info8").innerHTML = "";
-            document.getElementById("info9").innerHTML = "";
-        }
-
-        function getProperty(param) { //edit metascene.js metaobject.js and metamodel.js
-            document.getElementById("info1").style.borderLeft = "#03103f solid 0.25em";
-            document.getElementById("info1").style.margin = "1em 0.25em 0";
-            document.getElementById("info1").style.paddingLeft = "0.5em";
-
-            document.getElementById("info1").innerHTML = "<b>Address: </b>" + param.address;
-            if (param.title !== undefined) {
-                document.getElementById("info2").innerHTML = "<b>Name: </b>" + param.title;
-            } else {
-                document.getElementById("info2").innerHTML = "<b>Name: </b>" + param.name;
+            var info = "<ul>"
+            for (let i = 0; i < buildingPro.length; i++) {
+                info += "<li>" + "<b>" + buildingPro[i] + "</b>" + param[buildingProJSON[i]] + "</li>";
             }
-            document.getElementById("info3").innerHTML = "<b>Type: </b>" + param.type;
-            document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + param.date;
-            document.getElementById("info5").innerHTML = "<b>Historic: </b>" + param.historic;
-            document.getElementById("info6").innerHTML = "<b>Base area: </b>" + param.area;
-            document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + param.owner;
-            document.getElementById("info8").innerHTML = "";
+            info += "</ul>";
+            document.getElementById("info").innerHTML = info
+        }
 
+        function getInfo(param) {
+            if (param.id == "3rFeaDCe58Ph8ptbjJL$5m") { getSensorPro(40, param.name) }
+            else if (param.id == "3rFeaDCe58Ph8ptbjJL$vK") { getSensorPro(41, param.name) }
+            else if (param.id == "3rFeaDCe58Ph8ptbjJL$vQ") { getSensorPro(42, param.name) }
+            else if (param.id == "3rFeaDCe58Ph8ptbjJL$v1") { getSensorPro(43, param.name) }
+            else if (param.id == "3rFeaDCe58Ph8ptbjJL$vo") { getSensorPro(44, param.name) }
+            else { getBuildingPro(param) }
         }
 
 
@@ -259,26 +346,24 @@
             document.getElementById("weather").innerHTML = "";
         }
 
+        //----------------------------------------------------------------------------------------------------------------------
         document.initAachen = function () {
 
             if (globalModel != undefined) { clearCanvas() }
 
             globalModel.push(xktLoader.load({
-                id: "Building",
                 src: "../app/data/projects/Aachen/models/Building/building.xkt",
                 metaModelSrc: "../app/data/projects/Aachen/models/Building/building.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "Pipes",
                 src: "../app/data/projects/Aachen/models/Pipes/pipes.xkt",
                 metaModelSrc: "../app/data/projects/Aachen/models/Pipes/pipes.json",
                 edges: true,
             }));
 
             globalModel.push(xktLoader.load({
-                id: "Terrain_and_traffic",
                 src: "../app/data/projects/Aachen/models/terrain/terrain.xkt",
                 metaModelSrc: "../app/data/projects/Aachen/models/terrain/terrain.json",
                 edges: true,
@@ -288,12 +373,12 @@
 
         }
 
+        //----------------------------------------------------------------------------------------------------------------------
         document.initWaterlock = function () {
 
             clearCanvas();
 
             globalModel.push(xktLoader.load({
-                id: "Duplex",
                 src: "../app/data/projects/WaterLock/models/design/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WaterLock/models/design/metadata.json",
                 edges: true
@@ -303,12 +388,12 @@
 
         }
 
+        //----------------------------------------------------------------------------------------------------------------------
         document.initSchependomlaan = function () {
 
             clearCanvas();
 
             globalModel.push(xktLoader.load({
-                id: "Schependomlaan",
                 src: "../app/data/projects/Schependomlaan/models/design/geometry.xkt",
                 metaModelSrc: "../app/data/projects/Schependomlaan/models/design/metadata.json",
                 edges: true
@@ -318,47 +403,42 @@
 
         }
 
+        //----------------------------------------------------------------------------------------------------------------------
         document.initHospital = function () {
 
             clearCanvas();
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/architectural/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/architectural/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/electrical/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/electrical/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/fireAlarms/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/fireAlarms/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/mechanical/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/mechanical/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/plumbing/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/plumbing/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/sprinklers/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/sprinklers/metadata.json",
                 edges: true
@@ -366,7 +446,6 @@
 
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/structure/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/structure/metadata.json",
                 edges: true
@@ -436,12 +515,7 @@
                             const scene = viewer.scene;
                             const metaObject = viewer.metaScene.metaObjects[entity.objectId];
 
-                            if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
-                            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
-                            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
-                            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
-                            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
-                            else { getProperty(metaObject) }
+                            getInfo(metaObject);
 
                             if (lastEntity != null) {
                                 lastEntity.colorize = lastColorize;
@@ -549,14 +623,7 @@
                 entity.colorize = [1, 130 / 255, 0];
             }
 
-
-            if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
-            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
-            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
-            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
-            else if (metaObject.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
-            else { getProperty(metaObject) }
-
+            getInfo(metaObject);
 
         });
 
@@ -657,12 +724,7 @@
                             const scene = viewer.scene;
                             const metaObject = viewer.metaScene.metaObjects[entity.id];
 
-                            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
-                            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
-                            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
-                            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
-                            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
-                            else { getProperty(metaObject) }
+                            getInfo(metaObject);
 
                             if (!metaObject) {
                                 return;
@@ -758,13 +820,7 @@
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh();
 
-            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m") { loadSensor(40, metaObject.name) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vK") { loadSensor(41, metaObject.name) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vQ") { loadSensor(42, metaObject.name) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$v1") { loadSensor(43, metaObject.name) }
-            else if (entity.id == "3rFeaDCe58Ph8ptbjJL$vo") { loadSensor(44, metaObject.name) }
-            else { getProperty(metaObject) }
-
+            getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
                 if (lastEntity) {
@@ -838,7 +894,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.3.1</i>
+                    <i>Alpha Testing | v0.9.3.2</i>
                 </div>
 
                 <div class="nav">
@@ -905,18 +961,7 @@
 
             <div class="info">
                 <h2>Information</h2>
-                <ul>
-                    <li id="info1"></li>
-                    <li id="info2"></li>
-                    <li id="info3"></li>
-                    <li id="info4"></li>
-                    <li id="info5"></li>
-                    <li id="info6"></li>
-                    <li id="info7"></li>
-                    <li id="info8"></li>
-                    <li id="info9"></li>
-
-                </ul>
+                <p id="info"></p>
             </div>
         </div>
 

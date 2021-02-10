@@ -191,12 +191,14 @@ div.info h2 {
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
     border-left: #03103f 0.25em solid;
+    color: #03103f;
     list-style-type: none;
 }
 
 .info li i {
     color: #03103f63;
     font-size: 14pt;
+    
 }
 
 /* ----------------------------------------------------------------------------------------------------------*/
