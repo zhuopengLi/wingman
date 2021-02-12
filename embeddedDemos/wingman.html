@@ -49,7 +49,7 @@
 
 </head>
 
-<body onload="document.initAachen()">
+<body onload="document.initAachenEarly()">
 
 
     <script type="module">
@@ -317,11 +317,14 @@
         }
 
         function getInfo(param) {
-            if (param.id == "3rFeaDCe58Ph8ptbjJL$5m") { getSensorPro(40, param.name) }
-            else if (param.id == "3rFeaDCe58Ph8ptbjJL$vK") { getSensorPro(41, param.name) }
-            else if (param.id == "3rFeaDCe58Ph8ptbjJL$vQ") { getSensorPro(42, param.name) }
-            else if (param.id == "3rFeaDCe58Ph8ptbjJL$v1") { getSensorPro(43, param.name) }
-            else if (param.id == "3rFeaDCe58Ph8ptbjJL$vo") { getSensorPro(44, param.name) }
+            const id = param.id;
+            const name = param.name;
+
+            if (id == "3rFeaDCe58Ph8ptbjJL$5m") { getSensorPro(30, name) }
+            else if (id == "3rFeaDCe58Ph8ptbjJL$vK") { getSensorPro(29, name) }
+            else if (id == "3rFeaDCe58Ph8ptbjJL$vQ") { getSensorPro(36, name) }
+            else if (id == "3rFeaDCe58Ph8ptbjJL$v1") { getSensorPro(32, name) }
+            else if (id == "3rFeaDCe58Ph8ptbjJL$vo") { getSensorPro(9, name) }
             else { getBuildingPro(param) }
         }
 
@@ -346,10 +349,47 @@
             document.getElementById("weather").innerHTML = "";
         }
 
-        //----------------------------------------------------------------------------------------------------------------------
-        document.initAachen = function () {
+        function enable(i, value) {
+            document.getElementsByTagName("button")[i].setAttribute("onclick", value)
+            document.getElementsByTagName("button")[i].removeAttribute("disabled")
+            document.getElementsByTagName("button")[i].style.backgroundColor = "white";
+            document.getElementsByTagName("button")[i].style.fontStyle = "normal";
 
-            if (globalModel != undefined) { clearCanvas() }
+        }
+
+        function disable(i) {
+            document.getElementsByTagName("button")[i].setAttribute("disabled", "disabled")
+            document.getElementsByTagName("button")[i].removeAttribute("onclick")
+            document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(161, 161, 161)";
+            document.getElementsByTagName("button")[i].style.fontStyle = "normal";
+
+        }
+
+        function select(i, value) {
+            document.getElementsByTagName("button")[i].setAttribute("disabled", "disabled")
+            document.getElementsByTagName("button")[i].removeAttribute("onclick")
+            document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(220,180,50)";
+            document.getElementsByTagName("button")[i].style.fontStyle = "italic";
+
+        }
+
+        function restoreCamera(i) {
+            globalModel[i].on("loaded", () => {
+                viewer.cameraFlight.flyTo({
+                    projection: "perspective",
+                    aabb: viewer.scene.getAABB({}),
+                    duration: 0
+                });
+            });
+        }
+        //----------------------------------------------------------------------------------------------------------------------
+        document.initAachenEarly = function () {
+
+            select(0);
+            enable(1, "document.initAachenMid()");
+            enable(2, "document.initAachenEnd()");
+
+            if (globalModel != undefined) { clearCanvas(); }
 
             globalModel.push(xktLoader.load({
                 src: "../app/data/projects/Aachen/models/Building/building.xkt",
@@ -357,17 +397,55 @@
                 edges: true
             }));
 
-            globalModel.push(xktLoader.load({
-                src: "../app/data/projects/Aachen/models/Pipes/pipes.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/Pipes/pipes.json",
-                edges: true,
-            }));
+            globalModel[0].on("loaded", () => {
+                globalModel.push(xktLoader.load({
+                    src: "../app/data/projects/Aachen/models/Pipes/pipes.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/models/Pipes/pipes.json",
+                    edges: true,
+                }));
 
-            globalModel.push(xktLoader.load({
-                src: "../app/data/projects/Aachen/models/terrain/terrain.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/terrain/terrain.json",
-                edges: true,
-            }));
+                globalModel[1].on("loaded", () => {
+                    globalModel.push(xktLoader.load({
+                        src: "../app/data/projects/Aachen/models/terrain/terrain.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/models/terrain/terrain.json",
+                        edges: true,
+                    }));
+
+                    globalModel[2].on("loaded", () => {
+                        viewer.cameraFlight.flyTo({
+                            projection: "perspective",
+                            eye: [25, 150, 75],
+                            look: [0, 5, 0],
+                            up: [-0.01, 0.99, 0.039],
+                            duration: 0
+                        });
+                    });
+                });
+            });
+
+            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
+
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------
+        document.initAachenMid = function () {
+            select(1);
+            enable(0, "document.initAachenEarly()");
+            enable(2, "document.initAachenEnd()");
+
+            clearCanvas()
+
+            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
+
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------
+        document.initAachenEnd = function () {
+            select(2);
+            enable(0, "document.initAachenEarly()");
+            enable(1, "document.initAachenMid()");
+
+            clearCanvas()
 
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
 
@@ -375,6 +453,10 @@
 
         //----------------------------------------------------------------------------------------------------------------------
         document.initWaterlock = function () {
+
+            select(1);
+            disable(0);
+            disable(2);
 
             clearCanvas();
 
@@ -386,10 +468,16 @@
 
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8");
 
+            restoreCamera(0);
+
         }
 
         //----------------------------------------------------------------------------------------------------------------------
         document.initSchependomlaan = function () {
+
+            select(2);
+            disable(0);
+            disable(1);
 
             clearCanvas();
 
@@ -399,12 +487,19 @@
                 edges: true
             }));
 
+            restoreCamera(0);
+
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
 
+
         //----------------------------------------------------------------------------------------------------------------------
         document.initHospital = function () {
+
+            select(2);
+            disable(0);
+            disable(1);
 
             clearCanvas();
 
@@ -450,6 +545,8 @@
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/structure/metadata.json",
                 edges: true
             }));
+
+            restoreCamera(6);
 
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8");
 
@@ -894,7 +991,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.3.3</i>
+                    <i>Alpha Testing | v0.9.3.4</i>
                 </div>
 
                 <div class="nav">
@@ -903,7 +1000,7 @@
                     <div class="nav project">
                         <br />
                         <p>Project: <select>
-                                <option value="Aachen" onclick="document.initAachen()" selected>Aachen</option>
+                                <option value="Aachen" onclick="document.initAachenEarly()" selected>Aachen</option>
                                 <option value="Waterlock" onclick="document.initWaterlock()">Waterlock</option>
                                 <option value="Schependomlaan" onclick="document.initSchependomlaan()">
                                     Schependomlaan
@@ -917,9 +1014,9 @@
                     <div class="nav phase">
 
                         Phase: &nbsp;
-                        <button type="button">Early-term</button>
-                        <button type="button">Mid-term</button>
-                        <button type="button">End-term</button>
+                        <button onclick="">Early-term</button>
+                        <button onclick="">Mid-term</button>
+                        <button onclick="">End-term</button>
 
                     </div>
 
