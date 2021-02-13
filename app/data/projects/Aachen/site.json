@@ -1,0 +1,70 @@
+{
+  "id": "Projektnummer",
+  "projectId": "2clzl$UuzDAAuy3WDv$TNv",
+  "author": "",
+  "createdAt": "2021-02-12T16:33:17",
+  "schema": "IFC2X3",
+  "creatingApplication": "20170223_1515(x64) - Exporter 18.0.0.420 - Alternate UI 18.0.0.420",
+  "metaObjects": [
+    {
+      "id": "2clzl$UuzDAAuy3WDv$TNv",
+      "name": "Projektnummer",
+      "type": "IfcProject",
+      "parent": null
+    },
+    {
+      "id": "2clzl$UuzDAAuy3WDv$TNx",
+      "name": "Default",
+      "type": "IfcSite",
+      "parent": "2clzl$UuzDAAuy3WDv$TNv"
+    },
+    {
+      "id": "2clzl$UuzDAAuy3WDv$TNu",
+      "name": "",
+      "type": "IfcBuilding",
+      "parent": "2clzl$UuzDAAuy3WDv$TNx"
+    },
+    {
+      "id": "2clzl$UuzDAAuy3WE60Xa6",
+      "name": "Ebene 1",
+      "type": "IfcBuildingStorey",
+      "parent": "2clzl$UuzDAAuy3WDv$TNu"
+    },
+    {
+      "id": "0RcD6OWIT3aeDtzYT9g_DH",
+      "name": "Körper 32:Körper 32:489736",
+      "type": "IfcBuildingElementProxy",
+      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+    },
+    {
+      "id": "0tpvif7_v6$w3IphpAZAch",
+      "name": "建筑车辆:27.5 m  范围:492440",
+      "type": "IfcBuildingElementProxy",
+      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+    },
+    {
+      "id": "0tpvif7_v6$w3IphpAZAcV",
+      "name": "建筑起重机:22000mm @ 60 度:492460",
+      "type": "IfcBuildingElementProxy",
+      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+    },
+    {
+      "id": "0tpvif7_v6$w3IphpAZAcD",
+      "name": "混凝土卡车:混凝土卡车:492478",
+      "type": "IfcBuildingElementProxy",
+      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+    },
+    {
+      "id": "0tpvif7_v6$w3IphpAZAFF",
+      "name": "路障:路障:494076",
+      "type": "IfcBuildingElementProxy",
+      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+    },
+    {
+      "id": "0tpvif7_v6$w3IphpAZB_1",
+      "name": "路障:路障:497074",
+      "type": "IfcBuildingElementProxy",
+      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+    }
+  ]
+}

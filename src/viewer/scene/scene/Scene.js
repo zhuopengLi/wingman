@@ -1869,7 +1869,7 @@ class Scene extends Component {
      *         var primIndex = pickResult.primIndex; // Position of triangle's first index in the picked Entity's Geometry's indices array
      *         var indices = pickResult.indices; // UInt32Array containing the triangle's vertex indices
      *         var localPos = pickResult.localPos; // Float64Array containing the picked Local-space position on the triangle
-     *         var worldPos = pickResult.worldPos; // Float64Array containing the picked World-space position on the triangle
+     *         var worldPos = pickResult.worldPos; // Float64Array cozntaining the picked World-space position on the triangle
      *         var viewPos = pickResult.viewPos; // Float64Array containing the picked View-space position on the triangle
      *         var bary = pickResult.bary; // Float64Array containing the picked barycentric position within the triangle
      *         var worldNormal = pickResult.worldNormal; // Float64Array containing the interpolated World-space normal vector at the picked position on the triangle

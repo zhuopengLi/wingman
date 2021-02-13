@@ -392,22 +392,22 @@
             if (globalModel != undefined) { clearCanvas(); }
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/Aachen/models/Building/building.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/Building/building.json",
+                src: "../app/data/projects/Aachen/buildings.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/buildings.json",
                 edges: true
             }));
 
             globalModel[0].on("loaded", () => {
                 globalModel.push(xktLoader.load({
-                    src: "../app/data/projects/Aachen/models/Pipes/pipes.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/models/Pipes/pipes.json",
+                    src: "../app/data/projects/Aachen/streets.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/streets.json",
                     edges: true,
                 }));
 
                 globalModel[1].on("loaded", () => {
                     globalModel.push(xktLoader.load({
-                        src: "../app/data/projects/Aachen/models/terrain/terrain.xkt",
-                        metaModelSrc: "../app/data/projects/Aachen/models/terrain/terrain.json",
+                        src: "../app/data/projects/Aachen/pipes.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/pipes.json",
                         edges: true,
                     }));
 
@@ -435,6 +435,55 @@
 
             clearCanvas()
 
+            globalModel.push(xktLoader.load({
+                src: "../app/data/projects/Aachen/site.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/site.json",
+                edges: true
+            }));
+
+            globalModel[0].on("loaded", () => {
+                globalModel.push(xktLoader.load({
+                    src: "../app/data/projects/Aachen/sensor.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/sensor.json",
+                    edges: true,
+                }));
+
+                globalModel[1].on("loaded", () => {
+                    globalModel.push(xktLoader.load({
+                        src: "../app/data/projects/Aachen/buildings.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/buildings.json",
+                        edges: true,
+                    }));
+
+                    globalModel[2].on("loaded", () => {
+                        globalModel.push(xktLoader.load({
+                            src: "../app/data/projects/Aachen/streets.xkt",
+                            metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                            edges: true,
+                        }));
+
+                        globalModel[3].on("loaded", () => {
+                            globalModel.push(xktLoader.load({
+                                src: "../app/data/projects/Aachen/pipes.xkt",
+                                metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                                edges: true,
+                            }));
+
+                            globalModel[4].on("loaded", () => {
+                                viewer.cameraFlight.flyTo({
+                                    projection: "perspective",
+                                    eye: [25, 150, 75],
+                                    look: [0, 5, 0],
+                                    up: [-0.01, 0.99, 0.039],
+                                    duration: 0
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+
+
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
@@ -446,6 +495,46 @@
             enable(1, "document.initAachenMid()");
 
             clearCanvas()
+
+            globalModel.push(xktLoader.load({
+                src: "../app/data/projects/Aachen/built.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/built.json",
+                edges: true
+            }));
+
+            globalModel[0].on("loaded", () => {
+                globalModel.push(xktLoader.load({
+                    src: "../app/data/projects/Aachen/buildings.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/buildings.json",
+                    edges: true,
+                }));
+
+                globalModel[0].on("loaded", () => {
+                    globalModel.push(xktLoader.load({
+                        src: "../app/data/projects/Aachen/streets.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                        edges: true,
+                    }));
+
+                    globalModel[1].on("loaded", () => {
+                        globalModel.push(xktLoader.load({
+                            src: "../app/data/projects/Aachen/pipes.xkt",
+                            metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                            edges: true,
+                        }));
+
+                        globalModel[2].on("loaded", () => {
+                            viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                eye: [25, 150, 75],
+                                look: [0, 5, 0],
+                                up: [-0.01, 0.99, 0.039],
+                                duration: 0
+                            });
+                        });
+                    });
+                });
+            });
 
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
 
@@ -917,6 +1006,8 @@
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh();
 
+            console.log(pickResult);
+            console.log(pickResult._worldPos);
             getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -991,7 +1082,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.3.4</i>
+                    <i>Alpha Testing | v0.9.4</i>
                 </div>
 
                 <div class="nav">
