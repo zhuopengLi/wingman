@@ -49,36 +49,76 @@
 
 </head>
 
-<body onload="document.initAachen()">
-    
+<body onload="document.initAachenEarly()">
+
+
     <script type="module">
 
-        
+
         //------------------------------------------------------------------------------------------------------------------------------------------
         // Request for geo data and sensorValue
         //------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var weather = JSON.parse(this.responseText);
-                document.getElementById("location").innerHTML =
-                    "Location: " + weather.coord.lat.toFixed(2) + ", " + weather.coord.lon.toFixed(2) + ", " + weather.name + ", " + weather.sys.country;
-                document.getElementById("weather").innerHTML =
-                    "Weather: " + weather.weather[0].main + ", " + (weather.main.feels_like - 273.15).toFixed(2) + "°C ";
-            }
-        };
+        var geoData = new XMLHttpRequest();
+        var globalGeoRefresh;
 
-        xmlhttp.open("GET", "https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", true);
-            xmlhttp.send();
+        function loadGeoData(url, cfunc) {
+            geoData.onreadystatechange = cfunc;
+            geoData.open("GET", url, true);
+            geoData.send();
+        }
 
-            
+        function loadGeo(url) {
+            var localGeoRefresh = setInterval(function () {
+                loadGeoData(url, function () {
+                    if (geoData.readyState == 4 && geoData.status == 200) {
+                        var weather = JSON.parse(geoData.responseText);
+                        if (weather.coord.lon > 0) {
+                            document.getElementById("location").innerHTML =
+                                "Location: " + weather.coord.lat.toFixed(2) + "N, " + weather.coord.lon.toFixed(2) + "E, " + weather.name + ", " + weather.sys.country;
+                        }
+                        else if ((weather.coord.lon < 0)) {
+                            document.getElementById("location").innerHTML =
+                                "Location: " + weather.coord.lat.toFixed(2) + "N, " + Math.abs(weather.coord.lon.toFixed(2)) + "W, " + weather.name + ", " + weather.sys.country;
+                        }
+                        document.getElementById("weather").innerHTML =
+                            "Weather: " + weather.weather[0].main + ", " + (weather.main.temp - 273.15).toFixed(2) + "°C ";
+                    }
+                })
+            }, 5000)
+
+            globalGeoRefresh = localGeoRefresh;
+
+        }
+
+        function stopGeoRefresh() {
+            clearInterval(globalGeoRefresh);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // set up the clock
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        var timerInterval = setInterval(function () { timer() }, 1000);
+
+        function timer() {
+            var d = new Date();
+            d.setHours(d.getHours() - 7);
+            var hours = d.toLocaleTimeString();
+            var day = d.toDateString();
+            document.getElementById("time").innerHTML = hours + ", " + day + " (CET)";
+        }
+
+
         //------------------------------------------------------------------------------------------------------------------------------------------
+        //
         //create viewer
+        //
         //------------------------------------------------------------------------------------------------------------------------------------------
-        
-        
+
+
         import { Viewer } from "../src/viewer/Viewer.js";
         import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
 
@@ -114,6 +154,180 @@
         viewer.cameraControl.rotationInertia = 0;
         viewer.cameraControl.dollyInertia = 0;
 
+        //------------------------------------------------------------------------------------------------------------------
+        // declare the info query list
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        const buildingPro = [
+            "Address: ",
+            "Name: ",
+            "Type: ",
+            "Date of built: ",
+            "Historic building: ",
+            "Base area: ",
+            "Owner of the premises: "
+        ];
+
+        const buildingProJSON = [
+            "address",
+            "name",
+            "type",
+            "date",
+            "historic",
+            "area",
+            "owner"
+        ]
+
+        const pipePro = [
+            "Type: ",
+            "Depth: ",
+            "Diameter: ",
+            "Owner: "
+        ];
+
+        const pipeProJSON = [
+            "type",
+            "depth",
+            "diameter",
+            "owner"
+        ]
+
+        const treePro = [
+            "Type: ",
+            "Diameter at breast height: ",
+            "Height: ",
+            "Age: "
+        ];
+
+        const treeProJSON = [
+            "type",
+            "diameter",
+            "height",
+            "age"
+        ]
+
+        const roadPro = [
+            "Name: ",
+            "Type: ",
+            "Width: "
+        ];
+
+        const roadProJSON = [
+            "name",
+            "type",
+            "width"
+        ]
+
+        const sensorPro = [
+            "Temperature: ",
+            "Moisture: ",
+            "Windspeed: ",
+            "Wind-direction: ",
+            "Ozone: ",
+            "Noise level: ",
+            "Last update at: "
+        ];
+
+        const sensorProJSON = [
+            "temperatures",
+            "moisture",
+            "windspeed",
+            "winddirection",
+            "ozone",
+            "NoiseLevel",
+            "timestamp"
+        ]
+
+        const sensorProUnit = [
+            "°C",
+            "%",
+            "m/s",
+            "°",
+            "µg/m³",
+            "dB",
+            " (CET)"
+        ]
+
+        //------------------------------------------------------------------------------------------------------------------
+        // declare sensor data query function
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        var sensor = new XMLHttpRequest();
+        var globalRefresh;
+
+        function loadSensorData(url, cfunc) {
+            sensor.onreadystatechange = cfunc;
+            sensor.open("GET", url, true);
+            sensor.send();
+        }
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // declare the property query functions
+        //------------------------------------------------------------------------------------------------------------------
+
+
+        function clearProperty() {
+            document.getElementById("info").style.margin = "1em";
+            document.getElementById("info").style.fontSize = "14pt";
+            document.getElementById("info").style.color = "#03103f63";
+            document.getElementById("info").innerHTML = '<i>Click on objects for more info</i>';
+        }
+
+        function stopRefresh() {
+            clearInterval(globalRefresh);
+        }
+
+        function getSensorPro(param, name) {
+            document.getElementById("info").style.margin = "1em 1.2em 0";
+            document.getElementById("info").innerHTML = "Loading sensor data...";
+
+            var localRefresh = setInterval(function () {
+                loadSensorData("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
+                    if (sensor.readyState == 4 && sensor.status == 200) {
+                        document.getElementById("info").style.margin = "0";
+
+                        var data = JSON.parse(sensor.responseText);
+
+                        var info = "<ul>" + "<li>" + "<b>Name: </b>" + name + "</li>";
+                        for (let i = 0; i < sensorPro.length - 1; i++) {
+                            info += "<li>" + "<b>" + sensorPro[i] + "</b>" + data[param][sensorProJSON[i]].$numberDouble + sensorProUnit[i] + "</li>";
+                        }
+                        info += "<li>" + "<b>Last update at: </b>" + data[param][sensorProJSON[6]] + sensorProUnit[6] + "</li>" + "</ul>";
+                        document.getElementById("info").innerHTML = info
+
+                    }
+                })
+            }, 5000);
+
+            globalRefresh = localRefresh;
+        }
+
+        function getBuildingPro(param) { //edit metascene.js metaobject.js and metamodel.js
+            document.getElementById("info").style.margin = "0";
+
+            var info = "<ul>"
+            for (let i = 0; i < buildingPro.length; i++) {
+                info += "<li>" + "<b>" + buildingPro[i] + "</b>" + param[buildingProJSON[i]] + "</li>";
+            }
+            info += "</ul>";
+            document.getElementById("info").innerHTML = info
+        }
+
+        function getInfo(param) {
+            const id = param.id;
+            const name = param.name;
+
+            if (id == "3rFeaDCe58Ph8ptbjJL$5m") { getSensorPro(30, name) }
+            else if (id == "3rFeaDCe58Ph8ptbjJL$vK") { getSensorPro(29, name) }
+            else if (id == "3rFeaDCe58Ph8ptbjJL$vQ") { getSensorPro(36, name) }
+            else if (id == "3rFeaDCe58Ph8ptbjJL$v1") { getSensorPro(32, name) }
+            else if (id == "3rFeaDCe58Ph8ptbjJL$vo") { getSensorPro(9, name) }
+            else { getBuildingPro(param) }
+        }
+
 
         //------------------------------------------------------------------------------------------------------------------
         // Load models
@@ -124,162 +338,291 @@
 
         var globalModel = [];
 
-        document.initAachen = function () {
+        function clearCanvas() {
+            globalModel.forEach(element => element.destroy());
+            globalModel.length = 0;
+            stopRefresh();
+            stopGeoRefresh();
+            lastEntity = null;
+            clearProperty();
+            document.getElementById("location").innerHTML = "Loading geo data...";
+            document.getElementById("weather").innerHTML = "";
+        }
 
-            if (typeof (globalModel) !== "undefined") {
-                globalModel.forEach(element => element.destroy());
-                globalModel.length = 0;
-                lastEntity = null;
-                document.getElementById("info1").innerHTML = "";
-                document.getElementById("info2").innerHTML = "";
-                document.getElementById("info3").innerHTML = "";
-                document.getElementById("info4").innerHTML = "";
-                document.getElementById("info5").innerHTML = "";
-                document.getElementById("info6").innerHTML = "";
-                document.getElementById("info7").innerHTML = "";
-                document.getElementById("info8").innerHTML = "";
-                document.getElementById("info9").innerHTML = "";
-
-            }
-
-            globalModel.push(xktLoader.load({
-                id: "Building",
-                src: "../app/data/projects/Aachen/models/Building/building.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/Building/building.json",
-                edges: true
-            }));
-
-            globalModel.push(xktLoader.load({
-                id: "Pipes",
-                src: "../app/data/projects/Aachen/models/Pipes/pipes.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/Pipes/pipes.json",
-                edges: true,
-            }));
-
-            globalModel.push(xktLoader.load({
-                id: "Terrain_and_traffic",
-                src: "../app/data/projects/Aachen/models/terrain/terrain.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/models/terrain/terrain.json",
-                edges: true,
-            }));
-
-            //load geo
-            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            xmlhttp.send();
+        function enable(i, value) {
+            document.getElementsByTagName("button")[i].setAttribute("onclick", value)
+            document.getElementsByTagName("button")[i].removeAttribute("disabled")
+            document.getElementsByTagName("button")[i].style.backgroundColor = "white";
+            document.getElementsByTagName("button")[i].style.fontStyle = "normal";
 
         }
 
-        document.initWaterlock = function () {
+        function disable(i) {
+            document.getElementsByTagName("button")[i].setAttribute("disabled", "disabled")
+            document.getElementsByTagName("button")[i].removeAttribute("onclick")
+            document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(161, 161, 161)";
+            document.getElementsByTagName("button")[i].style.fontStyle = "normal";
 
-            globalModel.forEach(element => element.destroy());
-            globalModel.length = 0
-            lastEntity = null;
-            document.getElementById("info1").innerHTML = "";
-            document.getElementById("info2").innerHTML = "";
-            document.getElementById("info3").innerHTML = "";
-            document.getElementById("info4").innerHTML = "";
-            document.getElementById("info5").innerHTML = "";
-            document.getElementById("info6").innerHTML = "";
-            document.getElementById("info7").innerHTML = "";
-            document.getElementById("info8").innerHTML = "";
-            document.getElementById("info9").innerHTML = "";
+        }
 
+        function select(i, value) {
+            document.getElementsByTagName("button")[i].setAttribute("disabled", "disabled")
+            document.getElementsByTagName("button")[i].removeAttribute("onclick")
+            document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(220,180,50)";
+            document.getElementsByTagName("button")[i].style.fontStyle = "italic";
+
+        }
+
+        function restoreCamera(i) {
+            globalModel[i].on("loaded", () => {
+                viewer.cameraFlight.flyTo({
+                    projection: "perspective",
+                    aabb: viewer.scene.getAABB({}),
+                    duration: 0
+                });
+            });
+        }
+        //----------------------------------------------------------------------------------------------------------------------
+        document.initAachenEarly = function () {
+
+            select(0);
+            enable(1, "document.initAachenMid()");
+            enable(2, "document.initAachenEnd()");
+
+            if (globalModel != undefined) { clearCanvas(); }
 
             globalModel.push(xktLoader.load({
-                id: "Duplex",
+                src: "../app/data/projects/Aachen/buildings.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/buildings.json",
+                edges: true
+            }));
+
+            globalModel[0].on("loaded", () => {
+                globalModel.push(xktLoader.load({
+                    src: "../app/data/projects/Aachen/streets.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                    edges: true,
+                }));
+
+                globalModel[1].on("loaded", () => {
+                    globalModel.push(xktLoader.load({
+                        src: "../app/data/projects/Aachen/pipes.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                        edges: true,
+                    }));
+
+                    globalModel[2].on("loaded", () => {
+                        viewer.cameraFlight.flyTo({
+                            projection: "perspective",
+                            eye: [25, 150, 75],
+                            look: [0, 5, 0],
+                            up: [-0.01, 0.99, 0.039],
+                            duration: 0
+                        });
+                    });
+                });
+            });
+
+            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
+
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------
+        document.initAachenMid = function () {
+            select(1);
+            enable(0, "document.initAachenEarly()");
+            enable(2, "document.initAachenEnd()");
+
+            clearCanvas()
+
+            globalModel.push(xktLoader.load({
+                src: "../app/data/projects/Aachen/site.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/site.json",
+                edges: true
+            }));
+
+            globalModel[0].on("loaded", () => {
+                globalModel.push(xktLoader.load({
+                    src: "../app/data/projects/Aachen/sensor.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/sensor.json",
+                    edges: true,
+                }));
+
+                globalModel[1].on("loaded", () => {
+                    globalModel.push(xktLoader.load({
+                        src: "../app/data/projects/Aachen/buildings.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/buildings.json",
+                        edges: true,
+                    }));
+
+                    globalModel[2].on("loaded", () => {
+                        globalModel.push(xktLoader.load({
+                            src: "../app/data/projects/Aachen/streets.xkt",
+                            metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                            edges: true,
+                        }));
+
+                        globalModel[3].on("loaded", () => {
+                            globalModel.push(xktLoader.load({
+                                src: "../app/data/projects/Aachen/pipes.xkt",
+                                metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                                edges: true,
+                            }));
+
+                            globalModel[4].on("loaded", () => {
+                                viewer.cameraFlight.flyTo({
+                                    projection: "perspective",
+                                    eye: [25, 150, 75],
+                                    look: [0, 5, 0],
+                                    up: [-0.01, 0.99, 0.039],
+                                    duration: 0
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+
+
+            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
+
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------
+        document.initAachenEnd = function () {
+            select(2);
+            enable(0, "document.initAachenEarly()");
+            enable(1, "document.initAachenMid()");
+
+            clearCanvas()
+
+            globalModel.push(xktLoader.load({
+                src: "../app/data/projects/Aachen/built.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/built.json",
+                edges: true
+            }));
+
+            globalModel[0].on("loaded", () => {
+                globalModel.push(xktLoader.load({
+                    src: "../app/data/projects/Aachen/buildings.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/buildings.json",
+                    edges: true,
+                }));
+
+                globalModel[0].on("loaded", () => {
+                    globalModel.push(xktLoader.load({
+                        src: "../app/data/projects/Aachen/streets.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                        edges: true,
+                    }));
+
+                    globalModel[1].on("loaded", () => {
+                        globalModel.push(xktLoader.load({
+                            src: "../app/data/projects/Aachen/pipes.xkt",
+                            metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                            edges: true,
+                        }));
+
+                        globalModel[2].on("loaded", () => {
+                            viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                eye: [25, 150, 75],
+                                look: [0, 5, 0],
+                                up: [-0.01, 0.99, 0.039],
+                                duration: 0
+                            });
+                        });
+                    });
+                });
+            });
+
+            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
+
+        }
+
+        //----------------------------------------------------------------------------------------------------------------------
+        document.initWaterlock = function () {
+
+            select(1);
+            disable(0);
+            disable(2);
+
+            clearCanvas();
+
+            globalModel.push(xktLoader.load({
                 src: "../app/data/projects/WaterLock/models/design/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WaterLock/models/design/metadata.json",
                 edges: true
             }));
 
-            //load geo
-            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            xmlhttp.send();
+            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=2759661&appid=164d9c87e52c6093c36d1dc348e167d8");
+
+            restoreCamera(0);
 
         }
 
+        //----------------------------------------------------------------------------------------------------------------------
         document.initSchependomlaan = function () {
 
-            globalModel.forEach(element => element.destroy());
-            globalModel.length = 0
-            lastEntity = null;
-            document.getElementById("info1").innerHTML = "";
-            document.getElementById("info2").innerHTML = "";
-            document.getElementById("info3").innerHTML = "";
-            document.getElementById("info4").innerHTML = "";
-            document.getElementById("info5").innerHTML = "";
-            document.getElementById("info6").innerHTML = "";
-            document.getElementById("info7").innerHTML = "";
-            document.getElementById("info8").innerHTML = "";
-            document.getElementById("info9").innerHTML = "";
+            select(2);
+            disable(0);
+            disable(1);
 
+            clearCanvas();
 
             globalModel.push(xktLoader.load({
-                id: "Schependomlaan",
                 src: "../app/data/projects/Schependomlaan/models/design/geometry.xkt",
                 metaModelSrc: "../app/data/projects/Schependomlaan/models/design/metadata.json",
                 edges: true
             }));
 
-            //load geo
-            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            xmlhttp.send();
+            restoreCamera(0);
+
+            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=2750053&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
 
-        document.initWestRiversideHospital = function () {
 
-            globalModel.forEach(element => element.destroy());
-            globalModel.length = 0
-            lastEntity = null;
-            document.getElementById("info1").innerHTML = "";
-            document.getElementById("info2").innerHTML = "";
-            document.getElementById("info3").innerHTML = "";
-            document.getElementById("info4").innerHTML = "";
-            document.getElementById("info5").innerHTML = "";
-            document.getElementById("info6").innerHTML = "";
-            document.getElementById("info7").innerHTML = "";
-            document.getElementById("info8").innerHTML = "";
-            document.getElementById("info9").innerHTML = "";
+        //----------------------------------------------------------------------------------------------------------------------
+        document.initHospital = function () {
 
+            select(2);
+            disable(0);
+            disable(1);
+
+            clearCanvas();
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/architectural/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/architectural/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/electrical/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/electrical/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/fireAlarms/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/fireAlarms/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/mechanical/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/mechanical/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/plumbing/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/plumbing/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/sprinklers/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/sprinklers/metadata.json",
                 edges: true
@@ -287,15 +630,14 @@
 
 
             globalModel.push(xktLoader.load({
-                id: "WestRiversideHospital",
                 src: "../app/data/projects/WestRiversideHospital/models/structure/geometry.xkt",
                 metaModelSrc: "../app/data/projects/WestRiversideHospital/models/structure/metadata.json",
                 edges: true
             }));
 
-            //load geo
-            xmlhttp.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8", true);
-            xmlhttp.send();
+            restoreCamera(6);
+
+            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=5368361&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
 
@@ -303,6 +645,7 @@
         //----------------------------------------------------------------------------------------------------------------------
         // Create a tree view
         //----------------------------------------------------------------------------------------------------------------------
+
 
         const treeView = new TreeViewPlugin(viewer, {
             containerElement: document.getElementById("treeViewContainer"),
@@ -353,7 +696,30 @@
                     {
                         title: "X-Ray Others",
                         doAction: function (context) {
-                            const scene = context.viewer.scene;
+                            var entity = context.treeViewNode;
+                            const viewer = context.viewer;
+                            const scene = viewer.scene;
+                            const metaObject = viewer.metaScene.metaObjects[entity.objectId];
+
+                            getInfo(metaObject);
+
+                            if (lastEntity != null) {
+                                lastEntity.colorize = lastColorize;
+                                lastEntity = null;
+                                lastColorize = null;
+                                stopRefresh();
+                            }
+                            if (context.entity != undefined) {
+                                lastEntity = context.entity;
+                                lastColorize = context.entity.colorize.slice();
+                                context.entity.colorize = [1, 130 / 255, 0];
+                            }
+                            context.viewer.cameraFlight.flyTo({
+                                projection: "perspective",
+                                aabb: scene.getAABB(entity.objectId),
+                                duration: 0.5
+                            });
+
                             scene.setObjectsVisible(scene.objectIds, true);
                             scene.setObjectsXRayed(scene.objectIds, true);
                             scene.setObjectsSelected(scene.selectedObjectIds, false);
@@ -375,15 +741,11 @@
                         },
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
-                            document.getElementById("info1").innerHTML = "";
-                            document.getElementById("info2").innerHTML = "";
-                            document.getElementById("info3").innerHTML = "";
-                            document.getElementById("info4").innerHTML = "";
-                            document.getElementById("info5").innerHTML = "";
-                            document.getElementById("info6").innerHTML = "";
-                            document.getElementById("info7").innerHTML = "";
-                            document.getElementById("info8").innerHTML = "";
-                            document.getElementById("info9").innerHTML = "";
+                            clearProperty();
+                            lastEntity.colorize = lastColorize;
+                            lastEntity = null;
+                            lastColorize = null;
+
                         }
                     }
                 ]
@@ -408,6 +770,7 @@
 
         treeView.on("nodeTitleClicked", (e) => {
             const scene = viewer.scene;
+            const entity = e.viewer.scene.objects[e.treeViewNode.objectId];
             const objectIds = [];
 
             e.treeViewPlugin.withNodeTree(e.treeViewNode, (treeViewNode) => {
@@ -417,6 +780,8 @@
 
             });
             e.treeViewPlugin.unShowNode();
+
+            const metaObject = e.viewer.metaScene.metaObjects[objectIds[0]];
 
             scene.setObjectsXRayed(scene.objectIds, true);
             scene.setObjectsVisible(scene.objectIds, true);
@@ -431,36 +796,23 @@
                 }, 500);
             });
 
-            lastEntity = null;
-            lastColorize = null;
 
-
-            // customize ModelTreeView.js & TreeViewNode.js to add more properties
-            if (objectIds == "3rFeaDCe58Ph8ptbjJL$5m" ||
-                objectIds == "3rFeaDCe58Ph8ptbjJL$vK" ||
-                objectIds == "3rFeaDCe58Ph8ptbjJL$vQ" ||
-                objectIds == "3rFeaDCe58Ph8ptbjJL$v1" ||
-                objectIds == "3rFeaDCe58Ph8ptbjJL$vo"
-            ) {
-                document.getElementById("info1").innerHTML = "<b>Temperatures: </b>";
-                document.getElementById("info2").innerHTML = "<b>Moisture: </b>";
-                document.getElementById("info3").innerHTML = "<b>Windspeed: </b>";
-                document.getElementById("info4").innerHTML = "<b>Winddirection: </b>";
-                document.getElementById("info5").innerHTML = "<b>Ozone: </b>";
-                document.getElementById("info6").innerHTML = "";
-                document.getElementById("info7").innerHTML = "";
-            } else {
-                document.getElementById("info1").innerHTML = "<b>Address: </b>" + e.treeViewNode.address;
-                document.getElementById("info2").innerHTML = "<b>Name: </b>" + e.treeViewNode.title;
-                document.getElementById("info3").innerHTML = "<b>Type: </b>" + e.treeViewNode.type;
-                document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + e.treeViewNode.date;
-                document.getElementById("info5").innerHTML = "<b>Historic: </b>" + e.treeViewNode.historic;
-                document.getElementById("info6").innerHTML = "<b>Base area: </b>" + e.treeViewNode.area;
-                document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + e.treeViewNode.owner;
+            if (lastEntity != null) {
+                lastEntity.colorize = lastColorize;
+                lastEntity = null;
+                lastColorize = null;
+                stopRefresh();
+            }
+            if (entity != undefined) {
+                lastEntity = entity;
+                lastColorize = entity.colorize.slice();
+                entity.colorize = [1, 130 / 255, 0];
             }
 
+            getInfo(metaObject);
 
         });
+
 
         //------------------------------------------------------------------------------------------------------------------
         // Create two ContextMenus - one for right-click on empty space, the other for right-click on an Entity
@@ -552,13 +904,35 @@
                     {
                         title: "X-Ray Others",
                         doAction: function (context) {
+
+                            const entity = context.entity;
                             const viewer = context.viewer;
                             const scene = viewer.scene;
-                            const entity = context.entity;
                             const metaObject = viewer.metaScene.metaObjects[entity.id];
+
+                            getInfo(metaObject);
+
                             if (!metaObject) {
                                 return;
                             }
+
+                            if (lastEntity != null) {
+                                lastEntity.colorize = lastColorize;
+                                lastEntity = null;
+                                lastColorize = null;
+                                stopRefresh();
+                            }
+                            if (entity != undefined) {
+                                lastEntity = entity;
+                                lastColorize = entity.colorize.slice();
+                                entity.colorize = [1, 130 / 255, 0];
+                            }
+
+                            viewer.cameraFlight.flyTo({
+                                aabb: entity.aabb,
+                                duration: 0.5
+                            });
+
                             scene.setObjectsVisible(scene.objectIds, true);
                             scene.setObjectsXRayed(scene.objectIds, true);
                             scene.setObjectsSelected(scene.selectedObjectIds, false);
@@ -578,15 +952,11 @@
                         },
                         doAction: function (context) {
                             context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
-                            document.getElementById("info1").innerHTML = "";
-                            document.getElementById("info2").innerHTML = "";
-                            document.getElementById("info3").innerHTML = "";
-                            document.getElementById("info4").innerHTML = "";
-                            document.getElementById("info5").innerHTML = "";
-                            document.getElementById("info6").innerHTML = "";
-                            document.getElementById("info7").innerHTML = "";
-                            document.getElementById("info8").innerHTML = "";
-                            document.getElementById("info9").innerHTML = "";
+                            clearProperty();
+                            lastEntity.colorize = lastColorize;
+                            lastEntity = null;
+                            lastColorize = null;
+
                         }
                     }
                 ]
@@ -634,30 +1004,11 @@
         viewer.cameraControl.on("picked", (pickResult) => {
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
+            stopRefresh();
 
-            if (entity.id == "3rFeaDCe58Ph8ptbjJL$5m" ||
-                entity.id == "3rFeaDCe58Ph8ptbjJL$vK" ||
-                entity.id == "3rFeaDCe58Ph8ptbjJL$vQ" ||
-                entity.id == "3rFeaDCe58Ph8ptbjJL$v1" ||
-                entity.id == "3rFeaDCe58Ph8ptbjJL$vo"
-            ) {
-                document.getElementById("info1").innerHTML = "<b>Temperatures: </b>";
-                document.getElementById("info2").innerHTML = "<b>Moisture: </b>";
-                document.getElementById("info3").innerHTML = "<b>Windspeed: </b>";
-                document.getElementById("info4").innerHTML = "<b>Winddirection: </b>";
-                document.getElementById("info5").innerHTML = "<b>Ozone: </b>";
-                document.getElementById("info6").innerHTML = "";
-                document.getElementById("info7").innerHTML = "";
-            } else {
-                document.getElementById("info1").innerHTML = "<b>Address: </b>" + metaObject.address;
-                document.getElementById("info2").innerHTML = "<b>Name: </b>" + metaObject.name;
-                document.getElementById("info3").innerHTML = "<b>Type: </b>" + metaObject.type;
-                document.getElementById("info4").innerHTML = "<b>Date of built: </b>" + metaObject.date;
-                document.getElementById("info5").innerHTML = "<b>Historic: </b>" + metaObject.historic;
-                document.getElementById("info6").innerHTML = "<b>Base area: </b>" + metaObject.area;
-                document.getElementById("info7").innerHTML = "<b>Owner of the premises: </b>" + metaObject.owner;
-            }
-
+            console.log(pickResult);
+            console.log(pickResult._worldPos);
+            getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
                 if (lastEntity) {
@@ -671,17 +1022,10 @@
 
 
             } else if (entity.id == lastEntity.id || globalModel.length == 0) {
+                stopRefresh();
                 lastEntity = null;
                 pickResult.entity.colorize = lastColorize;
-                document.getElementById("info1").innerHTML = ""; //edit metascene.js metaobject.js and metamodel.js
-                document.getElementById("info2").innerHTML = "";
-                document.getElementById("info3").innerHTML = "";
-                document.getElementById("info4").innerHTML = "";
-                document.getElementById("info5").innerHTML = "";
-                document.getElementById("info6").innerHTML = "";
-                document.getElementById("info7").innerHTML = "";
-                document.getElementById("info8").innerHTML = "";
-                document.getElementById("info9").innerHTML = "";
+                clearProperty();
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
 
             }
@@ -738,7 +1082,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Internal Testing | v0.2021.2.08.1</i>
+                    <i>Alpha Testing | v0.9.4</i>
                 </div>
 
                 <div class="nav">
@@ -747,12 +1091,12 @@
                     <div class="nav project">
                         <br />
                         <p>Project: <select>
-                                <option value="Aachen" onclick="document.initAachen()" selected>Aachen</option>
+                                <option value="Aachen" onclick="document.initAachenEarly()" selected>Aachen</option>
                                 <option value="Waterlock" onclick="document.initWaterlock()">Waterlock</option>
                                 <option value="Schependomlaan" onclick="document.initSchependomlaan()">
                                     Schependomlaan
                                 </option>
-                                <option value="West riverside hospital" onclick="document.initWestRiversideHospital()">
+                                <option value="West riverside hospital" onclick="document.initHospital()">
                                     West riverside hospital</option>
                             </select></p>
                     </div>
@@ -761,9 +1105,9 @@
                     <div class="nav phase">
 
                         Phase: &nbsp;
-                        <button type="button">Early-term</button>
-                        <button type="button">Mid-term</button>
-                        <button type="button">End-term</button>
+                        <button onclick="">Early-term</button>
+                        <button onclick="">Mid-term</button>
+                        <button onclick="">End-term</button>
 
                     </div>
 
@@ -776,16 +1120,15 @@
 
                 <p id="location">Loading geo data...</p>
                 <p id="weather"></p>
+                <p id="time"></p>
 
             </div>
 
             <div class="news">
-                <marquee><i>Under construction!</i></marquee>
+                <marquee><i>Welcome to <b>Wingman</b></i></marquee>
             </div>
 
         </div>
-
-
 
 
         <!--middle-->
@@ -806,31 +1149,22 @@
 
             <div class="info">
                 <h2>Information</h2>
-                <ul>
-                    <li id="info1">info1: </li>
-                    <li id="info2">info2: </li>
-                    <li id="info3">info3: </li>
-                    <li id="info4">info4: </li>
-                    <li id="info5">info5: </li>
-                    <li id="info6">info6: </li>
-                    <li id="info7">info7: </li>
-                    <li id="info8">info8: </li>
-                    <li id="info9">info9: </li>
-
-                </ul>
+                <p id="info"></p>
             </div>
         </div>
 
 
         <!--buttom-->
         <div class="buttomcontainer">
+
+
             <i>Copyright</i>
-            <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
             <img src="..\images\Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
             <img src="..\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
-            <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP">
+            <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP" style="margin-right: 3em">
+            <i>Supported by</i>
+            <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
             <img src="..\images\itnrw_logo.png" width="8%" alt="IT NRW">
-
 
 
         </div>

@@ -1,0 +1,18 @@
+{
+  "id": "Completed building",
+  "projectId": "Completed building",
+  "metaObjects": [
+    {
+      "id": "Completed building",
+      "name": "Completed building",
+      "type": "Completed building",
+      "parent": null
+    },
+    {
+      "id": "1pEomJbuL6pAjDLauPLdDj",
+      "name": "Completed building",
+      "type": "Building",
+      "parent": "Completed building"
+    }
+  ]
+}

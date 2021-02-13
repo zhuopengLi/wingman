@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "jsonfile": "^6.1.0"
+  }
+}
