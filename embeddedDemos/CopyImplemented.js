@@ -45,7 +45,7 @@ setInterval(function(){
 
 
     ////////////////////////////////////storing SensorIds in an Array/////////////////////////////////////////////
-    for (var c = 0; c < 2; c++) {
+    for (var c = 0; c < 1; c++) {
 
     
 
@@ -266,148 +266,98 @@ setInterval(function(){
             });
                 
             let ids = ["3rFeaDCe58Ph8ptbjJL$5m","3rFeaDCe58Ph8ptbjJL$vK","3rFeaDCe58Ph8ptbjJL$vQ","3rFeaDCe58Ph8ptbjJL$v1","3rFeaDCe58Ph8ptbjJL$vo"];
-            let idsPipes = ["3skJDZ7bb1mAlUwrlJ0Wh6"];
 
-            console.log(matrixAfterMQTT);
             
-
-               if(c == 0){
             MongoClient.connect(uri, function(err, db) {
                 if (err) throw err;
-                var dbo = db.db("Aachen");
-                
-             
-                for (var b = 0; b < 5; b++) {  //b = number of sensors
+                var dbo = db.db("Sensors");
+                for (var b = 0; b < 5; b++) {
                 var myquery = { id: ids[b] };
                 
-            
                 // console.log(matrixAfterMQTT)
                 var newvalues = {$set: {NoiseLevel: matrixAfterMQTT[b][5]}};
-                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                dbo.collection("Sensors").updateMany(myquery, newvalues, function(err, res) {
                   if (err) throw err;
                 });
                   
                     newvalues = {$set: {windspeed: matrixAfterMQTT[b][2]}};
-                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                dbo.collection("Sensors").updateMany(myquery, newvalues, function(err, res) {
                     if (err) throw err;   
                 });
 
                 newvalues = {$set: {moisture: matrixAfterMQTT[b][1]}};
-                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                dbo.collection("Sensors").updateMany(myquery, newvalues, function(err, res) {
                     if (err) throw err; 
                 });
 
                 newvalues = {$set: {temperatures: matrixAfterMQTT[b][0]}};
-                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                dbo.collection("Seonsors").updateMany(myquery, newvalues, function(err, res) {
                     if (err) throw err;   
                 });
 
                 newvalues = {$set: {ozone: matrixAfterMQTT[b][4] }};
-                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                dbo.collection("Seonsors").updateMany(myquery, newvalues, function(err, res) {
                     if (err) throw err;   
                 });
 
                 newvalues = {$set: {timestamp: timestampValue}};
-                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                dbo.collection("Seonsors").updateMany(myquery, newvalues, function(err, res) {
                     if (err) throw err;   
                 });
 
 
                 newvalues = {$set: {winddirection: matrixAfterMQTT[b][3]}};
-                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                dbo.collection("Seonsors").updateMany(myquery, newvalues, function(err, res) {
                     if (err) throw err;
                 //   console.log(res.result.nModified + " document(s) updated");
-
-                
-                 
-                db.close();
-
-            })}
-
-
-            
-        });
-        }
-
-
-        if(c == 1){
-            MongoClient.connect(uri, function(err, db) {
-                if (err) throw err;
-                var dbo = db.db("Aachen");
-
-
-                for (var p = 0; p < 1; p++) { // number of pipes
-                   
-                    var myquery = { id:"3skJDZ7bb1mAlUwrlJ0Wh6" }; 
-
-                    newvalues = {$set: {waterlevel: matrixAfterMQTT[p][0]}};
-                    dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
-                        if (err) throw err;
-                    //   console.log(res.result.nModified + " document(s) updated");
-
-                    newvalues = {$set: {timestamp: timestampValue}};
-                    dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
-                        if (err) throw err;   
-                    });
-                
-                    db.close();
-                })
+                  db.close();
+                });
             }
-        })
-    }
-                
-                
-            
-              
+              });
             
 
 
-            //  var myquery = data.metaObjects;
-            //     dbo.collection("customers").deleteMany(myquery, function(err, obj) {
-            //       if (err) throw err;
-            //       console.log("1 document deleted");
-            //       console.log(obj.result.n + " document(s) deleted");
-            //       db.close();
-            //     });
-            //     console.log(data.metaObjects[3]);
-            //     var myquery = obj.metaObjects[3];
-            //     dbo.collection("IFC").deleteMany(myquery, function(err, obj) {
-            //       if (err) throw err;
-            //       console.log(obj.result.n + " document(s) deleted");
-            //       db.close();
-            //     });
+         //     // var myquery = data.metaObjects;
+            //     // dbo.collection("customers").deleteMany(myquery, function(err, obj) {
+            //     //   if (err) throw err;
+            //     //   console.log("1 document deleted");
+            //     //   console.log(obj.result.n + " document(s) deleted");
+            //     //   db.close();
+            //     // });
+            //     // console.log(data.metaObjects[3]);
+            //     // var myquery = obj.metaObjects[3];
+            //     // dbo.collection("IFC").deleteMany(myquery, function(err, obj) {
+            //     //   if (err) throw err;
+            //     //   console.log(obj.result.n + " document(s) deleted");
+            //     //   db.close();
+            //     // });
 
 
-
-            
 
             ///////////////////////////////////////create database////////////////////////////////////////////////////////////
 
             // MongoClient.connect(uri, function(err, db) {
             //     if (err) throw err;
-            //     var dbo = db.db("Aachen");
+            //     var dbo = db.db("Sensors");
 
             //     console.log(indexSensors);
 
             //     var myobj = [];
             //     for (var l = 0; l <= (indexSensors.length-1); l++) {
-            //      myobj[l] = obj.metaObjects[indexSensors[l]];
+            //     myobj[l] = obj.metaObjects[indexSensors[l]];
 
             //     }
             // //     // console.log(myobj);
 
             //     let collection = chooseCollection[c];
-            //     dbo.collection("Terrain").insertMany(myobj, function(err, res) {
+            //     dbo.collection("Sensors").insertMany(myobj, function(err, res) {
             //     if (err) throw err;
             //     console.log("Number of documents inserted " + res.insertedCount + "in Database "+ c + choosenDB[c]);
             //     db.close();
             //     });
             // });
 
-        
-        
-        
-            // } )
+        // } )
 
 
 
@@ -465,7 +415,7 @@ function liveStringDate(realTime) {
 
 function interpolate(indices, hour, minute, c) {
 
-    typeOfSensor = ["temperatures", "moisture", "windspeed", "winddirection", "ozone", "NoiseLevel","waterlevel"]
+    typeOfSensor = ["temperatures", "moisture", "windspeed", "winddirection", "ozone", "NoiseLevel"]
     typeOfSensorPipe = ["waterlevel"];
 
     let interpolateTemp = [];
