@@ -1,478 +1,826 @@
 {
-  "id": "Projektnummer",
-  "projectId": "2clzl$UuzDAAuy3WDv$TNv",
-  "author": "",
-  "createdAt": "2021-02-12T15:43:38",
-  "schema": "IFC2X3",
-  "creatingApplication": "20170223_1515(x64) - Exporter 18.0.0.420 - Alternate UI 18.0.0.420",
+  "id": "Buildings",
+  "projectId": "Buildings",
   "metaObjects": [
     {
-      "id": "2clzl$UuzDAAuy3WDv$TNv",
-      "name": "Projektnummer",
-      "type": "IfcProject",
+      "id": "Buildings",
+      "name": "Buildings",
+      "type": "Buildings",
       "parent": null
     },
     {
-      "id": "2clzl$UuzDAAuy3WDv$TNx",
-      "name": "Default",
-      "type": "IfcSite",
-      "parent": "2clzl$UuzDAAuy3WDv$TNv"
-    },
-    {
-      "id": "2clzl$UuzDAAuy3WDv$TNu",
-      "name": "",
-      "type": "IfcBuilding",
-      "parent": "2clzl$UuzDAAuy3WDv$TNx"
-    },
-    {
-      "id": "2clzl$UuzDAAuy3WE60Xa6",
-      "name": "Ebene 1",
-      "type": "IfcBuildingStorey",
-      "parent": "2clzl$UuzDAAuy3WDv$TNu"
-    },
-    {
       "id": "1pphEOCTnCZwhV4$ZnI9Fm",
-      "name": "Rathaus Aachen:Rathaus Aachen:219420",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Rathaus Aachen",
+      "type": "Apparatus",
+      "parent": "Buildings",
+      "address": "Markt, 52062 Aachen",
+      "date": "1353",
+      "historic": "Yes",
+      "area": "xxx",
+      "owner": "Government"
     },
     {
       "id": "2_aHxlWpL9aedoJVIsgPFo",
-      "name": "Standesamt Aachen Government office:Standesamt Aachen Government office:224536",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Standesamt Aachen Government office",
+      "type": "Apparatus",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0Q0u0BIPD4e9bmmeoEFOqT",
-      "name": "Hexenhof am Apfelbau, European Restaurant:Hexenhof am Apfelbau, European Restaurant:230076",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Hexenhof am Apfelbau",
+      "type": "European Restaurant",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0Q0u0BIPD4e9bmmeoEFP$w",
-      "name": "Minh Chau:Minh Chau:233563",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Minh Chau",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0Q0u0BIPD4e9bmmeoEFQvQ",
-      "name": "van Hout Partout:van Hout Partout:238075",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "van Hout Partout",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1z$yeIC5b0XxpfFDsrQXh1",
-      "name": "Couven Museum:Couven Museum:242733",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Couven Museum",
+      "type": "Museum",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1z$yeIC5b0XxpfFDsrQc_k",
-      "name": "Lammerskötter im Hof:Lammerskötter im Hof:246082",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Lammerskötter im Hof",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "01T$5UrSX5RBD4VvWyrOBt",
-      "name": "Rethel Pub, Irish Pub:Rethel Pub, Irish Pub:252631",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Rethel Pub",
+      "type": "Irish Pub",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "01T$5UrSX5RBD4VvWyrRlD",
-      "name": "Cafe Middelberg:Cafe Middelberg:254957",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Cafe Middelberg",
+      "type": "Cafe",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "06HIuTqCv8JBJMUMspOK$C",
-      "name": "SOR Man clothing store:SOR Man clothing store:255769",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "SOR Man",
+      "type": "Clothing store",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "06HIuTqCv8JBJMUMspOK5U",
-      "name": "Restaurant Aix Mediterrane:Restaurant Aix Mediterrane:256395",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Restaurant Aix Mediterrane",
+      "type": "Restaurant",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "06HIuTqCv8JBJMUMspOKUv",
-      "name": "Haus am Hühnerdieb:Haus am Hühnerdieb:257900",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Haus am Hühnerdieb",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "06HIuTqCv8JBJMUMspOLju",
-      "name": "Ristorante AI Triangolo:Ristorante AI Triangolo:258989",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Ristorante AI Triangolo",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "06HIuTqCv8JBJMUMspPgdq",
-      "name": "Körper 1:Körper 1:262433",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 1",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "2riVeaiyn4B9Y2uF$KHpaY",
-      "name": "Luigis Pizza:Luigis Pizza:264695",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Luigis Pizza",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "2riVeaiyn4B9Y2uF$KHpvA",
-      "name": "Büchelmuseum Rote Burg:Büchelmuesum Rote Burg:265887",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Büchelmuseum Rote Burg",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1pyOhCTNH2cfW5gnnc9CtQ",
-      "name": "August Tonolo OHG, Funeral home:August Tonolo OHG, Funeral home:268181",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "August Tonolo OHG",
+      "type": "Funeral home",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0JNn1K7D15Ler0KZlG7nv1",
-      "name": "Drouven GmbH, bakery:Drouven GmbH, bakery:275769",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Drouven GmbH",
+      "type": "Bakery",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0JNn1K7D15Ler0KZlG7nAK",
-      "name": "Villa Kunterbunt, Toy store:Villa Kunterbunt, Toy store:276972",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Villa Kunterbunt",
+      "type": "Toy store",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0JNn1K7D15Ler0KZlG7nST",
-      "name": "Körper 3:Körper 3:277605",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 3",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0JNn1K7D15Ler0KZlG7nQn",
-      "name": "Women Clothing Store:Women Clothing Store:277961",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Women Clothing Store",
+      "type": "Clothing Store",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "00dW6J7UbEef_pvmjWlYK0",
-      "name": "Shoes by Harris and Schirp:Shoes by Harris and Schirp:279374",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Shoes by Harris and Schirp",
+      "type": "Shoe Store",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "00dW6J7UbEef_pvmjWlYzS",
-      "name": "Körper 4:Körper 4:280850",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 4",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "00dW6J7UbEef_pvmjWlYgv",
-      "name": "Neue Wege Shoe Store:Neue Wege Shoe Store:281847",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Neue Wege Shoe Store",
+      "type": "Shoe Store",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "00dW6J7UbEef_pvmjWlZ41",
-      "name": "Körper 5:Körper 5:284495",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 5",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1gHK1oNX13Vg0WPKWX7U5x",
-      "name": "Anne gallwe beauty:Anne gallwe beauty:285296",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Anne gallwe beauty",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1gHK1oNX13Vg0WPKWX7UPm",
-      "name": "Körper 6:Körper 6:286075",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 6",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1gHK1oNX13Vg0WPKWX7UJF",
-      "name": "Burgerista Aachen Markt:Burgerista Aachen Markt:286660",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Burgerista Aachen Markt",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1gHK1oNX13Vg0WPKWX7TfS",
-      "name": "ALEX Aachen Restaurant:ALEX Aachen Restaurant:287063",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "ALEX Aachen Restaurant",
+      "type": "Restaurant",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1gHK1oNX13Vg0WPKWX7Tc3",
-      "name": "Sausalitos Cocktail Bar:Sausalitos Cocktail Bar:287368",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Sausalitos Cocktail Bar",
+      "type": "Cocktail Bar",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1gHK1oNX13Vg0WPKWX7S06",
-      "name": "Körper 7:Körper 7:293645",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 7",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyQ3r",
-      "name": "Körper 8:Körper 8:294462",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 8",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyL$X",
-      "name": "Körper 9:Körper 9:295210",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 9",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyLtD",
-      "name": "Körper 10:Körper 10:295686",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 10",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyLhy",
-      "name": "Körper 11:Körper 11:295991",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 11",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyLUT",
-      "name": "Körper 12:Körper 12:297302",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 12",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyLLd",
-      "name": "Körper 13:Körper 13:297900",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 13",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyL7A",
-      "name": "Körper 14:Körper 14:298753",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 14",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyK_u",
-      "name": "Körper 15:Körper 15:299379",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 15",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyK7j",
-      "name": "Körper 16:Körper 16:302886",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 16",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "19chn9TUr6NhhLto3zyNjd",
-      "name": "Xian Küche:Xian Küche:304556",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Xian Küche",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0G$85Eip5ARg41TwLNjQBm",
-      "name": "Haus Löwenstein, Historic Landmark:Haus Löwenstein, Historic Landmark:305554",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Haus Löwenstein, Historic Landmark",
+      "type": "Historic Landmark",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "Yes",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "0G$85Eip5ARg41TwLNjQ2P",
-      "name": "Egmont Bar:Egmont Bar:306171",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Egmont Bar",
+      "type": "Bar",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3DzRJdez59APiwqOvl0Q41",
-      "name": "AKL libenesisches:AKL libenesisches:307070",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "AKL libenesisches",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3DzRJdez59APiwqOvl0RYN",
-      "name": "Pausenbrot Cafe:Pausenbrot Cafe:308968",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Pausenbrot Cafe",
+      "type": "Cafe",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3DzRJdez59APiwqOvl0RK7",
-      "name": "Fachbereich Presse und Marketing:Fachbereich Presse und Marketing:310136",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Fachbereich Presse und Marketing",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3DzRJdez59APiwqOvl0Sxu",
-      "name": "Zum goldenen Einhorn:Zum goldenen Einhorn:311431",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Zum goldenen Einhorn",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3DzRJdez59APiwqOvl0SoN",
-      "name": "REWE Supermarkt:REWE Supermarkt:312040",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "REWE Supermarkt",
+      "type": "Supermarket",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "04OOVpmYPAsOzVfpFHTzLN",
-      "name": "Körper 17:Körper 7:460414",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 17",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1Mrrfmh3z7yhpRnQXpO0Zp",
-      "name": "Körper 18:Körper 7:462609",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 18",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1Mrrfmh3z7yhpRnQXpO1M4",
-      "name": "Körper 19:Körper 7:463462",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 19",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1Mrrfmh3z7yhpRnQXpO1ss",
-      "name": "Körper 20:Körper 7:465492",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 20",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "1Mrrfmh3z7yhpRnQXpO1hd",
-      "name": "Körper 21:Körper 7:466181",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 21",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP4uJ",
-      "name": "Körper 22:Körper 7:467069",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 22",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP4ho",
-      "name": "Körper 23:Körper 7:468124",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 23",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP4dD",
-      "name": "Körper 24:Körper 7:468899",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 24",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP48Y",
-      "name": "Körper 25:Körper 5:470092",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 25",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP4F2",
-      "name": "Körper 26:Körper 5:470444",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 26",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP45I",
-      "name": "Körper 27:Körper 5:470844",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 27",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP5_w",
-      "name": "Villa Kunterbunt, Toy store1:Villa Kunterbunt, Toy store:471508",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Villa Kunterbunt, Toy store1",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP5rd",
-      "name": "Aachener Cafe:Aachener Cafe:471817",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Aachener Cafe",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP5hF",
-      "name": "Rethel Pub, Irish Pub1:Rethel Pub, Irish Pub:472225",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Rethel Pub, Irish Pub1",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP5kz",
-      "name": "Haus am Hühnerdieb1:Haus am Hühnerdieb:472531",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Haus am Hühnerdieb1",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP5M3",
-      "name": "Körper 29:Körper 1:474093",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 29",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP5A4",
-      "name": "Körper 30:Körper 1:474346",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 30",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP5E8",
-      "name": "Körper 31:Körper 1:474598",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 31",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP2Yk",
-      "name": "van Hout Partout1:van Hout Partout:476864",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "van Hout Partout1",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP2dI",
-      "name": "van Hout Partout2:van Hout Partout:477116",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "van Hout Partout2",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP2I3",
-      "name": "Minh Chau1:Minh Chau:477933",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Minh Chau1",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP2M9",
-      "name": "Minh Chau2:Minh Chau:478183",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Minh Chau2",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP2Fe",
-      "name": "Hexenhof am Apfelbau, European Restaurant1:Hexenhof am Apfelbau, European Restaurant:478598",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Hexenhof am Apfelbau, European Restaurant1",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP3tt",
-      "name": "Körper 2:Körper 16:480153",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 2",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP3jj",
-      "name": "Körper 28:Körper 16:480515",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Körper 28",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     },
     {
       "id": "3sp9c4Me9CoeIHtnknP3k8",
-      "name": "Xian Küche1:Xian Küche:480742",
-      "type": "IfcBuildingElementProxy",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "name": "Xian Küche1",
+      "type": "Buildings",
+      "parent": "Buildings",
+      "address": "",
+      "date": "",
+      "historic": "",
+      "area": "",
+      "owner": ""
     }
   ]
 }

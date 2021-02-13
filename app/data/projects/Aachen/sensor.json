@@ -1,64 +1,42 @@
 {
-  "id": "Projektnummer",
-  "projectId": "2clzl$UuzDAAuy3WDv$TNv",
-  "author": "",
-  "createdAt": "2021-02-12T16:30:49",
-  "schema": "IFC2X3",
-  "creatingApplication": "20170223_1515(x64) - Exporter 18.0.0.420 - Alternate UI 18.0.0.420",
+  "id": "Sensors",
+  "projectId": "Sensors",
   "metaObjects": [
     {
-      "id": "2clzl$UuzDAAuy3WDv$TNv",
-      "name": "Projektnummer",
-      "type": "IfcProject",
+      "id": "Sensors",
+      "name": "Sensors",
+      "type": "Sensors",
       "parent": null
     },
     {
-      "id": "2clzl$UuzDAAuy3WDv$TNx",
-      "name": "Default",
-      "type": "IfcSite",
-      "parent": "2clzl$UuzDAAuy3WDv$TNv"
-    },
-    {
-      "id": "2clzl$UuzDAAuy3WDv$TNu",
-      "name": "",
-      "type": "IfcBuilding",
-      "parent": "2clzl$UuzDAAuy3WDv$TNx"
-    },
-    {
-      "id": "2clzl$UuzDAAuy3WE60Xa6",
-      "name": "Ebene 1",
-      "type": "IfcBuildingStorey",
-      "parent": "2clzl$UuzDAAuy3WDv$TNu"
+      "id": "0RcD6OWIT3aeDtzYT9gg1Q",
+      "name": "Sensor 1",
+      "type": "IfcFlowTerminal",
+      "parent": "Sensors"
     },
     {
       "id": "0RcD6OWIT3aeDtzYT9ggz_",
-      "name": "Pfostenbeleuchtung:Sensor 2:406823",
+      "name": "Sensor 2",
       "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
-    },
-    {
-      "id": "0RcD6OWIT3aeDtzYT9gg1Q",
-      "name": "Pfostenbeleuchtung:Sensor 1:408067",
-      "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
-    },
-    {
-      "id": "0RcD6OWIT3aeDtzYT9gg1K",
-      "name": "Pfostenbeleuchtung:Sensor 5:408077",
-      "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
-    },
-    {
-      "id": "0RcD6OWIT3aeDtzYT9gg1F",
-      "name": "Pfostenbeleuchtung:Sensor 4:408086",
-      "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "parent": "Sensors"
     },
     {
       "id": "0RcD6OWIT3aeDtzYT9gg1y",
-      "name": "Pfostenbeleuchtung:Sensor 3:408101",
+      "name": "Sensor 3",
       "type": "IfcFlowTerminal",
-      "parent": "2clzl$UuzDAAuy3WE60Xa6"
+      "parent": "Sensors"
+    },
+    {
+      "id": "0RcD6OWIT3aeDtzYT9gg1F",
+      "name": "Sensor 4",
+      "type": "IfcFlowTerminal",
+      "parent": "Sensors"
+    },
+    {
+      "id": "0RcD6OWIT3aeDtzYT9gg1K",
+      "name": "Sensor 5",
+      "type": "IfcFlowTerminal",
+      "parent": "Sensors"
     }
   ]
 }
