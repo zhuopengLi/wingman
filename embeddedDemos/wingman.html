@@ -179,6 +179,41 @@
             "owner"
         ]
 
+        const sitePro = [
+            "Address: ",
+            "Name: ",
+            "Type: ",
+            "Date of built: ",
+            "Historic building: ",
+            "Base area: ",
+            "Owner of the premises: ",
+            "Electric consumption: ",
+            "Water consumption: ",
+            "Gas consumption: ",
+            "Last update at: "
+        ];
+
+        const siteProJSON = [
+            "address",
+            "name",
+            "type",
+            "date",
+            "historic",
+            "area",
+            "owner",
+            "ElectricityConsumption",
+            "WaterConsumption",
+            "GasConsumption",
+            "timestamp"
+        ]
+
+        const siteProUnit = [
+            "kW/h",
+            "m³/h",
+            "m³/h",
+            " (CET)"
+        ]
+
         const pipePro = [
             "Type: ",
             "Depth: ",
@@ -305,7 +340,37 @@
             globalRefresh = localRefresh;
         }
 
-        function getBuildingPro(param) { //edit metascene.js metaobject.js and metamodel.js
+        function getSmartBuildingPro(param, name) {
+            document.getElementById("info").style.margin = "1em 1.2em 0";
+            document.getElementById("info").innerHTML = "Loading sensor data...";
+
+            var localRefresh = setInterval(function () {
+                loadSensorData("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
+                    if (sensor.readyState == 4 && sensor.status == 200) {
+                        document.getElementById("info").style.margin = "0";
+
+                        var data = JSON.parse(sensor.responseText);
+
+                        var info = "<ul>"
+                        for (let i = 0; i < buildingPro.length; i++) {
+                            info += "<li>" + "<b>" + buildingPro[i] + "</b>" + param[buildingProJSON[i]] + "</li>";
+                        }
+                        info += "<hr/>"
+                        for (let i = 7; i < sitePro.length - 1; i++) {
+                            info += "<li>" + "<b>" + sitePro[i] + "</b>" + data[param][siteProJSON[i]].$numberDouble + siteProUnit[i - 7] + "</li>";
+                        }
+
+                        info += "<li>" + "<b>Last update at: </b>" + data[param][siteProJSON[10]] + siteProUnit[3] + "</li>" + "</ul>";
+
+                        document.getElementById("info").innerHTML = info
+                    }
+                })
+            }, 5000);
+
+            globalRefresh = localRefresh;
+        }
+
+        function getBuildingPro(param) { //edit metascene.js, metaobject.js and metamodel.js
             document.getElementById("info").style.margin = "0";
 
             var info = "<ul>"
@@ -320,11 +385,12 @@
             const id = param.id;
             const name = param.name;
 
-            if (id == "3rFeaDCe58Ph8ptbjJL$5m") { getSensorPro(30, name) }
-            else if (id == "3rFeaDCe58Ph8ptbjJL$vK") { getSensorPro(29, name) }
-            else if (id == "3rFeaDCe58Ph8ptbjJL$vQ") { getSensorPro(36, name) }
-            else if (id == "3rFeaDCe58Ph8ptbjJL$v1") { getSensorPro(32, name) }
-            else if (id == "3rFeaDCe58Ph8ptbjJL$vo") { getSensorPro(9, name) }
+            if (id == "0RcD6OWIT3aeDtzYT9gg1Q") { getSensorPro(2, name) } //sensors
+            else if (id == "0RcD6OWIT3aeDtzYT9ggz_") { getSensorPro(3, name) }
+            else if (id == "0RcD6OWIT3aeDtzYT9gg1y") { getSensorPro(4, name) }
+            else if (id == "0RcD6OWIT3aeDtzYT9gg1F") { getSensorPro(5, name) }
+            else if (id == "0RcD6OWIT3aeDtzYT9gg1K") { getSensorPro(6, name) }
+            else if (id == "1pEomJbuL6pAjDLauPLdDj") { getSmartBuildingPro(1, name) } //completed building
             else { getBuildingPro(param) }
         }
 
@@ -701,6 +767,7 @@
                             const scene = viewer.scene;
                             const metaObject = viewer.metaScene.metaObjects[entity.objectId];
 
+                            console.log(viewer.metaScene.metaObjects)
                             getInfo(metaObject);
 
                             if (lastEntity != null) {
@@ -1006,8 +1073,6 @@
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh();
 
-            console.log(pickResult);
-            console.log(pickResult._worldPos);
             getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -1019,16 +1084,21 @@
                 lastColorize = pickResult.entity.colorize.slice();
                 pickResult.entity.colorize = [1, 130 / 255, 0];
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
-
-
             } else if (entity.id == lastEntity.id || globalModel.length == 0) {
                 stopRefresh();
                 lastEntity = null;
                 pickResult.entity.colorize = lastColorize;
                 clearProperty();
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
-
             }
+
+            //entity.model.position = [20, 20, 20];
+            //console.log(entity.model.position);
+            //console.log(pickResult._worldPos);
+
+
+
+            
         });
 
 
@@ -1082,7 +1152,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.4</i>
+                    <i>Alpha Testing | v0.9.5</i>
                 </div>
 
                 <div class="nav">
@@ -1161,7 +1231,8 @@
             <i>Copyright</i>
             <img src="..\images\Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
             <img src="..\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
-            <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP" style="margin-right: 3em">
+            <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP"
+                style="padding-right: 1.5em; border-right: 1px white solid">
             <i>Supported by</i>
             <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
             <img src="..\images\itnrw_logo.png" width="8%" alt="IT NRW">
