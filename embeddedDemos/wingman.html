@@ -121,6 +121,7 @@
 
         import { Viewer } from "../src/viewer/Viewer.js";
         import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
+        import { GLTFLoaderPlugin } from "../src/plugins/GLTFLoaderPlugin/GLTFLoaderPlugin.js";
 
         //import menu
         import { ContextMenu } from "../src/extras/ContextMenu/ContextMenu.js";
@@ -134,6 +135,9 @@
         import { VBOGeometry } from "../src/viewer/scene/geometry/VBOGeometry.js";
         import { buildGridGeometry } from "../src/viewer/scene/geometry/builders/buildGridGeometry.js";
         import { PhongMaterial } from "../src/viewer/scene/materials/PhongMaterial.js";
+
+        //import node
+        import { Node } from "../src/viewer/scene/nodes/Node.js";
 
         const viewer = new Viewer({
             canvasId: "myCanvas"
@@ -311,8 +315,8 @@
             document.getElementById("info").innerHTML = '<i>Click on objects for more info</i>';
         }
 
-        function stopRefresh() {
-            clearInterval(globalRefresh);
+        function stopRefresh(param) {
+            clearInterval(param);
         }
 
         function getSensorPro(param, name) {
@@ -381,6 +385,22 @@
             document.getElementById("info").innerHTML = info
         }
 
+        function getCranePosition() {
+            var craneRefresh = setInterval(function () {
+
+                globalModel[globalModel.length - 1].destroy();
+                globalModel.push(xktLoader.load({
+                    src: "../app/data/projects/Aachen/crane.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/crane.json",
+                    edges: true,
+                    rotation: [0, Math.random() * 30, 0]
+                }));
+
+            }, 2000);
+
+            globalCraneRefresh = craneRefresh;
+        }
+
         function getInfo(param) {
             const id = param.id;
             const name = param.name;
@@ -401,13 +421,19 @@
 
 
         const xktLoader = new XKTLoaderPlugin(viewer);
+        const gltfLoader = new GLTFLoaderPlugin(viewer);
 
         var globalModel = [];
+
+        var globalCraneRefresh;
+
+        var globalCrane;
 
         function clearCanvas() {
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0;
-            stopRefresh();
+            stopRefresh(globalRefresh);
+            if (globalCraneRefresh !== undefined) { stopRefresh(globalCraneRefresh); }
             stopGeoRefresh();
             lastEntity = null;
             clearProperty();
@@ -501,47 +527,73 @@
 
             clearCanvas()
 
+
+
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/Aachen/site.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/site.json",
+                id: "buildings",
+                src: "../app/data/projects/Aachen/buildings.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/buildings.json",
                 edges: true
             }));
 
             globalModel[0].on("loaded", () => {
                 globalModel.push(xktLoader.load({
-                    src: "../app/data/projects/Aachen/sensor.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/sensor.json",
-                    edges: true,
+                    id: "streets",
+                    src: "../app/data/projects/Aachen/streets.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                    edges: true
                 }));
 
                 globalModel[1].on("loaded", () => {
                     globalModel.push(xktLoader.load({
-                        src: "../app/data/projects/Aachen/buildings.xkt",
-                        metaModelSrc: "../app/data/projects/Aachen/buildings.json",
-                        edges: true,
+                        id: "pipes",
+                        src: "../app/data/projects/Aachen/pipes.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                        edges: true
                     }));
 
                     globalModel[2].on("loaded", () => {
                         globalModel.push(xktLoader.load({
-                            src: "../app/data/projects/Aachen/streets.xkt",
-                            metaModelSrc: "../app/data/projects/Aachen/streets.json",
-                            edges: true,
+                            id: "sensor",
+                            src: "../app/data/projects/Aachen/sensor.xkt",
+                            metaModelSrc: "../app/data/projects/Aachen/sensor.json",
+                            edges: true
                         }));
 
                         globalModel[3].on("loaded", () => {
                             globalModel.push(xktLoader.load({
-                                src: "../app/data/projects/Aachen/pipes.xkt",
-                                metaModelSrc: "../app/data/projects/Aachen/pipes.json",
-                                edges: true,
-                            }));
+                                id: "site",
+                                src: "../app/data/projects/Aachen/site static.xkt",
+                                metaModelSrc: "../app/data/projects/Aachen/site static.json",
+                                edges: true
+                            }))
 
                             globalModel[4].on("loaded", () => {
-                                viewer.cameraFlight.flyTo({
-                                    projection: "perspective",
-                                    eye: [25, 150, 75],
-                                    look: [0, 5, 0],
-                                    up: [-0.01, 0.99, 0.039],
-                                    duration: 0
+                                globalModel.push(xktLoader.load({
+                                    id: "site",
+                                    src: "../app/data/projects/Aachen/truck.xkt",
+                                    metaModelSrc: "../app/data/projects/Aachen/truck.json",
+                                    edges: true
+                                }))
+
+                                globalModel[5].on("loaded", () => {
+                                    globalModel.push(xktLoader.load({
+                                        id: "site",
+                                        src: "../app/data/projects/Aachen/crane.xkt",
+                                        metaModelSrc: "../app/data/projects/Aachen/crane.json",
+                                        edges: true
+                                    }))
+
+                                    globalModel[6].on("loaded", () => {
+                                        viewer.cameraFlight.flyTo({
+                                            projection: "perspective",
+                                            eye: [25, 150, 75],
+                                            look: [0, 5, 0],
+                                            up: [-0.01, 0.99, 0.039],
+                                            duration: 0
+
+                                        });
+                                    });
                                 });
                             });
                         });
@@ -549,6 +601,7 @@
                 });
             });
 
+            getCranePosition()
 
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
 
@@ -774,7 +827,8 @@
                                 lastEntity.colorize = lastColorize;
                                 lastEntity = null;
                                 lastColorize = null;
-                                stopRefresh();
+                                stopRefresh(globalRefresh);
+
                             }
                             if (context.entity != undefined) {
                                 lastEntity = context.entity;
@@ -868,7 +922,8 @@
                 lastEntity.colorize = lastColorize;
                 lastEntity = null;
                 lastColorize = null;
-                stopRefresh();
+                stopRefresh(globalRefresh);
+
             }
             if (entity != undefined) {
                 lastEntity = entity;
@@ -987,7 +1042,8 @@
                                 lastEntity.colorize = lastColorize;
                                 lastEntity = null;
                                 lastColorize = null;
-                                stopRefresh();
+                                stopRefresh(globalRefresh);
+
                             }
                             if (entity != undefined) {
                                 lastEntity = entity;
@@ -1071,8 +1127,9 @@
         viewer.cameraControl.on("picked", (pickResult) => {
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
-            stopRefresh();
+            stopRefresh(globalRefresh);
 
+            console.log(viewer.scene.models["site"]);
             getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -1085,7 +1142,8 @@
                 pickResult.entity.colorize = [1, 130 / 255, 0];
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
             } else if (entity.id == lastEntity.id || globalModel.length == 0) {
-                stopRefresh();
+                stopRefresh(globalRefresh);
+
                 lastEntity = null;
                 pickResult.entity.colorize = lastColorize;
                 clearProperty();
@@ -1098,7 +1156,7 @@
 
 
 
-            
+
         });
 
 
