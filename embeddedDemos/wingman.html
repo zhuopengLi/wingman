@@ -385,6 +385,39 @@
             document.getElementById("info").innerHTML = info
         }
 
+        function getPipePro(param) { //edit metascene.js, metaobject.js and metamodel.js
+            document.getElementById("info").style.margin = "0";
+
+            var info = "<ul>"
+            for (let i = 0; i < pipePro.length; i++) {
+                info += "<li>" + "<b>" + pipePro[i] + "</b>" + param[pipeProJSON[i]] + "</li>";
+            }
+            info += "</ul>";
+            document.getElementById("info").innerHTML = info
+        }
+
+        function getStreetsPro(param) { //edit metascene.js, metaobject.js and metamodel.js
+            document.getElementById("info").style.margin = "0";
+
+            var info = "<ul>"
+            for (let i = 0; i < roadPro.length; i++) {
+                info += "<li>" + "<b>" + roadPro[i] + "</b>" + param[roadProJSON[i]] + "</li>";
+            }
+            info += "</ul>";
+            document.getElementById("info").innerHTML = info
+        }
+
+        function getTreePro(param) { //edit metascene.js, metaobject.js and metamodel.js
+            document.getElementById("info").style.margin = "0";
+
+            var info = "<ul>"
+            for (let i = 0; i < treePro.length; i++) {
+                info += "<li>" + "<b>" + treePro[i] + "</b>" + param[treeProJSON[i]] + "</li>";
+            }
+            info += "</ul>";
+            document.getElementById("info").innerHTML = info
+        }
+
         function getCranePosition() {
             var craneRefresh = setInterval(function () {
 
@@ -405,13 +438,24 @@
             const id = param.id;
             const name = param.name;
 
-            if (id == "0RcD6OWIT3aeDtzYT9gg1Q") { getSensorPro(2, name) } //sensors
-            else if (id == "0RcD6OWIT3aeDtzYT9ggz_") { getSensorPro(3, name) }
-            else if (id == "0RcD6OWIT3aeDtzYT9gg1y") { getSensorPro(4, name) }
-            else if (id == "0RcD6OWIT3aeDtzYT9gg1F") { getSensorPro(5, name) }
-            else if (id == "0RcD6OWIT3aeDtzYT9gg1K") { getSensorPro(6, name) }
-            else if (id == "1pEomJbuL6pAjDLauPLdDj") { getSmartBuildingPro(1, name) } //completed building
-            else { getBuildingPro(param) }
+            if (param.parent != undefined) {
+                const parent = param.parent.id;
+
+                if (id == "0RcD6OWIT3aeDtzYT9gg1Q") { getSensorPro(2, name) } //sensors
+                else if (id == "0RcD6OWIT3aeDtzYT9ggz_") { getSensorPro(3, name) }
+                else if (id == "0RcD6OWIT3aeDtzYT9gg1y") { getSensorPro(4, name) }
+                else if (id == "0RcD6OWIT3aeDtzYT9gg1F") { getSensorPro(5, name) }
+                else if (id == "0RcD6OWIT3aeDtzYT9gg1K") { getSensorPro(6, name) }
+                else if (id == "1pEomJbuL6pAjDLauPLdDj") { getSmartBuildingPro(1, name) } //completed building
+                else if (parent == "Buildings") { getBuildingPro(param) }
+                else if (parent == "Pipe networks") { getPipePro(param) }
+                else if (parent == "Streets") { getStreetsPro(param) }
+                else if (parent == "Planting") { getTreePro(param) }
+                else { clearProperty() }
+            }
+            else { clearProperty() }
+
+
         }
 
 
@@ -820,7 +864,7 @@
                             const scene = viewer.scene;
                             const metaObject = viewer.metaScene.metaObjects[entity.objectId];
 
-                            console.log(viewer.metaScene.metaObjects)
+                            //console.log(viewer.metaScene.metaObjects)
                             getInfo(metaObject);
 
                             if (lastEntity != null) {
@@ -1129,7 +1173,7 @@
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh(globalRefresh);
 
-            console.log(viewer.scene.models["site"]);
+            //console.log(viewer.scene.models["site"]);
             getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -1210,7 +1254,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.5</i>
+                    <i>Alpha Testing | v0.9.6</i>
                 </div>
 
                 <div class="nav">
