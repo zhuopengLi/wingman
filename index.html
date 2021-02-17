@@ -7,8 +7,8 @@
     <title>Wingman</title>
 
     <!-- Wingman Platform styles -->
-    <link rel="stylesheet" href="../app/css/lemonade.css" type="text/css" />
-    <link rel="stylesheet" href="../app/css/treeview.css" type="text/css" />
+    <link rel="stylesheet" href="/app/css/lemonade.css" type="text/css" />
+    <link rel="stylesheet" href="/app/css/treeview.css" type="text/css" />
 
     <!-- TreeViewPlugin -->
 
@@ -119,25 +119,22 @@
         //------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        import { Viewer } from "../src/viewer/Viewer.js";
-        import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
-        import { GLTFLoaderPlugin } from "../src/plugins/GLTFLoaderPlugin/GLTFLoaderPlugin.js";
+        import { Viewer } from "/src/viewer/Viewer.js";
+        import { XKTLoaderPlugin } from "/src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
 
         //import menu
-        import { ContextMenu } from "../src/extras/ContextMenu/ContextMenu.js";
-        import { TreeViewPlugin } from "../src/plugins/TreeViewPlugin/TreeViewPlugin.js";
+        import { ContextMenu } from "/src/extras/ContextMenu/ContextMenu.js";
+        import { TreeViewPlugin } from "/src/plugins/TreeViewPlugin/TreeViewPlugin.js";
 
         //import nav cube
-        import { NavCubePlugin } from "../src/plugins/NavCubePlugin/NavCubePlugin.js";
+        import { NavCubePlugin } from "/src/plugins/NavCubePlugin/NavCubePlugin.js";
 
         //import mesh 
-        import { Mesh } from "../src/viewer/scene/mesh/Mesh.js";
-        import { VBOGeometry } from "../src/viewer/scene/geometry/VBOGeometry.js";
-        import { buildGridGeometry } from "../src/viewer/scene/geometry/builders/buildGridGeometry.js";
-        import { PhongMaterial } from "../src/viewer/scene/materials/PhongMaterial.js";
+        import { Mesh } from "/src/viewer/scene/mesh/Mesh.js";
+        import { VBOGeometry } from "/src/viewer/scene/geometry/VBOGeometry.js";
+        import { buildGridGeometry } from "/src/viewer/scene/geometry/builders/buildGridGeometry.js";
+        import { PhongMaterial } from "/src/viewer/scene/materials/PhongMaterial.js";
 
-        //import node
-        import { Node } from "../src/viewer/scene/nodes/Node.js";
 
         const viewer = new Viewer({
             canvasId: "myCanvas"
@@ -315,6 +312,13 @@
             document.getElementById("info").innerHTML = '<i>Click on objects for more info</i>';
         }
 
+        function noProperty() {
+            document.getElementById("info").style.margin = "1em";
+            document.getElementById("info").style.fontSize = "14pt";
+            document.getElementById("info").style.color = "#03103f63";
+            document.getElementById("info").innerHTML = '<i>No infomation available</i>';
+        }
+
         function stopRefresh(param) {
             clearInterval(param);
         }
@@ -418,22 +422,6 @@
             document.getElementById("info").innerHTML = info
         }
 
-        function getCranePosition() {
-            var craneRefresh = setInterval(function () {
-
-                globalModel[globalModel.length - 1].destroy();
-                globalModel.push(xktLoader.load({
-                    src: "../app/data/projects/Aachen/crane.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/crane.json",
-                    edges: true,
-                    rotation: [0, Math.random() * 30, 0]
-                }));
-
-            }, 2000);
-
-            globalCraneRefresh = craneRefresh;
-        }
-
         function getInfo(param) {
             const id = param.id;
             const name = param.name;
@@ -451,11 +439,9 @@
                 else if (parent == "Pipe networks") { getPipePro(param) }
                 else if (parent == "Streets") { getStreetsPro(param) }
                 else if (parent == "Planting") { getTreePro(param) }
-                else { clearProperty() }
+                else { noProperty() }
             }
-            else { clearProperty() }
-
-
+            else { noProperty() }
         }
 
 
@@ -465,7 +451,6 @@
 
 
         const xktLoader = new XKTLoaderPlugin(viewer);
-        const gltfLoader = new GLTFLoaderPlugin(viewer);
 
         var globalModel = [];
 
@@ -477,7 +462,6 @@
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0;
             stopRefresh(globalRefresh);
-            if (globalCraneRefresh !== undefined) { stopRefresh(globalCraneRefresh); }
             stopGeoRefresh();
             lastEntity = null;
             clearProperty();
@@ -490,7 +474,6 @@
             document.getElementsByTagName("button")[i].removeAttribute("disabled")
             document.getElementsByTagName("button")[i].style.backgroundColor = "white";
             document.getElementsByTagName("button")[i].style.fontStyle = "normal";
-
         }
 
         function disable(i) {
@@ -498,7 +481,6 @@
             document.getElementsByTagName("button")[i].removeAttribute("onclick")
             document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(161, 161, 161)";
             document.getElementsByTagName("button")[i].style.fontStyle = "normal";
-
         }
 
         function select(i, value) {
@@ -506,7 +488,6 @@
             document.getElementsByTagName("button")[i].removeAttribute("onclick")
             document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(220,180,50)";
             document.getElementsByTagName("button")[i].style.fontStyle = "italic";
-
         }
 
         function restoreCamera(i) {
@@ -518,6 +499,7 @@
                 });
             });
         }
+        
         //----------------------------------------------------------------------------------------------------------------------
         document.initAachenEarly = function () {
 
@@ -528,22 +510,22 @@
             if (globalModel != undefined) { clearCanvas(); }
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/Aachen/buildings.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/buildings.json",
+                src: "/app/data/projects/Aachen/buildings.xkt",
+                metaModelSrc: "/app/data/projects/Aachen/buildings.json",
                 edges: true
             }));
 
             globalModel[0].on("loaded", () => {
                 globalModel.push(xktLoader.load({
-                    src: "../app/data/projects/Aachen/streets.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                    src: "/app/data/projects/Aachen/streets.xkt",
+                    metaModelSrc: "/app/data/projects/Aachen/streets.json",
                     edges: true,
                 }));
 
                 globalModel[1].on("loaded", () => {
                     globalModel.push(xktLoader.load({
-                        src: "../app/data/projects/Aachen/pipes.xkt",
-                        metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                        src: "/app/data/projects/Aachen/pipes.xkt",
+                        metaModelSrc: "/app/data/projects/Aachen/pipes.json",
                         edges: true,
                     }));
 
@@ -575,69 +557,51 @@
 
             globalModel.push(xktLoader.load({
                 id: "buildings",
-                src: "../app/data/projects/Aachen/buildings.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/buildings.json",
+                src: "/app/data/projects/Aachen/buildings.xkt",
+                metaModelSrc: "/app/data/projects/Aachen/buildings.json",
                 edges: true
             }));
 
             globalModel[0].on("loaded", () => {
                 globalModel.push(xktLoader.load({
                     id: "streets",
-                    src: "../app/data/projects/Aachen/streets.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                    src: "/app/data/projects/Aachen/streets.xkt",
+                    metaModelSrc: "/app/data/projects/Aachen/streets.json",
                     edges: true
                 }));
 
                 globalModel[1].on("loaded", () => {
                     globalModel.push(xktLoader.load({
                         id: "pipes",
-                        src: "../app/data/projects/Aachen/pipes.xkt",
-                        metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                        src: "/app/data/projects/Aachen/pipes.xkt",
+                        metaModelSrc: "/app/data/projects/Aachen/pipes.json",
                         edges: true
                     }));
 
                     globalModel[2].on("loaded", () => {
                         globalModel.push(xktLoader.load({
                             id: "sensor",
-                            src: "../app/data/projects/Aachen/sensor.xkt",
-                            metaModelSrc: "../app/data/projects/Aachen/sensor.json",
+                            src: "/app/data/projects/Aachen/sensor.xkt",
+                            metaModelSrc: "/app/data/projects/Aachen/sensor.json",
                             edges: true
                         }));
 
                         globalModel[3].on("loaded", () => {
                             globalModel.push(xktLoader.load({
                                 id: "site",
-                                src: "../app/data/projects/Aachen/site static.xkt",
-                                metaModelSrc: "../app/data/projects/Aachen/site static.json",
+                                src: "/app/data/projects/Aachen/site.xkt",
+                                metaModelSrc: "/app/data/projects/Aachen/site.json",
                                 edges: true
-                            }))
+                            }));
 
                             globalModel[4].on("loaded", () => {
-                                globalModel.push(xktLoader.load({
-                                    id: "site",
-                                    src: "../app/data/projects/Aachen/truck.xkt",
-                                    metaModelSrc: "../app/data/projects/Aachen/truck.json",
-                                    edges: true
-                                }))
+                                viewer.cameraFlight.flyTo({
+                                    projection: "perspective",
+                                    eye: [25, 150, 75],
+                                    look: [0, 5, 0],
+                                    up: [-0.01, 0.99, 0.039],
+                                    duration: 0
 
-                                globalModel[5].on("loaded", () => {
-                                    globalModel.push(xktLoader.load({
-                                        id: "site",
-                                        src: "../app/data/projects/Aachen/crane.xkt",
-                                        metaModelSrc: "../app/data/projects/Aachen/crane.json",
-                                        edges: true
-                                    }))
-
-                                    globalModel[6].on("loaded", () => {
-                                        viewer.cameraFlight.flyTo({
-                                            projection: "perspective",
-                                            eye: [25, 150, 75],
-                                            look: [0, 5, 0],
-                                            up: [-0.01, 0.99, 0.039],
-                                            duration: 0
-
-                                        });
-                                    });
                                 });
                             });
                         });
@@ -645,9 +609,9 @@
                 });
             });
 
-            getCranePosition()
 
-            loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
+
+        loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
 
         }
 
@@ -660,29 +624,29 @@
             clearCanvas()
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/Aachen/built.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/built.json",
+                src: "/app/data/projects/Aachen/built.xkt",
+                metaModelSrc: "/app/data/projects/Aachen/built.json",
                 edges: true
             }));
 
             globalModel[0].on("loaded", () => {
                 globalModel.push(xktLoader.load({
-                    src: "../app/data/projects/Aachen/buildings.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/buildings.json",
+                    src: "/app/data/projects/Aachen/buildings.xkt",
+                    metaModelSrc: "/app/data/projects/Aachen/buildings.json",
                     edges: true,
                 }));
 
                 globalModel[0].on("loaded", () => {
                     globalModel.push(xktLoader.load({
-                        src: "../app/data/projects/Aachen/streets.xkt",
-                        metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                        src: "/app/data/projects/Aachen/streets.xkt",
+                        metaModelSrc: "/app/data/projects/Aachen/streets.json",
                         edges: true,
                     }));
 
                     globalModel[1].on("loaded", () => {
                         globalModel.push(xktLoader.load({
-                            src: "../app/data/projects/Aachen/pipes.xkt",
-                            metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                            src: "/app/data/projects/Aachen/pipes.xkt",
+                            metaModelSrc: "/app/data/projects/Aachen/pipes.json",
                             edges: true,
                         }));
 
@@ -713,8 +677,8 @@
             clearCanvas();
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/WaterLock/models/design/geometry.xkt",
-                metaModelSrc: "../app/data/projects/WaterLock/models/design/metadata.json",
+                src: "/app/data/projects/WaterLock/models/design/geometry.xkt",
+                metaModelSrc: "/app/data/projects/WaterLock/models/design/metadata.json",
                 edges: true
             }));
 
@@ -734,8 +698,8 @@
             clearCanvas();
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/Schependomlaan/models/design/geometry.xkt",
-                metaModelSrc: "../app/data/projects/Schependomlaan/models/design/metadata.json",
+                src: "/app/data/projects/Schependomlaan/models/design/geometry.xkt",
+                metaModelSrc: "/app/data/projects/Schependomlaan/models/design/metadata.json",
                 edges: true
             }));
 
@@ -756,45 +720,45 @@
             clearCanvas();
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/WestRiversideHospital/models/architectural/geometry.xkt",
-                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/architectural/metadata.json",
+                src: "/app/data/projects/WestRiversideHospital/models/architectural/geometry.xkt",
+                metaModelSrc: "/app/data/projects/WestRiversideHospital/models/architectural/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/WestRiversideHospital/models/electrical/geometry.xkt",
-                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/electrical/metadata.json",
+                src: "/app/data/projects/WestRiversideHospital/models/electrical/geometry.xkt",
+                metaModelSrc: "/app/data/projects/WestRiversideHospital/models/electrical/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/WestRiversideHospital/models/fireAlarms/geometry.xkt",
-                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/fireAlarms/metadata.json",
+                src: "/app/data/projects/WestRiversideHospital/models/fireAlarms/geometry.xkt",
+                metaModelSrc: "/app/data/projects/WestRiversideHospital/models/fireAlarms/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/WestRiversideHospital/models/mechanical/geometry.xkt",
-                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/mechanical/metadata.json",
+                src: "/app/data/projects/WestRiversideHospital/models/mechanical/geometry.xkt",
+                metaModelSrc: "/app/data/projects/WestRiversideHospital/models/mechanical/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/WestRiversideHospital/models/plumbing/geometry.xkt",
-                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/plumbing/metadata.json",
+                src: "/app/data/projects/WestRiversideHospital/models/plumbing/geometry.xkt",
+                metaModelSrc: "/app/data/projects/WestRiversideHospital/models/plumbing/metadata.json",
                 edges: true
             }));
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/WestRiversideHospital/models/sprinklers/geometry.xkt",
-                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/sprinklers/metadata.json",
+                src: "/app/data/projects/WestRiversideHospital/models/sprinklers/geometry.xkt",
+                metaModelSrc: "/app/data/projects/WestRiversideHospital/models/sprinklers/metadata.json",
                 edges: true
             }));
 
 
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/WestRiversideHospital/models/structure/geometry.xkt",
-                metaModelSrc: "../app/data/projects/WestRiversideHospital/models/structure/metadata.json",
+                src: "/app/data/projects/WestRiversideHospital/models/structure/geometry.xkt",
+                metaModelSrc: "/app/data/projects/WestRiversideHospital/models/structure/metadata.json",
                 edges: true
             }));
 
@@ -1194,12 +1158,6 @@
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
             }
 
-            //entity.model.position = [20, 20, 20];
-            //console.log(entity.model.position);
-            //console.log(pickResult._worldPos);
-
-
-
 
         });
 
@@ -1254,7 +1212,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.6</i>
+                    <i>Alpha Testing | v0.9.7</i>
                 </div>
 
                 <div class="nav">
@@ -1331,13 +1289,13 @@
 
 
             <i>Copyright</i>
-            <img src="..\images\Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
-            <img src="..\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
-            <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP"
+            <img src="\images\Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
+            <img src="\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
+            <img src="\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP"
                 style="padding-right: 1.5em; border-right: 1px white solid">
             <i>Supported by</i>
-            <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
-            <img src="..\images\itnrw_logo.png" width="8%" alt="IT NRW">
+            <img src="\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
+            <img src="\images\itnrw_logo.png" width="8%" alt="IT NRW">
 
 
         </div>
