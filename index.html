@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Wingman</title>
-    <base href=".">
+    <base href="/">
 
     <!-- Wingman Platform styles -->
     <link rel="stylesheet" href="/app/css/lemonade.css" type="text/css" />
@@ -1138,7 +1138,7 @@
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh(globalRefresh);
 
-            //console.log(viewer.scene.models["site"]);
+            console.log(entity.id);
             getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
