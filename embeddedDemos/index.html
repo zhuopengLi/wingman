@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Wingman</title>
-    <base href=".">
 
     <!-- Wingman Platform styles -->
     <link rel="stylesheet" href="../app/css/lemonade.css" type="text/css" />
@@ -122,6 +121,7 @@
 
         import { Viewer } from "../src/viewer/Viewer.js";
         import { XKTLoaderPlugin } from "../src/plugins/XKTLoaderPlugin/XKTLoaderPlugin.js";
+        import { GLTFLoaderPlugin } from "../src/plugins/GLTFLoaderPlugin/GLTFLoaderPlugin.js";
 
         //import menu
         import { ContextMenu } from "../src/extras/ContextMenu/ContextMenu.js";
@@ -136,6 +136,8 @@
         import { buildGridGeometry } from "../src/viewer/scene/geometry/builders/buildGridGeometry.js";
         import { PhongMaterial } from "../src/viewer/scene/materials/PhongMaterial.js";
 
+        //import node
+        import { Node } from "../src/viewer/scene/nodes/Node.js";
 
         const viewer = new Viewer({
             canvasId: "myCanvas"
@@ -423,6 +425,22 @@
             document.getElementById("info").innerHTML = info
         }
 
+        function getCranePosition() {
+            var craneRefresh = setInterval(function () {
+
+                globalModel[globalModel.length - 1].destroy();
+                globalModel.push(xktLoader.load({
+                    src: "../app/data/projects/Aachen/crane.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/crane.json",
+                    edges: true,
+                    rotation: [0, Math.random() * 30, 0]
+                }));
+
+            }, 2000);
+
+            globalCraneRefresh = craneRefresh;
+        }
+
         function getInfo(param) {
             const id = param.id;
             const name = param.name;
@@ -443,6 +461,8 @@
                 else { noProperty() }
             }
             else { noProperty() }
+
+
         }
 
 
@@ -452,6 +472,7 @@
 
 
         const xktLoader = new XKTLoaderPlugin(viewer);
+        const gltfLoader = new GLTFLoaderPlugin(viewer);
 
         var globalModel = [];
 
@@ -463,6 +484,7 @@
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0;
             stopRefresh(globalRefresh);
+            if (globalCraneRefresh !== undefined) { stopRefresh(globalCraneRefresh); }
             stopGeoRefresh();
             lastEntity = null;
             clearProperty();
@@ -475,6 +497,7 @@
             document.getElementsByTagName("button")[i].removeAttribute("disabled")
             document.getElementsByTagName("button")[i].style.backgroundColor = "white";
             document.getElementsByTagName("button")[i].style.fontStyle = "normal";
+
         }
 
         function disable(i) {
@@ -482,6 +505,7 @@
             document.getElementsByTagName("button")[i].removeAttribute("onclick")
             document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(161, 161, 161)";
             document.getElementsByTagName("button")[i].style.fontStyle = "normal";
+
         }
 
         function select(i, value) {
@@ -489,6 +513,7 @@
             document.getElementsByTagName("button")[i].removeAttribute("onclick")
             document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(220,180,50)";
             document.getElementsByTagName("button")[i].style.fontStyle = "italic";
+
         }
 
         function restoreCamera(i) {
@@ -500,7 +525,6 @@
                 });
             });
         }
-
         //----------------------------------------------------------------------------------------------------------------------
         document.initAachenEarly = function () {
 
@@ -590,19 +614,37 @@
                         globalModel[3].on("loaded", () => {
                             globalModel.push(xktLoader.load({
                                 id: "site",
-                                src: "../app/data/projects/Aachen/site.xkt",
-                                metaModelSrc: "../app/data/projects/Aachen/site.json",
+                                src: "../app/data/projects/Aachen/site static.xkt",
+                                metaModelSrc: "../app/data/projects/Aachen/site static.json",
                                 edges: true
-                            }));
+                            }))
 
                             globalModel[4].on("loaded", () => {
-                                viewer.cameraFlight.flyTo({
-                                    projection: "perspective",
-                                    eye: [25, 150, 75],
-                                    look: [0, 5, 0],
-                                    up: [-0.01, 0.99, 0.039],
-                                    duration: 0
+                                globalModel.push(xktLoader.load({
+                                    id: "site",
+                                    src: "../app/data/projects/Aachen/truck.xkt",
+                                    metaModelSrc: "../app/data/projects/Aachen/truck.json",
+                                    edges: true
+                                }))
 
+                                globalModel[5].on("loaded", () => {
+                                    globalModel.push(xktLoader.load({
+                                        id: "site",
+                                        src: "../app/data/projects/Aachen/crane.xkt",
+                                        metaModelSrc: "../app/data/projects/Aachen/crane.json",
+                                        edges: true
+                                    }))
+
+                                    globalModel[6].on("loaded", () => {
+                                        viewer.cameraFlight.flyTo({
+                                            projection: "perspective",
+                                            eye: [25, 150, 75],
+                                            look: [0, 5, 0],
+                                            up: [-0.01, 0.99, 0.039],
+                                            duration: 0
+
+                                        });
+                                    });
                                 });
                             });
                         });
@@ -610,7 +652,7 @@
                 });
             });
 
-
+            getCranePosition()
 
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
 
@@ -1138,7 +1180,7 @@
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh(globalRefresh);
 
-            console.log(entity.id);
+            //console.log(viewer.scene.models["site"]);
             getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -1158,6 +1200,12 @@
                 clearProperty();
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
             }
+
+            //entity.model.position = [20, 20, 20];
+            //console.log(entity.model.position);
+            //console.log(pickResult._worldPos);
+
+
 
 
         });
@@ -1290,13 +1338,13 @@
 
 
             <i>Copyright</i>
-            <img src="../images/Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
-            <img src="../images/dc_logo.svg" width="9%" alt="Lehrstuhl DC">
-            <img src="../images/IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP"
+            <img src="..\images\Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
+            <img src="..\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
+            <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP"
                 style="padding-right: 1.5em; border-right: 1px white solid">
             <i>Supported by</i>
-            <img src="../images/xeolabs_transparent.png" width="2%" alt="Xeolabs">
-            <img src="../images/itnrw_logo.png" width="8%" alt="IT NRW">
+            <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
+            <img src="..\images\itnrw_logo.png" width="8%" alt="IT NRW">
 
 
         </div>
