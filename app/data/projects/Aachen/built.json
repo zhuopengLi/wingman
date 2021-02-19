@@ -12,7 +12,12 @@
       "id": "1pEomJbuL6pAjDLauPLdDj",
       "name": "Completed building",
       "type": "Building",
-      "parent": "Completed building"
+      "parent": "Completed building",
+      "address": "Not specific",
+      "date": "Not specific",
+      "historic": "No",
+      "area": "Not specific",
+      "owner": "Not specific"
     }
   ]
 }

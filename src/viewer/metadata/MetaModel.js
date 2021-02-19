@@ -120,7 +120,12 @@ class MetaModel {
                 date: metaObject.date,
                 historic: metaObject.historic,
                 area: metaObject.area,
-                owner: metaObject.owner
+                owner: metaObject.owner,
+                diameter: metaObject.diameter,
+                depth: metaObject.depth,
+                height: metaObject.height,
+                age: metaObject.age,
+                width:  metaObject.width
                 };
             if (metaObject.parent) {
                 metaObjectCfg.parent = metaObject.parent.id;

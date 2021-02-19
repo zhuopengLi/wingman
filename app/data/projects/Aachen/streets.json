@@ -43,7 +43,7 @@
       "name": "Markt Straße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "10m"
     },
     {
       "id": "2WTYoNe1P37Abmr9qQFhX7",
@@ -169,120 +169,135 @@
       "name": "Scarlet oak",
       "type": "Scarlet oak",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "12.5m"
+      "diameter": "",
+      "height": "12.5m",
+      "age": ">15 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKo8Y",
       "name": "Scarlet oak",
       "type": "Scarlet oak",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "12.5m"
+      "diameter": "",
+      "height": "12.5m",
+      "age": "32 years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKo8d",
       "name": "Scarlet oak",
       "type": "Scarlet oak",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "12.5m"
+      "diameter": "",
+      "height": "12.5m",
+      "age": ">30 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKo8j",
       "name": "Pyramid Poplar",
       "type": "Poplar",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "12.2m"
+      "diameter": "",
+      "height": "12.2m",
+      "age": ">30 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKo8k",
       "name": "Pyramid Poplar",
       "type": "Poplar",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "12.5m"
+      "diameter": "",
+      "height": "12.5m",
+      "age": ">20 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoFK",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "6m",
+      "height": "6m",
+      "age": ">10 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoFP",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "6.5m",
+      "height": "6m",
+      "age": ">30 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoFQ",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "7m",
+      "height": "6m",
+      "age": ">20 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoFV",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "8m",
+      "height": "6m",
+      "age": ">30 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoF0",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "5m",
+      "height": "6m",
+      "age": ">20 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoF5",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "8m",
+      "height": "6m",
+      "age": ">30 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoF6",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "4m",
+      "height": "6m",
+      "age": "15 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoFB",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "5m",
+      "height": "6m",
+      "age": ">30 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoFC",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "7m",
+      "height": "6m",
+      "age": ">50 Years"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKoFn",
       "name": "Apple tree",
       "type": "Apple",
       "parent": "Planting",
-      "diameter at breast height": "",
-      "height": "6m"
+      "diameter": "7m",
+      "height": "6m",
+      "age": ">30 Years"
     }
   ]
 }

@@ -231,6 +231,7 @@
         ]
 
         const treePro = [
+            "Name: ",
             "Type: ",
             "Diameter at breast height: ",
             "Height: ",
@@ -238,6 +239,7 @@
         ];
 
         const treeProJSON = [
+            "name",
             "type",
             "diameter",
             "height",
@@ -349,27 +351,31 @@
             globalRefresh = localRefresh;
         }
 
-        function getSmartBuildingPro(param, name) {
+        function getSmartBuildingPro(param, digit) {
             document.getElementById("info").style.margin = "1em 1.2em 0";
             document.getElementById("info").innerHTML = "Loading sensor data...";
 
             var localRefresh = setInterval(function () {
+
+
                 loadSensorData("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
+
                     if (sensor.readyState == 4 && sensor.status == 200) {
                         document.getElementById("info").style.margin = "0";
 
-                        var data = JSON.parse(sensor.responseText);
 
+
+                        var data = JSON.parse(sensor.responseText);
                         var info = "<ul>"
-                        for (let i = 0; i < buildingPro.length; i++) {
-                            info += "<li>" + "<b>" + buildingPro[i] + "</b>" + param[buildingProJSON[i]] + "</li>";
+                        for (let i = 0; i < sitePro.length - 4; i++) {
+                            info += "<li>" + "<b>" + sitePro[i] + "</b>" + param[siteProJSON[i]] + "</li>";
                         }
                         info += "<hr/>"
                         for (let i = 7; i < sitePro.length - 1; i++) {
-                            info += "<li>" + "<b>" + sitePro[i] + "</b>" + data[param][siteProJSON[i]].$numberDouble + siteProUnit[i - 7] + "</li>";
+                            info += "<li>" + "<b>" + sitePro[i] + "</b>" + data[digit][siteProJSON[i]].$numberDouble + siteProUnit[i - 7] + "</li>";
                         }
 
-                        info += "<li>" + "<b>Last update at: </b>" + data[param][siteProJSON[10]] + siteProUnit[3] + "</li>" + "</ul>";
+                        info += "<li>" + "<b>Last update at: </b>" + data[digit][siteProJSON[10]] + siteProUnit[3] + "</li>" + "</ul>";
 
                         document.getElementById("info").innerHTML = info
                     }
@@ -435,7 +441,7 @@
                 else if (id == "0RcD6OWIT3aeDtzYT9gg1y") { getSensorPro(4, name) }
                 else if (id == "0RcD6OWIT3aeDtzYT9gg1F") { getSensorPro(5, name) }
                 else if (id == "0RcD6OWIT3aeDtzYT9gg1K") { getSensorPro(6, name) }
-                else if (id == "1pEomJbuL6pAjDLauPLdDj") { getSmartBuildingPro(1, name) } //completed building
+                else if (id == "1pEomJbuL6pAjDLauPLdDj") { getSmartBuildingPro(param, 1) } //completed building
                 else if (parent == "Buildings") { getBuildingPro(param) }
                 else if (parent == "Pipe networks") { getPipePro(param) }
                 else if (parent == "Streets") { getStreetsPro(param) }
@@ -1138,7 +1144,7 @@
             const metaObject = viewer.metaScene.metaObjects[entity.id];
             stopRefresh(globalRefresh);
 
-            console.log(entity.id);
+            console.log(metaObject);
             getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -1213,7 +1219,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.7</i>
+                    <i>Alpha Testing | v0.9.8</i>
                 </div>
 
                 <div class="nav">
