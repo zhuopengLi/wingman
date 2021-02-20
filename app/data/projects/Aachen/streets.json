@@ -43,133 +43,133 @@
       "name": "Markt Straße",
       "type": "Streets",
       "parent": "Streets",
-      "width": "10m"
+      "width": "3.5m"
     },
     {
       "id": "2WTYoNe1P37Abmr9qQFhX7",
       "name": "Katschhof Straße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3m"
     },
     {
       "id": "3Ka05fSlzDcwRyR$2fhLcd",
       "name": "Ritter Chorus Strasse",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3m"
     },
     {
       "id": "3Ka05fSlzDcwRyR$2fhK1R",
       "name": "Krämerstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3.5m"
     },
     {
       "id": "2hwpp7SND6bgofubcTNLct",
       "name": "Grosskölnstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3m"
     },
     {
       "id": "2hwpp7SND6bgofubcTNMLE",
       "name": "Mostandardstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3.5m"
     },
     {
       "id": "2hwpp7SND6bgofubcTNMCU",
       "name": "Rommelsgasse",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3m"
     },
     {
       "id": "2hwpp7SND6bgofubcTNGwu",
       "name": "Büchel straße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "4m"
     },
     {
       "id": "3hXX$ESInBThBQU14BVqu1",
       "name": "Rethelstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3m"
     },
     {
       "id": "3hXX$ESInBThBQU14BVrnF",
       "name": "Kleinkölnstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3m"
     },
     {
       "id": "3hXX$ESInBThBQU14BVsAt",
       "name": "Nikolausstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "4m"
     },
     {
       "id": "1IA8vnifvEpxP2sUm7Vveb",
       "name": "Antoniusstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3.5m"
     },
     {
       "id": "1IA8vnifvEpxP2sUm7VvNf",
       "name": "Pontstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "2.5m"
     },
     {
       "id": "1IA8vnifvEpxP2sUm7Vv2v",
       "name": "Körbergasse",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3m"
     },
     {
       "id": "04OOVpmYPAsOzVfpFHTY17",
       "name": "Hof Straße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3m"
     },
     {
       "id": "04OOVpmYPAsOzVfpFHTYNH",
       "name": "Buchkremerstraße",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "3.5m"
     },
     {
       "id": "04OOVpmYPAsOzVfpFHTz4C",
       "name": "Hühnermarkt",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "2.5m"
     },
     {
       "id": "04OOVpmYPAsOzVfpFHTz10",
       "name": "Romaneygasse",
       "type": "Streets",
       "parent": "Streets",
-      "width": ""
+      "width": "2.5m"
     },
     {
       "id": "3kfOjs7yv3Gubre_eTKo8X",
       "name": "Scarlet oak",
       "type": "Scarlet oak",
       "parent": "Planting",
-      "diameter": "",
+      "diameter": "7m",
       "height": "12.5m",
       "age": ">15 Years"
     },
@@ -178,7 +178,7 @@
       "name": "Scarlet oak",
       "type": "Scarlet oak",
       "parent": "Planting",
-      "diameter": "",
+      "diameter": "8m",
       "height": "12.5m",
       "age": "32 years"
     },
@@ -187,7 +187,7 @@
       "name": "Scarlet oak",
       "type": "Scarlet oak",
       "parent": "Planting",
-      "diameter": "",
+      "diameter": "6m",
       "height": "12.5m",
       "age": ">30 Years"
     },
@@ -196,7 +196,7 @@
       "name": "Pyramid Poplar",
       "type": "Poplar",
       "parent": "Planting",
-      "diameter": "",
+      "diameter": "5m",
       "height": "12.2m",
       "age": ">30 Years"
     },
@@ -205,7 +205,7 @@
       "name": "Pyramid Poplar",
       "type": "Poplar",
       "parent": "Planting",
-      "diameter": "",
+      "diameter": "6m",
       "height": "12.5m",
       "age": ">20 Years"
     },
