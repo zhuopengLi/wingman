@@ -15,9 +15,9 @@
       "parent": "Buildings"
     },
     {
-      "id": "Restaurant",
-      "name": "Restaurant",
-      "type": "Restaurant",
+      "id": "Catering",
+      "name": "Catering",
+      "type": "Catering",
       "parent": "Buildings"
     },
     {
