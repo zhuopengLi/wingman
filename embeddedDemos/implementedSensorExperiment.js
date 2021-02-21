@@ -33,8 +33,8 @@ let timestampValue;
 
 ////////////////////////////////////Interval start/////////////////////////////////////////////
 
-let choosenList = ['SensorList.txt','SensorListPipes.txt']
-let choosenValues = ['/Users/hannes/documents/Repos/zhuopengli.github.io/xeokit-bim-viewer/app/data/projects/Aachen/models/terrain/terrain.json','/Users/hannes/documents/Repos/zhuopengli.github.io/xeokit-bim-viewer/embeddedDemos/AachenPipes.json']
+let choosenList = ['SensorList.txt','SensorListPipes.txt','SensorListSite.txt']
+let choosenValues = ['/Users/hannes/documents/Repos/zhuopengli.github.io/xeokit-bim-viewer/app/data/projects/Aachen/sensor.json','/Users/hannes/documents/Repos/zhuopengli.github.io/xeokit-bim-viewer/app/data/projects/Aachen/pipes.json','/Users/hannes/documents/Repos/zhuopengli.github.io/xeokit-bim-viewer/app/data/projects/Aachen/site.json']
 
 let chooseCollection = ['Terrain','Pipes']
 
@@ -45,7 +45,7 @@ setInterval(function(){
 
 
     ////////////////////////////////////storing SensorIds in an Array/////////////////////////////////////////////
-    for (var c = 0; c < 2; c++) {
+    for (var c = 0; c < 3; c++) {
 
     
 
@@ -225,6 +225,20 @@ setInterval(function(){
                 }
                 }
 
+            if (c == 2) {
+        
+                for (var l = 0; l <= (indexSensors.length-1); l++) {
+                    for (var j = 0; j < 3; j++) {
+    
+    
+                        obj['metaObjects'][indexSensors[l]][typeOfSensorSite[j]] = matrixAfterMQTT[l][j];
+                        obj['metaObjects'][indexSensors[l]]["timestamp"] = timestampValue;
+                        // read the example.json file into (obj). modify (obj) in certain lines
+                    }
+                }
+                }
+                
+            
             
 
             // file = choosenValues[c]
@@ -265,8 +279,9 @@ setInterval(function(){
                 client.close();
             });
                 
-            let ids = ["3rFeaDCe58Ph8ptbjJL$5m","3rFeaDCe58Ph8ptbjJL$vK","3rFeaDCe58Ph8ptbjJL$vQ","3rFeaDCe58Ph8ptbjJL$v1","3rFeaDCe58Ph8ptbjJL$vo"];
-            let idsPipes = ["3skJDZ7bb1mAlUwrlJ0Wh6"];
+            let ids = ["0RcD6OWIT3aeDtzYT9gg1Q","0RcD6OWIT3aeDtzYT9ggz_","0RcD6OWIT3aeDtzYT9gg1y","0RcD6OWIT3aeDtzYT9gg1F","0RcD6OWIT3aeDtzYT9gg1K"];
+            let idsPipes = ["1iDLMiQlrBQe6EHHWYiuRI"];
+            let idsSite = ["Site"];
 
             console.log(matrixAfterMQTT);
             
@@ -316,20 +331,16 @@ setInterval(function(){
                 newvalues = {$set: {winddirection: matrixAfterMQTT[b][3]}};
                 dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
                     if (err) throw err;
-                //   console.log(res.result.nModified + " document(s) updated");
-
-                
-                 
+                //   console.log(res.result.nModified + " document(s) updated")
                 db.close();
 
-            })}
-
-
-            
+            })}  
         });
         }
 
 
+
+        
         if(c == 1){
             MongoClient.connect(uri, function(err, db) {
                 if (err) throw err;
@@ -338,7 +349,7 @@ setInterval(function(){
 
                 for (var p = 0; p < 1; p++) { // number of pipes
                    
-                    var myquery = { id:"3skJDZ7bb1mAlUwrlJ0Wh6" }; 
+                    var myquery = {id: idsPipes[p]}; 
 
                     newvalues = {$set: {waterlevel: matrixAfterMQTT[p][0]}};
                     dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
@@ -355,7 +366,45 @@ setInterval(function(){
             }
         })
     }
-                
+      
+    
+    if(c == 2){
+        MongoClient.connect(uri, function(err, db) {
+            if (err) throw err;
+            var dbo = db.db("Aachen");
+
+
+            for (var y = 0; y < 1; y++) { // number of site objects
+               
+                var myquery = {id: idsSite[y]}; 
+
+                newvalues = {$set: {ElectricityConsumption: matrixAfterMQTT[y][0]}};
+                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                    if (err) throw err;
+                //   console.log(res.result.nModified + " document(s) updated");
+            })
+
+                newvalues = {$set: {GasConsumption: matrixAfterMQTT[y][1]}};
+                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                    if (err) throw err;
+            })
+
+                newvalues = {$set: {WaterConsumption: matrixAfterMQTT[y][2]}};
+                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                    if (err) throw err;
+            })
+
+                newvalues = {$set: {timestamp: timestampValue}};
+                dbo.collection("Terrain").updateMany(myquery, newvalues, function(err, res) {
+                    if (err) throw err;   
+                });
+            
+                db.close();
+            
+        }
+    })
+}
+          
                 
             
               
@@ -404,7 +453,7 @@ setInterval(function(){
             //     });
             // });
 
-        
+         
         
         
             // } )
@@ -467,6 +516,7 @@ function interpolate(indices, hour, minute, c) {
 
     typeOfSensor = ["temperatures", "moisture", "windspeed", "winddirection", "ozone", "NoiseLevel","waterlevel"]
     typeOfSensorPipe = ["waterlevel"];
+    typeOfSensorSite = ["ElectricityConsumption","WaterConsumption","GasConsumption"];
 
     let interpolateTemp = [];
 
@@ -539,6 +589,68 @@ function interpolate(indices, hour, minute, c) {
 
 
         let filename = typeOfSensorPipe[k] + ".txt"
+        try {
+            var data = fs.readFileSync(filename, 'utf8');
+            temperatures = data.toString().split("\n");
+        } catch (e) {
+            console.log('Error:', e.stack);
+        }
+
+
+        let n = 0;
+        let currentTemperature = [];
+        
+        while (n < 24) {
+            currentTemperature[n] = (temperatures[indices[n]]);
+            n++;
+        }
+        //console.log(indices);
+        //console.log(currentTemperature);
+        var minutes = parseInt(minute)
+        var percent = minutes / 60;
+
+        let oldHour = parseInt(hour);
+        let newHour = parseInt(hour) + 1;
+
+        //console.log (oldHour);
+        
+        let oldCurrentTemperature = currentTemperature[oldHour].split(",");
+        let freshCurrentTemperature = currentTemperature[newHour].split(",");
+
+        let oldTemperature = [];
+        let newTemperature = [];
+
+        if (oldCurrentTemperature.length == 2) {
+
+            oldTemperature = parseInt(oldCurrentTemperature[0]) + parseInt(oldCurrentTemperature[1]) / 10;
+            newTemperature = parseInt(freshCurrentTemperature[0]) + parseInt(freshCurrentTemperature[1]) / 10;
+        } else {
+            oldTemperature = parseInt(oldCurrentTemperature[0])
+            newTemperature = parseInt(freshCurrentTemperature[0])
+
+        }
+
+        interpolateTemp = oldTemperature + (newTemperature - oldTemperature) * percent;
+
+        let multiplier = 100;
+        interpolateTempRound = Math.round(interpolateTemp * multiplier) / multiplier;
+
+        //console.log(k);
+        //console.log("The current " + filename + " is " + interpolateTempRound);
+
+        numbers[k] = interpolateTempRound;
+
+        //console.log(numbers);
+
+    }  
+}
+
+if (c == 2) {
+
+    for (var k = 0; k < 3; k = k + 1) {
+
+
+        let filename = typeOfSensorSite[k] + ".txt"
         try {
             var data = fs.readFileSync(filename, 'utf8');
             temperatures = data.toString().split("\n");
