@@ -16,7 +16,7 @@
  */
 class MetaObject {
 
-    constructor(metaModel, id, originalSystemId, name, type, address, date, historic, area, owner, properties, parent, children, external) {
+    constructor(metaModel, id, originalSystemId, name, type, address, date, historic, area, owner, diameter, depth, height, age, width, properties, parent, children, external) {
 
         /**
          * Model metadata.
@@ -65,6 +65,11 @@ class MetaObject {
         this.historic = historic;
         this.area = area;
         this.owner = owner;
+        this.diameter = diameter;
+        this.depth = depth;
+        this.height = height;
+        this.age = age;
+        this.width = width;;
 
 
         if (properties) {
@@ -211,12 +216,17 @@ class MetaObject {
             id: this.id,
             type: this.type,
             name: this.name,
-            address: this.address = address,
-            date: this.date = date,
-            historic: this.historic = historic,
-            area: this.area = area,
-            owner: this.owner = owner
-            };
+            address: this.address,
+            date: this.date,
+            historic: this.historic,
+            area: this.area,
+            owner: this.owner,
+            diameter: this.diameter,
+            depth: this.depth,
+            height: this.height,
+            age: this.age,
+            width: this.width
+        };
         if (this.parent) {
             json.parent = this.parent.id
         }
@@ -224,4 +234,4 @@ class MetaObject {
     }
 }
 
-export {MetaObject};
+export { MetaObject };

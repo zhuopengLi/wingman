@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Wingman</title>
+    <base href=".">
 
     <!-- Wingman Platform styles -->
     <link rel="stylesheet" href="../app/css/lemonade.css" type="text/css" />
@@ -135,6 +136,7 @@
         import { buildGridGeometry } from "../src/viewer/scene/geometry/builders/buildGridGeometry.js";
         import { PhongMaterial } from "../src/viewer/scene/materials/PhongMaterial.js";
 
+
         const viewer = new Viewer({
             canvasId: "myCanvas"
         });
@@ -179,6 +181,41 @@
             "owner"
         ]
 
+        const sitePro = [
+            "Address: ",
+            "Name: ",
+            "Type: ",
+            "Date of built: ",
+            "Historic building: ",
+            "Base area: ",
+            "Owner of the premises: ",
+            "Electric consumption: ",
+            "Water consumption: ",
+            "Gas consumption: ",
+            "Last update at: "
+        ];
+
+        const siteProJSON = [
+            "address",
+            "name",
+            "type",
+            "date",
+            "historic",
+            "area",
+            "owner",
+            "ElectricityConsumption",
+            "WaterConsumption",
+            "GasConsumption",
+            "timestamp"
+        ]
+
+        const siteProUnit = [
+            "kW/h",
+            "m³/h",
+            "m³/h",
+            " (CET)"
+        ]
+
         const pipePro = [
             "Type: ",
             "Depth: ",
@@ -194,6 +231,7 @@
         ]
 
         const treePro = [
+            "Name: ",
             "Type: ",
             "Diameter at breast height: ",
             "Height: ",
@@ -201,6 +239,7 @@
         ];
 
         const treeProJSON = [
+            "name",
             "type",
             "diameter",
             "height",
@@ -276,8 +315,15 @@
             document.getElementById("info").innerHTML = '<i>Click on objects for more info</i>';
         }
 
-        function stopRefresh() {
-            clearInterval(globalRefresh);
+        function noProperty() {
+            document.getElementById("info").style.margin = "1em";
+            document.getElementById("info").style.fontSize = "14pt";
+            document.getElementById("info").style.color = "#03103f63";
+            document.getElementById("info").innerHTML = '<i>No infomation available</i>';
+        }
+
+        function stopRefresh(param) {
+            clearInterval(param);
         }
 
         function getSensorPro(param, name) {
@@ -305,7 +351,41 @@
             globalRefresh = localRefresh;
         }
 
-        function getBuildingPro(param) { //edit metascene.js metaobject.js and metamodel.js
+        function getSmartBuildingPro(param, digit) {
+            document.getElementById("info").style.margin = "1em 1.2em 0";
+            document.getElementById("info").innerHTML = "Loading sensor data...";
+
+            var localRefresh = setInterval(function () {
+
+
+                loadSensorData("https://webhooks.mongodb-realm.com/api/client/v2.0/app/sensordata-rzgof/service/sensorValue/incoming_webhook/sensorValue", function () {
+
+                    if (sensor.readyState == 4 && sensor.status == 200) {
+                        document.getElementById("info").style.margin = "0";
+
+
+
+                        var data = JSON.parse(sensor.responseText);
+                        var info = "<ul>"
+                        for (let i = 0; i < sitePro.length - 4; i++) {
+                            info += "<li>" + "<b>" + sitePro[i] + "</b>" + param[siteProJSON[i]] + "</li>";
+                        }
+                        info += "<hr/>"
+                        for (let i = 7; i < sitePro.length - 1; i++) {
+                            info += "<li>" + "<b>" + sitePro[i] + "</b>" + data[digit][siteProJSON[i]].$numberDouble + siteProUnit[i - 7] + "</li>";
+                        }
+
+                        info += "<li>" + "<b>Last update at: </b>" + data[digit][siteProJSON[10]] + siteProUnit[3] + "</li>" + "</ul>";
+
+                        document.getElementById("info").innerHTML = info
+                    }
+                })
+            }, 5000);
+
+            globalRefresh = localRefresh;
+        }
+
+        function getBuildingPro(param) { //edit metascene.js, metaobject.js and metamodel.js
             document.getElementById("info").style.margin = "0";
 
             var info = "<ul>"
@@ -316,16 +396,59 @@
             document.getElementById("info").innerHTML = info
         }
 
+        function getPipePro(param) { //edit metascene.js, metaobject.js and metamodel.js
+            document.getElementById("info").style.margin = "0";
+
+            var info = "<ul>"
+            for (let i = 0; i < pipePro.length; i++) {
+                info += "<li>" + "<b>" + pipePro[i] + "</b>" + param[pipeProJSON[i]] + "</li>";
+            }
+            info += "</ul>";
+            document.getElementById("info").innerHTML = info
+        }
+
+        function getStreetsPro(param) { //edit metascene.js, metaobject.js and metamodel.js
+            document.getElementById("info").style.margin = "0";
+
+            var info = "<ul>"
+            for (let i = 0; i < roadPro.length; i++) {
+                info += "<li>" + "<b>" + roadPro[i] + "</b>" + param[roadProJSON[i]] + "</li>";
+            }
+            info += "</ul>";
+            document.getElementById("info").innerHTML = info
+        }
+
+        function getTreePro(param) { //edit metascene.js, metaobject.js and metamodel.js
+            document.getElementById("info").style.margin = "0";
+
+            var info = "<ul>"
+            for (let i = 0; i < treePro.length; i++) {
+                info += "<li>" + "<b>" + treePro[i] + "</b>" + param[treeProJSON[i]] + "</li>";
+            }
+            info += "</ul>";
+            document.getElementById("info").innerHTML = info
+        }
+
         function getInfo(param) {
             const id = param.id;
             const name = param.name;
 
-            if (id == "3rFeaDCe58Ph8ptbjJL$5m") { getSensorPro(30, name) }
-            else if (id == "3rFeaDCe58Ph8ptbjJL$vK") { getSensorPro(29, name) }
-            else if (id == "3rFeaDCe58Ph8ptbjJL$vQ") { getSensorPro(36, name) }
-            else if (id == "3rFeaDCe58Ph8ptbjJL$v1") { getSensorPro(32, name) }
-            else if (id == "3rFeaDCe58Ph8ptbjJL$vo") { getSensorPro(9, name) }
-            else { getBuildingPro(param) }
+            if (param.parent != undefined) {
+                const parent = param.parent.id;
+
+                if (id == "0RcD6OWIT3aeDtzYT9gg1Q") { getSensorPro(2, name) } //sensors
+                else if (id == "0RcD6OWIT3aeDtzYT9ggz_") { getSensorPro(3, name) }
+                else if (id == "0RcD6OWIT3aeDtzYT9gg1y") { getSensorPro(4, name) }
+                else if (id == "0RcD6OWIT3aeDtzYT9gg1F") { getSensorPro(5, name) }
+                else if (id == "0RcD6OWIT3aeDtzYT9gg1K") { getSensorPro(6, name) }
+                else if (id == "1pEomJbuL6pAjDLauPLdDj") { getSmartBuildingPro(param, 1) } //completed building
+                else if (parent == "Buildings") { getBuildingPro(param) }
+                else if (parent == "Pipe networks") { getPipePro(param) }
+                else if (parent == "Streets") { getStreetsPro(param) }
+                else if (parent == "Planting") { getTreePro(param) }
+                else { noProperty() }
+            }
+            else { noProperty() }
         }
 
 
@@ -338,10 +461,14 @@
 
         var globalModel = [];
 
+        var globalCraneRefresh;
+
+        var globalCrane;
+
         function clearCanvas() {
             globalModel.forEach(element => element.destroy());
             globalModel.length = 0;
-            stopRefresh();
+            stopRefresh(globalRefresh);
             stopGeoRefresh();
             lastEntity = null;
             clearProperty();
@@ -354,7 +481,6 @@
             document.getElementsByTagName("button")[i].removeAttribute("disabled")
             document.getElementsByTagName("button")[i].style.backgroundColor = "white";
             document.getElementsByTagName("button")[i].style.fontStyle = "normal";
-
         }
 
         function disable(i) {
@@ -362,7 +488,6 @@
             document.getElementsByTagName("button")[i].removeAttribute("onclick")
             document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(161, 161, 161)";
             document.getElementsByTagName("button")[i].style.fontStyle = "normal";
-
         }
 
         function select(i, value) {
@@ -370,7 +495,6 @@
             document.getElementsByTagName("button")[i].removeAttribute("onclick")
             document.getElementsByTagName("button")[i].style.backgroundColor = "rgb(220,180,50)";
             document.getElementsByTagName("button")[i].style.fontStyle = "italic";
-
         }
 
         function restoreCamera(i) {
@@ -382,6 +506,7 @@
                 });
             });
         }
+
         //----------------------------------------------------------------------------------------------------------------------
         document.initAachenEarly = function () {
 
@@ -435,38 +560,45 @@
 
             clearCanvas()
 
+
+
             globalModel.push(xktLoader.load({
-                src: "../app/data/projects/Aachen/site.xkt",
-                metaModelSrc: "../app/data/projects/Aachen/site.json",
+                id: "buildings",
+                src: "../app/data/projects/Aachen/buildings.xkt",
+                metaModelSrc: "../app/data/projects/Aachen/buildings.json",
                 edges: true
             }));
 
             globalModel[0].on("loaded", () => {
                 globalModel.push(xktLoader.load({
-                    src: "../app/data/projects/Aachen/sensor.xkt",
-                    metaModelSrc: "../app/data/projects/Aachen/sensor.json",
-                    edges: true,
+                    id: "streets",
+                    src: "../app/data/projects/Aachen/streets.xkt",
+                    metaModelSrc: "../app/data/projects/Aachen/streets.json",
+                    edges: true
                 }));
 
                 globalModel[1].on("loaded", () => {
                     globalModel.push(xktLoader.load({
-                        src: "../app/data/projects/Aachen/buildings.xkt",
-                        metaModelSrc: "../app/data/projects/Aachen/buildings.json",
-                        edges: true,
+                        id: "pipes",
+                        src: "../app/data/projects/Aachen/pipes.xkt",
+                        metaModelSrc: "../app/data/projects/Aachen/pipes.json",
+                        edges: true
                     }));
 
                     globalModel[2].on("loaded", () => {
                         globalModel.push(xktLoader.load({
-                            src: "../app/data/projects/Aachen/streets.xkt",
-                            metaModelSrc: "../app/data/projects/Aachen/streets.json",
-                            edges: true,
+                            id: "sensor",
+                            src: "../app/data/projects/Aachen/sensor.xkt",
+                            metaModelSrc: "../app/data/projects/Aachen/sensor.json",
+                            edges: true
                         }));
 
                         globalModel[3].on("loaded", () => {
                             globalModel.push(xktLoader.load({
-                                src: "../app/data/projects/Aachen/pipes.xkt",
-                                metaModelSrc: "../app/data/projects/Aachen/pipes.json",
-                                edges: true,
+                                id: "site",
+                                src: "../app/data/projects/Aachen/site.xkt",
+                                metaModelSrc: "../app/data/projects/Aachen/site.json",
+                                edges: true
                             }));
 
                             globalModel[4].on("loaded", () => {
@@ -476,12 +608,14 @@
                                     look: [0, 5, 0],
                                     up: [-0.01, 0.99, 0.039],
                                     duration: 0
+
                                 });
                             });
                         });
                     });
                 });
             });
+
 
 
             loadGeo("https://api.openweathermap.org/data/2.5/weather?id=3247449&appid=164d9c87e52c6093c36d1dc348e167d8");
@@ -701,13 +835,15 @@
                             const scene = viewer.scene;
                             const metaObject = viewer.metaScene.metaObjects[entity.objectId];
 
+                            //console.log(viewer.metaScene.metaObjects)
                             getInfo(metaObject);
 
                             if (lastEntity != null) {
                                 lastEntity.colorize = lastColorize;
                                 lastEntity = null;
                                 lastColorize = null;
-                                stopRefresh();
+                                stopRefresh(globalRefresh);
+
                             }
                             if (context.entity != undefined) {
                                 lastEntity = context.entity;
@@ -801,7 +937,8 @@
                 lastEntity.colorize = lastColorize;
                 lastEntity = null;
                 lastColorize = null;
-                stopRefresh();
+                stopRefresh(globalRefresh);
+
             }
             if (entity != undefined) {
                 lastEntity = entity;
@@ -920,7 +1057,8 @@
                                 lastEntity.colorize = lastColorize;
                                 lastEntity = null;
                                 lastColorize = null;
-                                stopRefresh();
+                                stopRefresh(globalRefresh);
+
                             }
                             if (entity != undefined) {
                                 lastEntity = entity;
@@ -1004,10 +1142,9 @@
         viewer.cameraControl.on("picked", (pickResult) => {
             const entity = pickResult.entity;
             const metaObject = viewer.metaScene.metaObjects[entity.id];
-            stopRefresh();
+            stopRefresh(globalRefresh);
 
-            console.log(pickResult);
-            console.log(pickResult._worldPos);
+            console.log(metaObject);
             getInfo(metaObject);
 
             if (!lastEntity || entity.id !== lastEntity.id) {
@@ -1019,16 +1156,16 @@
                 lastColorize = pickResult.entity.colorize.slice();
                 pickResult.entity.colorize = [1, 130 / 255, 0];
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
-
-
             } else if (entity.id == lastEntity.id || globalModel.length == 0) {
-                stopRefresh();
+                stopRefresh(globalRefresh);
+
                 lastEntity = null;
                 pickResult.entity.colorize = lastColorize;
                 clearProperty();
                 viewer.scene.setObjectsXRayed(viewer.scene.xrayedObjectIds, false);
-
             }
+
+
         });
 
 
@@ -1082,7 +1219,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Alpha Testing | v0.9.4</i>
+                    <i>Beta Testing | v1.0.1</i>
                 </div>
 
                 <div class="nav">
@@ -1159,12 +1296,13 @@
 
 
             <i>Copyright</i>
-            <img src="..\images\Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
-            <img src="..\images\dc_logo.svg" width="9%" alt="Lehrstuhl DC">
-            <img src="..\images\IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP" style="margin-right: 3em">
+            <img src="../images/Lemonade_Logo_4_transparent_white.png" width="8%" alt="Team Lemonade">
+            <img src="../images/dc_logo.svg" width="9%" alt="Lehrstuhl DC">
+            <img src="../images/IP_logo_transparent.png" width="10%" alt="Lehrstuhl IP"
+                style="padding-right: 1.5em; border-right: 1px white solid">
             <i>Supported by</i>
-            <img src="..\images\xeolabs_transparent.png" width="2%" alt="Xeolabs">
-            <img src="..\images\itnrw_logo.png" width="8%" alt="IT NRW">
+            <img src="../images/xeolabs_transparent.png" width="2%" alt="Xeolabs">
+            <img src="../images/itnrw_logo.png" width="8%" alt="IT NRW">
 
 
         </div>

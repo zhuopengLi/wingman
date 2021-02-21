@@ -1,6 +1,6 @@
-import {MetaModel} from "./MetaModel.js";
-import {MetaObject} from "./MetaObject.js";
-import {math} from "../scene/math/math.js";
+import { MetaModel } from "./MetaModel.js";
+import { MetaObject } from "./MetaObject.js";
+import { math } from "../scene/math/math.js";
 
 /**
  * @desc Metadata corresponding to a {@link Scene}.
@@ -166,12 +166,17 @@ class MetaScene {
             const historic = newObject.historic;
             const area = newObject.area;
             const owner = newObject.owner;
+            const diameter = newObject.diameter;
+            const depth = newObject.depth;
+            const height = newObject.height;
+            const age = newObject.age;
+            const width = newObject.width;
 
             const properties = newObject.properties;
             const parent = null;
             const children = null;
             const external = newObject.external;
-            const metaObject = new MetaObject(metaModel, objectId, originalSystemId, name, type, address, date, historic, area, owner, properties, parent, children, external);
+            const metaObject = new MetaObject(metaModel, objectId, originalSystemId, name, type, address, date, historic, area, owner, diameter, depth, height, age, width, properties, parent, children, external);
             this.metaObjects[objectId] = metaObject;
             (this.metaObjectsByType[type] || (this.metaObjectsByType[type] = {}))[objectId] = metaObject;
             if (this._typeCounts[type] === undefined) {
@@ -317,4 +322,4 @@ function arrayToMap(array) {
     return map;
 }
 
-export {MetaScene};
+export { MetaScene };
