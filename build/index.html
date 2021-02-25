@@ -346,7 +346,7 @@
 
                     }
                 })
-            }, 4000);
+            }, 5000);
 
             globalRefresh = localRefresh;
         }
@@ -380,7 +380,7 @@
                         document.getElementById("info").innerHTML = info
                     }
                 })
-            }, 4000);
+            }, 5000);
 
             globalRefresh = localRefresh;
         }
@@ -442,8 +442,8 @@
                 else if (id == "0RcD6OWIT3aeDtzYT9gg1F") { getSensorPro(5, name) }
                 else if (id == "0RcD6OWIT3aeDtzYT9gg1K") { getSensorPro(6, name) }
                 else if (id == "1pEomJbuL6pAjDLauPLdDj") { getSmartBuildingPro(param, 1) } //completed building
-                else if (parent == "Buildings") { getBuildingPro(param) }
-                else if (parent == "Pipe networks") { getPipePro(param) }
+                else if (param.parent.parent.id == "Buildings") { getBuildingPro(param) }
+                else if (param.parent.parent.id == "Pipe networks") { getPipePro(param) }
                 else if (parent == "Streets") { getStreetsPro(param) }
                 else if (parent == "Planting") { getTreePro(param) }
                 else { noProperty() }
@@ -1219,7 +1219,7 @@
                 <!-- Title -->
                 <div class="header title">
                     <h1>Wingman - Construction Project Info Platform</h1>
-                    <i>Beta Testing | v1.0.2</i>
+                    <i>Beta Testing | v1.0.3</i>
                 </div>
 
                 <div class="nav">
