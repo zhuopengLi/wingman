@@ -1,11 +1,11 @@
 # Wingman
 
  
-[![Screenshot](https://github.com/teamLemonade/wingman/blob/master/images/screenshot.png)](https://teamlemonade.github.io/wingman/embeddedDemos/wingman.html)
+[![Screenshot](https://github.com/teamLemonade/wingman/blob/master/images/screenshot.png)](https://teamlemonade.github.io/wingman/build/index.html)
 
 ---
 
-**[Wingman](https://teamlemonade.github.io/wingman/embeddedDemos/wingman.html)** is an open source life-cycle construction project infomation platform that runs in the browser. 
+**[Wingman](https://teamlemonade.github.io/wingman/build/index.html)** is an open source life-cycle construction project infomation platform that runs in the browser. 
 
 The platform is developed by [Team Lemonade](https://github.com/teamLemonade) and supported by [Xeolab](https://xeolabs.com/index.html).
 
