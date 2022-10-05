@@ -1,0 +1,27 @@
+stages:
+  - pages
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+variables:
+  DOMAIN: zli-wm.surge.sh
+
+pages:
+  stage: 
+    pages
+  image:
+    name: alpine:latest
+    entrypoint: [""]
+  script:
+    - npm i -g surge
+    - surge --project ./public --domain $DOMAIN
+  artifacts:
+    paths:
+      - "public/"
+  environment:
+    name: pages/$CI_COMMIT_REF_NAME
+    url: https://$DOMAIN
+

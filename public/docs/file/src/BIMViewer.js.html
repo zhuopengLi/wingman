@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/BIMViewer.js | xeokit-bim-viewer</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="BIM viewer built on xeokit"><meta property="og:type" content="website"><meta property="og:url" content="https://github.com/xeokit/xeokit-bim-viewer"><meta property="og:site_name" content="xeokit-bim-viewer"><meta property="og:title" content="xeokit-bim-viewer"><meta property="og:image" content="./images/logo.jpg"><meta property="og:description" content="BIM viewer built on xeokit"><meta property="og:author" content="http://xeolabs.com"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="xeokit-bim-viewer"><meta property="twitter:description" content="BIM viewer built on xeokit"><meta property="twitter:image" content="./images/logo.jpg"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.jpg" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/xeokit/xeokit-bim-viewer"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/BIMViewer.js~BIMViewer.html">BIMViewer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#contextmenus">contextMenus</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/contextMenus/SectionToolContextMenu.js~SectionToolContextMenu.html">SectionToolContextMenu</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/server/Server.js~Server.html">Server</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/BIMViewer.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {Controller} from &quot;./Controller.js&quot;;
+import {BusyModal} from &quot;./BusyModal.js&quot;;
+import {ResetAction} from &quot;./toolbar/ResetAction.js&quot;;
+import {FitAction} from &quot;./toolbar/FitAction.js&quot;;
+import {FirstPersonMode} from &quot;./toolbar/FirstPersonMode.js&quot;;
+import {HideTool} from &quot;./toolbar/HideTool.js&quot;;
+import {SelectionTool} from &quot;./toolbar/SelectionTool.js&quot;;
+import {QueryTool} from &quot;./toolbar/QueryTool.js&quot;;
+import {SectionTool} from &quot;./toolbar/SectionTool.js&quot;;
+import {NavCubeMode} from &quot;./toolbar/NavCubeMode.js&quot;;
+
+import {ModelsExplorer} from &quot;./explorer/ModelsExplorer.js&quot;;
+import {ObjectsExplorer} from &quot;./explorer/ObjectsExplorer.js&quot;;
+import {ClassesExplorer} from &quot;./explorer/ClassesExplorer.js&quot;;
+import {StoreysExplorer} from &quot;./explorer/StoreysExplorer.js&quot;;
+
+import {Viewer} from &quot;@xeokit/xeokit-sdk/src/viewer/Viewer.js&quot;;
+import {AmbientLight} from &quot;@xeokit/xeokit-sdk/src/viewer/scene/lights/AmbientLight.js&quot;;
+import {DirLight} from &quot;@xeokit/xeokit-sdk/src/viewer/scene/lights/DirLight.js&quot;;
+import {BCFViewpointsPlugin} from &quot;@xeokit/xeokit-sdk/src/plugins/BCFViewpointsPlugin/BCFViewpointsPlugin.js&quot;;
+import {ThreeDMode} from &quot;./toolbar/ThreeDMode.js&quot;;
+import {ObjectContextMenu} from &quot;./contextMenus/ObjectContextMenu.js&quot;;
+import {math} from &quot;@xeokit/xeokit-sdk/src/viewer/scene/math/math.js&quot;;
+import {CanvasContextMenu} from &quot;./contextMenus/CanvasContextMenu.js&quot;;
+import {OrthoMode} from &quot;./toolbar/OrthoMode.js&quot;;
+
+function createExplorerTemplate(cfg) {
+    const explorerTemplate = `&lt;div class=&quot;xeokit-tabs&quot;&gt;
+    &lt;div class=&quot;xeokit-tab xeokit-modelsTab&quot;&gt;
+        &lt;a class=&quot;xeokit-tab-btn&quot; href=&quot;#&quot;&gt;Models&lt;/a&gt;
+        &lt;div class=&quot;xeokit-tab-content&quot;&gt;
+            &lt;div class=&quot;xeokit-btn-group&quot;&gt;
+                &lt;button type=&quot;button&quot; class=&quot;xeokit-loadAllModels xeokit-btn disabled&quot; data-tippy-content=&quot;Load all models&quot;&gt;Load all&lt;/button&gt;
+                &lt;button type=&quot;button&quot; class=&quot;xeokit-unloadAllModels xeokit-btn disabled&quot; data-tippy-content=&quot;Unload all models&quot;&gt;Unload all&lt;/button&gt;` +
+        (cfg.enableEditModels ? `&lt;button type=&quot;button&quot; class=&quot;xeokit-addModel xeokit-btn disabled&quot; data-tippy-content=&quot;Add model&quot;&gt;Add&lt;/button&gt;` : ``) +
+        `&lt;/div&gt;
+            &lt;div class=&quot;xeokit-models&quot; &gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;xeokit-tab xeokit-objectsTab&quot;&gt;
+        &lt;a class=&quot;xeokit-tab-btn disabled&quot; href=&quot;#&quot;&gt;Objects&lt;/a&gt;
+        &lt;div class=&quot;xeokit-tab-content&quot;&gt;
+         &lt;div class=&quot;xeokit-btn-group&quot;&gt;
+            &lt;button type=&quot;button&quot; class=&quot;xeokit-showAllObjects xeokit-btn disabled&quot; data-tippy-content=&quot;Show all objects&quot;&gt;Show all&lt;/button&gt;
+            &lt;button type=&quot;button&quot; class=&quot;xeokit-hideAllObjects xeokit-btn disabled&quot; data-tippy-content=&quot;Hide all objects&quot;&gt;Hide all&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xeokit-objects xeokit-tree-panel&quot; &gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;xeokit-tab xeokit-classesTab&quot;&gt;
+        &lt;a class=&quot;xeokit-tab-btn disabled&quot; href=&quot;#&quot;&gt;Classes&lt;/a&gt;
+        &lt;div class=&quot;xeokit-tab-content&quot;&gt;
+            &lt;div class=&quot;xeokit-btn-group&quot;&gt;
+                &lt;button type=&quot;button&quot; class=&quot;xeokit-showAllClasses xeokit-btn disabled&quot; data-tippy-content=&quot;Show all classes&quot;&gt;Show all&lt;/button&gt;
+                &lt;button type=&quot;button&quot; class=&quot;xeokit-hideAllClasses xeokit-btn disabled&quot; data-tippy-content=&quot;Hide all classes&quot;&gt;Hide all&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;xeokit-classes xeokit-tree-panel&quot; &gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+     &lt;div class=&quot;xeokit-tab xeokit-storeysTab&quot;&gt;
+        &lt;a class=&quot;xeokit-tab-btn disabled&quot; href=&quot;#&quot;&gt;Storeys&lt;/a&gt;
+        &lt;div class=&quot;xeokit-tab-content&quot;&gt;
+         &lt;div class=&quot;xeokit-btn-group&quot;&gt;
+                &lt;button type=&quot;button&quot; class=&quot;xeokit-showAllStoreys xeokit-btn disabled&quot; data-tippy-content=&quot;Show all storeys&quot;&gt;Show all&lt;/button&gt;
+                &lt;button type=&quot;button&quot; class=&quot;xeokit-hideAllStoreys xeokit-btn disabled&quot; data-tippy-content=&quot;Hide all storeys&quot;&gt;Hide all&lt;/button&gt;
+            &lt;/div&gt;
+             &lt;div class=&quot;xeokit-storeys xeokit-tree-panel&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;`;
+    return explorerTemplate;
+}
+
+const toolbarTemplate = `&lt;div class=&quot;xeokit-toolbar&quot;&gt;
+    &lt;!-- Reset button --&gt;
+    &lt;div class=&quot;xeokit-btn-group&quot;&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-reset xeokit-btn fa fa-home fa-2x disabled&quot; data-tippy-content=&quot;Reset view&quot;&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;xeokit-btn-group&quot; role=&quot;group&quot;&gt;
+        &lt;!-- 3D Mode button --&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-threeD xeokit-btn fa fa-cube fa-2x&quot; data-tippy-content=&quot;Toggle 2D/3D&quot;&gt;&lt;/button&gt;
+        &lt;!-- Perspective/Ortho Mode button --&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-ortho xeokit-btn fa fa-th fa-2x&quot; data-tippy-content=&quot;Toggle Perspective/Ortho&quot;&gt;&lt;/button&gt;
+        &lt;!-- Fit button --&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-fit xeokit-btn fa fa-crop fa-2x disabled&quot; data-tippy-content=&quot;View fit&quot;&gt;&lt;/button&gt;   
+        &lt;!-- First Person mode button --&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-firstPerson xeokit-btn fa fa-male fa-2x disabled&quot; data-tippy-content=&quot;First person&quot;&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;!-- Tools button group --&gt;
+    &lt;div class=&quot;xeokit-btn-group&quot; role=&quot;group&quot;&gt;
+        &lt;!-- Hide tool button --&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-hide xeokit-btn fa fa-eraser fa-2x disabled&quot; data-tippy-content=&quot;Hide objects&quot;&gt;&lt;/button&gt;
+        &lt;!-- Select tool button --&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-select xeokit-btn fa fa-mouse-pointer fa-2x disabled&quot; data-tippy-content=&quot;Select objects&quot;&gt;&lt;/button&gt;
+        &lt;!-- Query tool button --&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-query xeokit-btn fa fa-info-circle fa-2x disabled&quot; data-tippy-content=&quot;Query objects&quot;&gt;&lt;/button&gt;
+        &lt;!-- section tool button --&gt;
+        &lt;button type=&quot;button&quot; class=&quot;xeokit-section xeokit-btn fa fa-cut fa-2x disabled&quot; data-tippy-content=&quot;Slice objects&quot;&gt;&lt;div class=&quot;xeokit-section-menu-button&quot;&gt;&lt;span class=&quot;xeokit-arrow-down xeokit-section-menu-button-arrow&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;xeokit-section-counter&quot; data-tippy-content=&quot;Number of existing slices&quot;&gt;&lt;/div&gt;&lt;/button&gt;
+    &lt;/div&gt;
+
+&lt;/div&gt;`;
+
+function initTabs(containerElement) {
+
+    const tabsClass = &apos;xeokit-tabs&apos;;
+    const tabClass = &apos;xeokit-tab&apos;;
+    const tabButtonClass = &apos;xeokit-tab-btn&apos;;
+    const activeClass = &apos;active&apos;;
+
+    // Activates the chosen tab and deactivates the rest
+    function activateTab(chosenTabElement) {
+        let tabList = chosenTabElement.parentNode.querySelectorAll(&apos;.&apos; + tabClass);
+        for (let i = 0; i &lt; tabList.length; i++) {
+            let tabElement = tabList[i];
+            if (tabElement.isEqualNode(chosenTabElement)) {
+                tabElement.classList.add(activeClass)
+            } else {
+                tabElement.classList.remove(activeClass)
+            }
+        }
+    }
+
+    // Initialize each tabbed container
+    let tabbedContainers = containerElement.querySelectorAll(&apos;.&apos; + tabsClass);
+    for (let i = 0; i &lt; tabbedContainers.length; i++) {
+        let tabbedContainer = tabbedContainers[i];
+        let tabList = tabbedContainer.querySelectorAll(&apos;.&apos; + tabClass);
+        activateTab(tabList[0]);
+        for (let i = 0; i &lt; tabList.length; i++) {
+            let tabElement = tabList[i];
+            let tabButton = tabElement.querySelector(&apos;.&apos; + tabButtonClass);
+            tabButton.addEventListener(&apos;click&apos;, function (event) {
+                event.preventDefault();
+                if (this.classList.contains(&quot;disabled&quot;)) {
+                    return;
+                }
+                activateTab(event.target.parentNode);
+            })
+        }
+    }
+}
+
+/**
+ * @desc A BIM viewer based on the [xeokit SDK](http://xeokit.io).
+ *
+ *
+ */
+class BIMViewer extends Controller {
+
+    /**
+     * Constructs a BIMViewer.
+     * @param {Server} server Data access strategy.
+     * @param {*} cfg Configuration.
+     * @param {Boolean} [cfg.enableEditModels=false] Set ````true```` to show &quot;Add&quot;, &quot;Edit&quot; and &quot;Delete&quot; options in the Models tab&apos;s context menu.
+     */
+    constructor(server, cfg = {}) {
+
+        if (!cfg.canvasElement) {
+            throw &quot;Config expected: canvasElement&quot;;
+        }
+
+        if (!cfg.explorerElement) {
+            throw &quot;Config expected: explorerElement&quot;;
+        }
+
+        if (!cfg.toolbarElement) {
+            throw &quot;Config expected: toolbarElement&quot;;
+        }
+
+        if (!cfg.navCubeCanvasElement) {
+            throw &quot;Config expected: navCubeCanvasElement&quot;;
+        }
+
+        const canvasElement = cfg.canvasElement;
+        const explorerElement = cfg.explorerElement;
+        const toolbarElement = cfg.toolbarElement;
+        const navCubeCanvasElement = cfg.navCubeCanvasElement;
+        const queryInfoPanelElement = cfg.queryInfoPanelElement;
+        const busyModelBackdropElement = cfg.busyModelBackdropElement;
+
+        explorerElement.oncontextmenu = (e) =&gt; {
+            e.preventDefault();
+        };
+
+        toolbarElement.oncontextmenu = (e) =&gt; {
+            e.preventDefault();
+        };
+
+        navCubeCanvasElement.oncontextmenu = (e) =&gt; {
+            e.preventDefault();
+        };
+
+        const viewer = new Viewer({
+            canvasElement: canvasElement,
+            transparent: true
+        });
+
+        super(null, cfg, server, viewer);
+
+        this._configs = {};
+
+        /**
+         * The xeokit [Viewer](https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Viewer.js~Viewer.html) at the core of this BIMViewer.
+         *
+         * @type {Viewer}
+         */
+        this.viewer = viewer;
+
+        this._customizeViewer();
+        this._initCanvasContextMenus();
+        this._initConfigs();
+
+        this._enableAddModels = !!cfg.enableEditModels;
+
+        explorerElement.innerHTML = createExplorerTemplate(cfg);
+        toolbarElement.innerHTML = toolbarTemplate;
+
+        this._explorerElement = explorerElement;
+
+        initTabs(explorerElement);
+
+        this._modelsExplorer = new ModelsExplorer(this, {
+            modelsTabElement: explorerElement.querySelector(&quot;.xeokit-modelsTab&quot;),
+            loadModelsButtonElement: explorerElement.querySelector(&quot;.xeokit-loadAllModels&quot;), // Can be undefined
+            unloadModelsButtonElement: explorerElement.querySelector(&quot;.xeokit-unloadAllModels&quot;),
+            addModelButtonElement: explorerElement.querySelector(&quot;.xeokit-addModel&quot;), // Can be undefined
+            modelsElement: explorerElement.querySelector(&quot;.xeokit-models&quot;),
+            enableEditModels: this._enableAddModels
+        });
+
+        this._objectsExplorer = new ObjectsExplorer(this, {
+            objectsTabElement: explorerElement.querySelector(&quot;.xeokit-objectsTab&quot;),
+            showAllObjectsButtonElement: explorerElement.querySelector(&quot;.xeokit-showAllObjects&quot;),
+            hideAllObjectsButtonElement: explorerElement.querySelector(&quot;.xeokit-hideAllObjects&quot;),
+            objectsElement: explorerElement.querySelector(&quot;.xeokit-objects&quot;)
+        });
+
+        this._classesExplorer = new ClassesExplorer(this, {
+            classesTabElement: explorerElement.querySelector(&quot;.xeokit-classesTab&quot;),
+            showAllClassesButtonElement: explorerElement.querySelector(&quot;.xeokit-showAllClasses&quot;),
+            hideAllClassesButtonElement: explorerElement.querySelector(&quot;.xeokit-hideAllClasses&quot;),
+            classesElement: explorerElement.querySelector(&quot;.xeokit-classes&quot;)
+        });
+
+        this._storeysExplorer = new StoreysExplorer(this, {
+            storeysTabElement: explorerElement.querySelector(&quot;.xeokit-storeysTab&quot;),
+            showAllStoreysButtonElement: explorerElement.querySelector(&quot;.xeokit-showAllStoreys&quot;),
+            hideAllStoreysButtonElement: explorerElement.querySelector(&quot;.xeokit-hideAllStoreys&quot;),
+            storeysElement: explorerElement.querySelector(&quot;.xeokit-storeys&quot;)
+        });
+
+        this._resetAction = new ResetAction(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-reset&quot;),
+            active: false
+        });
+
+        this._fitAction = new FitAction(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-fit&quot;),
+            active: false
+        });
+
+        // Allows Three-D and First Person toggle buttons to cooperatively switch
+        // CameraControl#navMode between &quot;orbit&quot;, &quot;firstPerson&quot; and &quot;planView&quot; modes
+
+        const cameraControlNavModeMediator = new (function (bimViewer) {
+
+            let threeDActive = false;
+            let firstPersonActive = false;
+
+            this.setThreeDModeActive = (active) =&gt; {
+                if (active) {
+                    bimViewer._firstPersonMode.setActive(false);
+                    bimViewer.viewer.cameraControl.navMode = &quot;orbit&quot;;
+                    //  bimViewer.viewer.cameraControl.followPointer = true;
+                } else {
+                    bimViewer._firstPersonMode.setActive(false);
+                    bimViewer.viewer.cameraControl.navMode = &quot;planView&quot;;
+                    //  bimViewer.viewer.cameraControl.followPointer = false;
+                }
+                threeDActive = active;
+            };
+
+            this.setFirstPersonModeActive = (active) =&gt; {
+                bimViewer.viewer.cameraControl.navMode = active ? &quot;firstPerson&quot; : (threeDActive ? &quot;orbit&quot; : &quot;planView&quot;);
+                //bimViewer.viewer.cameraControl.followPointer = bimViewer.viewer.cameraControl.navMode !== &quot;planView&quot;;
+                firstPersonActive = active;
+            };
+        })(this);
+
+        this._threeDMode = new ThreeDMode(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-threeD&quot;),
+            cameraControlNavModeMediator: cameraControlNavModeMediator,
+            active: false
+        });
+
+        this._orthoMode = new OrthoMode(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-ortho&quot;),
+            active: false
+        });
+
+        this._firstPersonMode = new FirstPersonMode(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-firstPerson&quot;),
+            cameraControlNavModeMediator: cameraControlNavModeMediator,
+            active: false
+        });
+
+        this._hideTool = new HideTool(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-hide&quot;),
+            active: false
+        });
+
+        this._selectionTool = new SelectionTool(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-select&quot;),
+            active: false
+        });
+
+        this._queryTool = new QueryTool(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-query&quot;),
+            queryInfoPanelElement: queryInfoPanelElement,
+            active: false
+        });
+
+        this._sectionTool = new SectionTool(this, {
+            buttonElement: toolbarElement.querySelector(&quot;.xeokit-section&quot;),
+            counterElement: toolbarElement.querySelector(&quot;.xeokit-section-counter&quot;),
+            menuButtonElement: toolbarElement.querySelector(&quot;.xeokit-section-menu-button&quot;),
+            menuButtonArrowElement: toolbarElement.querySelector(&quot;.xeokit-section-menu-button-arrow&quot;),
+            active: false
+        });
+
+        this._navCubeMode = new NavCubeMode(this, {
+            navCubeCanvasElement: navCubeCanvasElement,
+            active: true
+        });
+
+        this._busyModal = new BusyModal(this, {
+            busyModalBackdropElement: busyModelBackdropElement
+        });
+
+        this._threeDMode.setActive(true);
+        this._firstPersonMode.setActive(false);
+        this._navCubeMode.setActive(true);
+
+        this._modelsExplorer.on(&quot;modelLoaded&quot;, (modelId) =&gt; {
+            if (this._modelsExplorer.getNumModelsLoaded() === 1) {
+                this.setControlsEnabled(true);
+            }
+            this.fire(&quot;modelLoaded&quot;, modelId);
+        });
+
+        this._modelsExplorer.on(&quot;modelUnloaded&quot;, (modelId) =&gt; {
+            if (this._modelsExplorer.getNumModelsLoaded() === 0) {
+                this.setControlsEnabled(false);
+                this.openTab(&quot;models&quot;);
+            }
+            this.fire(&quot;modelUnloaded&quot;, modelId);
+        });
+
+        this._queryTool.on(&quot;queryPicked&quot;, (event) =&gt; {
+            this.fire(&quot;queryPicked&quot;, event);
+        });
+
+        this._queryTool.on(&quot;queryNotPicked&quot;, () =&gt; {
+            this.fire(&quot;queryNotPicked&quot;, true);
+        });
+
+        this._resetAction.on(&quot;reset&quot;, () =&gt; {
+            this.fire(&quot;reset&quot;, true);
+        });
+
+        this._mutexActivation([this._queryTool, this._hideTool, this._selectionTool, this._sectionTool]);
+
+        explorerElement.querySelector(&quot;.xeokit-showAllObjects&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+            this.setAllObjectsVisible(true);
+            this.setAllObjectsXRayed(false);
+            event.preventDefault();
+        });
+
+        explorerElement.querySelector(&quot;.xeokit-hideAllObjects&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+            this.setAllObjectsVisible(false);
+            event.preventDefault();
+        });
+
+        explorerElement.querySelector(&quot;.xeokit-showAllClasses&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+            this.setAllObjectsVisible(true);
+            this.setAllObjectsXRayed(false);
+            event.preventDefault();
+        });
+
+        explorerElement.querySelector(&quot;.xeokit-hideAllClasses&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+            this.setAllObjectsVisible(false);
+            event.preventDefault();
+        });
+
+        explorerElement.querySelector(&quot;.xeokit-showAllStoreys&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+            this.setAllObjectsVisible(true);
+            this.setAllObjectsXRayed(false);
+            event.preventDefault();
+        });
+
+        explorerElement.querySelector(&quot;.xeokit-hideAllStoreys&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+            this.setAllObjectsVisible(false);
+            event.preventDefault();
+        });
+
+        explorerElement.querySelector(&quot;.xeokit-loadAllModels&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+            this.setControlsEnabled(false); // For quick UI feedback
+            this.loadAllModels();
+            event.preventDefault();
+        });
+
+        explorerElement.querySelector(&quot;.xeokit-unloadAllModels&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+            this.setControlsEnabled(false); // For quick UI feedback
+            this._modelsExplorer.unloadAllModels();
+            event.preventDefault();
+        });
+
+        if (this._enableAddModels) {
+            explorerElement.querySelector(&quot;.xeokit-addModel&quot;).addEventListener(&quot;click&quot;, (event) =&gt; {
+                this.fire(&quot;addModel&quot;, {});
+                event.preventDefault();
+            });
+        }
+
+        this._bcfViewpointsPlugin = new BCFViewpointsPlugin(this.viewer, {});
+    }
+
+    _customizeViewer() {
+
+        const scene = this.viewer.scene;
+
+        // Emphasis effects
+
+        scene.xrayMaterial.fill = false;
+        scene.xrayMaterial.fillAlpha = 0.1;
+        scene.xrayMaterial.fillColor = [0, 0, 0];
+        scene.xrayMaterial.edges = true;
+        scene.xrayMaterial.edgeAlpha = 0.3;
+        scene.xrayMaterial.edgeColor = [0, 0, 0];
+
+        scene.highlightMaterial.edges = true;
+        scene.highlightMaterial.edgeColor = [.5, .5, 0];
+        scene.highlightMaterial.edgeAlpha = 0.9;
+        scene.highlightMaterial.fill = true;
+        scene.highlightMaterial.fillAlpha = 0.1;
+        scene.highlightMaterial.fillColor = [1, 0, 0];
+
+        // Lighting
+
+        scene.clearLights();
+
+        new AmbientLight(scene, {
+            color: [0.3, 0.3, 0.3],
+            intensity: 1.0
+        });
+
+        new DirLight(scene, {
+            dir: [0.8, -0.6, -0.8],
+            color: [1.0, 1.0, 1.0],
+            intensity: 1.0,
+            space: &quot;world&quot;
+        });
+
+        new DirLight(scene, {
+            dir: [-0.8, -0.4, 0.4],
+            color: [1.0, 1.0, 1.0],
+            intensity: 1.0,
+            space: &quot;world&quot;
+        });
+
+        new DirLight(scene, {
+            dir: [0.2, -0.8, 0.8],
+            color: [0.6, 0.6, 0.6],
+            intensity: 1.0,
+            space: &quot;world&quot;
+        });
+
+        // Camera control
+
+        this.viewer.cameraControl.panRightClick = true;
+        this.viewer.cameraControl.followPointer = true;
+        this.viewer.cameraControl.doublePickFlyTo = true;
+
+        // Dolly tweaks for best precision when aligning camera for BCF snapshots
+
+        this.viewer.cameraControl.keyboardDollyRate = 100.0;
+        this.viewer.cameraControl.mouseWheelDollyRate = 100.0;
+        this.viewer.cameraControl.dollyInertia = 0;
+        this.viewer.cameraControl.dollyMinSpeed = 0.01;
+        this.viewer.cameraControl.dollyProximityThreshold = 30.0;
+
+        const cameraPivotElement = document.createRange().createContextualFragment(&quot;&lt;div class=&apos;xeokit-camera-pivot-marker&apos;&gt;&lt;/div&gt;&quot;).firstChild;
+        document.body.appendChild(cameraPivotElement);
+        this.viewer.cameraControl.pivotElement = cameraPivotElement;
+
+        // Scalable Ambient Obscurance (SAO) defaults
+
+        scene.camera.perspective.near = 0.01;
+        scene.camera.perspective.far = 3000.0;
+        scene.camera.ortho.near = 0.01;
+        scene.camera.ortho.far = 3000.0;
+
+        const sao = scene.sao;
+        sao.enabled = false;
+        sao.bias = 0.5;
+        sao.intensity = 0.2;
+        sao.scale = 1200.0;
+        sao.kernelRadius = 100;
+
+        // Only enable SAO and normal edge emphasis while camera is not moving
+
+        const timeoutDuration = 200;
+        var timer = timeoutDuration;
+        var saoEnabled = false;
+
+        const onCameraMatrix = scene.camera.on(&quot;matrix&quot;, () =&gt; {
+            if (this._configs.saoInteractive) {
+                return;
+            }
+            const saoInteractiveDelay = this._configs.saoInteractiveDelay;
+            timer = ((saoInteractiveDelay !== null &amp;&amp; saoInteractiveDelay !== undefined) ? this._configs.saoInteractiveDelay : 200);
+            if (saoEnabled) {
+                scene.sao.enabled = false;
+                saoEnabled = false;
+            }
+        });
+
+        const onSceneTick = scene.on(&quot;tick&quot;, (e) =&gt; {
+            if (this._configs.saoInteractive) {
+                if (!saoEnabled) {
+                    scene.sao.enabled = (!!this._configs.saoEnabled);
+                    saoEnabled = true;
+                }
+                return;
+            }
+            if (saoEnabled) {
+                return;
+            }
+            timer -= e.deltaTime;
+            if (timer &lt;= 0) {
+                if (!saoEnabled) {
+                    scene.sao.enabled = (!!this._configs.saoEnabled);
+                    saoEnabled = true;
+                }
+            }
+        });
+    }
+
+    _initCanvasContextMenus() {
+
+        this._canvasContextMenu = new CanvasContextMenu();
+        this._objectContextMenu = new ObjectContextMenu();
+
+        this.viewer.cameraControl.on(&quot;rightClick&quot;, (e) =&gt; {
+
+            const event = e.event;
+
+            const hit = this.viewer.scene.pick({
+                canvasPos: [event.offsetX, event.offsetY]
+            });
+
+            if (hit &amp;&amp; hit.entity.isObject) {
+                this._canvasContextMenu.hide();
+                this._objectContextMenu.context = {
+                    viewer: this.viewer,
+                    bimViewer: this,
+                    showObjectInExplorers: (objectId) =&gt; {
+                        const openTabId = this.getOpenTab();
+                        if (openTabId !== &quot;objects&quot; &amp;&amp; openTabId !== &quot;classes&quot; &amp;&amp; openTabId !== &quot;storeys&quot;) {
+                            // Scroll won&apos;t work if tab not open
+                            this.openTab(&quot;objects&quot;);
+                        }
+                        this.showObjectInExplorers(objectId);
+                    },
+                    entity: hit.entity
+                };
+                this._objectContextMenu.show(event.pageX, event.pageY);
+            } else {
+                this._objectContextMenu.hide();
+                this._canvasContextMenu.context = {
+                    viewer: this.viewer,
+                    bimViewer: this
+                };
+                this._canvasContextMenu.show(event.pageX, event.pageY);
+            }
+        });
+    }
+
+    _initConfigs() {
+        this.setConfigs({
+            &quot;cameraNear&quot;: &quot;0.05&quot;,
+            &quot;cameraFar&quot;: &quot;3000.0&quot;,
+            &quot;saoEnabled&quot;: &quot;false&quot;,
+            &quot;saoBias&quot;: &quot;0.5&quot;,
+            &quot;saoIntensity&quot;: &quot;0.5&quot;,
+            &quot;saoScale&quot;: &quot;1200.0&quot;,
+            &quot;saoKernelRadius&quot;: &quot;100&quot;,
+            &quot;xrayContext&quot;: true,
+            &quot;backgroundColor&quot;: [1.0, 1.0, 1.0],
+            &quot;saoInteractive&quot;: true,
+            &quot;saoInteractiveDelay&quot;: 200,
+            &quot;objectColorSource&quot;: &quot;model&quot;
+        });
+    }
+
+    /**
+     * Sets a batch of viewer configurations.
+     *
+     * Note that this method is not to be confused with {@link BIMViewer#setViewerState}, which batch-updates various states of the viewer&apos;s UI and 3D view.
+     *
+     * See [Viewer Configurations](https://xeokit.github.io/xeokit-bim-viewer/docs/#viewer-configurations) for the list of available configurations.
+     *
+     * @param {*} viewerConfigs Map of key-value configuration pairs.
+     */
+    setConfigs(viewerConfigs) {
+        for (let name in viewerConfigs) {
+            if (viewerConfigs.hasOwnProperty(name)) {
+                const value = viewerConfigs[name];
+                this.setConfig(name, value);
+            }
+        }
+    }
+
+    /**
+     * Sets a viewer configuration.
+     *
+     * See [Viewer Configurations](https://xeokit.github.io/xeokit-bim-viewer/docs/#viewer-configurations) for the list of available configurations.
+     *
+     * @param {String} name Configuration name.
+     * @param {*} value Configuration value.
+     */
+    setConfig(name, value) {
+
+        function parseBool(value) {
+            return ((value === true) || (value === &quot;true&quot;));
+        }
+
+        try {
+            switch (name) {
+
+                case &quot;backgroundColor&quot;:
+                    const rgbColor = value;
+                    this.setBackgroundColor(rgbColor);
+                    this._configs[name] = rgbColor;
+                    break;
+
+                case &quot;cameraNear&quot;:
+                    const near = parseFloat(value);
+                    this.viewer.scene.camera.perspective.near = near;
+                    this.viewer.scene.camera.ortho.near = near;
+                    this._configs[name] = near;
+                    break;
+
+                case &quot;cameraFar&quot;:
+                    const far = parseFloat(value);
+                    this.viewer.scene.camera.perspective.far = far;
+                    this.viewer.scene.camera.ortho.far = far;
+                    this._configs[name] = far;
+                    break;
+
+                case &quot;saoEnabled&quot;:
+                    this.viewer.scene.sao.enabled = this._configs[name] = parseBool(value);
+                    break;
+
+                case &quot;saoBias&quot;:
+                    this.viewer.scene.sao.bias = parseFloat(value);
+                    break;
+
+                case &quot;saoIntensity&quot;:
+                    this.viewer.scene.sao.intensity = parseFloat(value);
+                    break;
+
+                case &quot;saoScale&quot;:
+                    this.viewer.scene.sao.scale = this._configs[name] = parseFloat(value);
+                    break;
+
+                case &quot;saoKernelRadius&quot;:
+                    this.viewer.scene.sao.kernelRadius = this._configs[name] = parseFloat(value);
+                    break;
+
+                case &quot;saoBlur&quot;:
+                    this.viewer.scene.sao.blur = this._configs[name] = parseBool(value);
+                    break;
+
+                case &quot;viewFitFOV&quot;:
+                    this.viewer.cameraFlight.fitFOV = this._configs[name] = parseFloat(value);
+                    break;
+
+                case &quot;viewFitDuration&quot;:
+                    this.viewer.cameraFlight.duration = this._configs[name] = parseFloat(value);
+                    break;
+
+                case &quot;perspectiveFOV&quot;:
+                    this.viewer.camera.perspective.fov = this._configs[name] = parseFloat(value);
+                    break;
+
+                case &quot;excludeUnclassifiedObjects&quot;:
+                    this._configs[name] = parseBool(value);
+                    break;
+
+                case &quot;objectColorSource&quot;:
+                    this.setObjectColorSource(value);
+                    this._configs[name] = value;
+                    break;
+
+                case &quot;xrayContext&quot;:
+                    this._configs[name] = value;
+                    break;
+
+                case &quot;saoInteractive&quot;:
+                    this._configs[&quot;saoInteractive&quot;] = parseBool(value);
+                    break;
+
+                case &quot;saoInteractiveDelay&quot;:
+                    var saoInteractiveDelay = parseFloat(value);
+                    if (saoInteractiveDelay &lt; 0) {
+                        this.error(&quot;setConfig() - saoInteractiveDelay cannot be less than zero - clamping to zero&quot;);
+                        saoInteractiveDelay = 0;
+                    }
+                    this._configs[&quot;saoInteractiveDelay&quot;] = parseFloat(value);
+                    break;
+
+                default:
+                    this.error(&quot;setConfig() - unsupported configuration: &apos;&quot; + name + &quot;&apos;&quot;);
+            }
+
+        } catch (e) {
+            this.error(&quot;setConfig() - failed to configure &apos;&quot; + name + &quot;&apos;: &quot; + e);
+        }
+    }
+
+    /**
+     * Gets the value of a viewer configuration.
+     *
+     * These are set with {@link BIMViewer#setConfig} and {@link BIMViewer#setConfigs}.
+     *
+     * @param {String} name Configuration name.
+     * @ereturns {*} Configuration value.
+     */
+    getConfig(name) {
+        return this._configs[name];
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Content querying methods
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Gets information on all available projects.
+     *
+     * See [Getting Info on Available Projects](https://xeokit.github.io/xeokit-bim-viewer/docs/#getting-info-on-available-projects) for usage.
+     *
+     * @param {Function} done Callback invoked on success, into which the projects information JSON is passed.
+     * @param {Function} error Callback invoked on failure, into which the error message string is passed.
+     */
+    getProjectsInfo(done, error) {
+        if (!done) {
+            this.error(&quot;getProjectsInfo() - Argument expected: &apos;done&apos;&quot;);
+            return;
+        }
+        this.server.getProjects(done, (errorMsg) =&gt; {
+            this.error(&quot;getProjectsInfo() - &quot; + errorMsg);
+            if (error) {
+                error(errorMsg);
+            }
+        });
+    }
+
+    /**
+     * Gets information on the given project.
+     *
+     * See [Getting Info on a Project](https://xeokit.github.io/xeokit-bim-viewer/docs/#getting-info-on-a-project) for usage.
+     *
+     * @param {String} projectId ID of the project to get information on. Must be the ID of one of the projects in the information obtained by {@link BIMViewer#getProjects}.
+     * @param {Function} done Callback invoked on success, into which the project information JSON is passed.
+     * @param {Function} error Callback invoked on failure, into which the error message string is passed.
+     */
+    getProjectInfo(projectId, done, error) {
+        if (!projectId) {
+            this.error(&quot;getProjectInfo() - Argument expected: projectId&quot;);
+            return;
+        }
+        if (!done) {
+            this.error(&quot;getProjectInfo() - Argument expected: &apos;done&apos;&quot;);
+            return;
+        }
+        this.server.getProject(projectId,
+            done, (errorMsg) =&gt; {
+                this.error(&quot;getProjectInfo() - &quot; + errorMsg);
+                if (error) {
+                    error(errorMsg);
+                }
+            });
+    }
+
+    /**
+     * Gets information on the given object, belonging to the given model, within the given project.
+     *
+     * See [Getting Info on an Object](https://xeokit.github.io/xeokit-bim-viewer/docs/#getting-info-on-an-object) for usage.
+     *
+     * @param {String} projectId ID of the project to get information on. Must be the ID of one of the projects in the information obtained by {@link BIMViewer#getProjects}.
+     * @param {String} modelId ID of a model within the project. Must be the ID of one of the models in the information obtained by {@link BIMViewer#getProjectInfo}.
+     * @param {String} objectId ID of an object in the model.
+     * @param {Function} done Callback invoked on success, into which the object information JSON is passed.
+     * @param {Function} error Callback invoked on failure, into which the error message string is passed.
+     */
+    getObjectInfo(projectId, modelId, objectId, done, error) {
+        if (!projectId) {
+            this.error(&quot;getObjectInfo() - Argument expected: projectId&quot;);
+            return;
+        }
+        if (!modelId) {
+            this.error(&quot;getObjectInfo() - Argument expected: modelId&quot;);
+            return;
+        }
+        if (!objectId) {
+            this.error(&quot;getObjectInfo() - Argument expected: objectId&quot;);
+            return;
+        }
+        if (!done) {
+            this.error(&quot;getProjectInfo() - Argument expected: &apos;done&apos;&quot;);
+            return;
+        }
+        this.server.getObjectInfo(projectId, modelId, objectId,
+            done,
+            (errorMsg) =&gt; {
+                if (error) {
+                    error(errorMsg);
+                }
+            });
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Content loading methods
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Loads a project into the viewer.
+     *
+     * Unloads any currently loaded project and its models first. If the given project is already loaded, will unload that project first.
+     *
+     * @param {String} projectId ID of the project to load. Must be the ID of one of the projects in the information obtained by {@link BIMViewer#getProjects}.
+     * @param {Function} done Callback invoked on success.
+     * @param {Function} error Callback invoked on failure, into which the error message string is passed.
+     */
+    loadProject(projectId, done, error) {
+        if (!projectId) {
+            this.error(&quot;loadProject() - Argument expected: objectId&quot;);
+            return;
+        }
+        this._modelsExplorer.loadProject(projectId,
+            () =&gt; {
+                if (done) {
+                    done();
+                }
+            }, (errorMsg) =&gt; {
+                this.error(&quot;loadProject() - &quot; + errorMsg);
+                if (error) {
+                    error(errorMsg);
+                }
+            });
+    }
+
+    /**
+     * Unloads whatever project is currently loaded.
+     */
+    unloadProject() {
+        this._modelsExplorer.unloadProject();
+        this.openTab(&quot;models&quot;);
+        this.setControlsEnabled(false); // For quick UI feedback
+    }
+
+    /**
+     * Returns the ID of the currently loaded project, if any.
+     *
+     * @returns {String} The ID of the currently loaded project, otherwise ````null```` if no project is currently loaded.
+     */
+    getLoadedProjectId() {
+        return this._modelsExplorer.getLoadedProjectId();
+    }
+
+    /**
+     * Returns the IDs of the models in the currently loaded project.
+     *
+     * @returns {String[]} The IDs of the models in the currently loaded project.
+     */
+    getModelIds() {
+        return this._modelsExplorer.getModelIds();
+    }
+
+    /**
+     * Loads a model into the viewer.
+     *
+     * Assumes that the project containing the model is currently loaded.
+     *
+     * @param {String} modelId ID of the model to load. Must be the ID of one of the models in the currently loaded project.
+     * @param {Function} done Callback invoked on success.
+     * @param {Function} error Callback invoked on failure, into which the error message string is passed.
+     */
+    loadModel(modelId, done, error) {
+        if (!modelId) {
+            this.error(&quot;loadModel() - Argument expected: modelId&quot;);
+            return;
+        }
+        this._modelsExplorer.loadModel(modelId,
+            () =&gt; {
+                if (done) {
+                    done();
+                }
+            }, (errorMsg) =&gt; {
+                this.error(&quot;loadModel() - &quot; + errorMsg);
+                if (error) {
+                    error(errorMsg);
+                }
+            });
+    }
+
+    /**
+     * Load all models in the currently loaded project.
+     *
+     * Doesn&apos;t reload any models that are currently loaded.
+     *
+     * @param {Function} done Callback invoked on successful loading of the models.
+     */
+    loadAllModels(done = function () {
+    }) {
+        const modelIds = this._modelsExplorer.getModelIds();
+        const loadNextModel = (i, done2) =&gt; {
+            if (i &gt;= modelIds.length) {
+                done2();
+            } else {
+                const modelId = modelIds[i];
+                if (!this._modelsExplorer.isModelLoaded(modelId)) {
+                    this._modelsExplorer.loadModel(modelId, () =&gt; {
+                        loadNextModel(i + 1, done2);
+                    }, (errorMsg) =&gt; {
+                        this.error(&quot;loadAllModels() - &quot; + errorMsg);
+                        loadNextModel(i + 1, done2);
+                    });
+                } else {
+                    loadNextModel(i + 1, done2);
+                }
+            }
+        };
+        loadNextModel(0, done);
+    }
+
+    /**
+     * Returns the IDs of the currently loaded models, if any.
+     *
+     * @returns {String[]} The IDs of the currently loaded models, otherwise an empty array if no models are currently loaded.
+     */
+    getLoadedModelIds() {
+        return this._modelsExplorer._getLoadedModelIds();
+    }
+
+    /**
+     * Gets if the given model is loaded.
+     *
+     * @param {String} modelId ID of the model to check. Must be the ID of one of the models in the currently loaded project.
+     * @returns {Boolean} True if the given model is loaded.
+     */
+    isModelLoaded(modelId) {
+        if (!modelId) {
+            this.error(&quot;unloadModel() - Argument expected: modelId&quot;);
+            return;
+        }
+        return this._modelsExplorer.isModelLoaded(modelId);
+    }
+
+    /**
+     * Unloads a model from the viewer.
+     *
+     * Does nothing if the model is not currently loaded.
+     *
+     * @param {String} modelId ID of the model to unload.
+     */
+    unloadModel(modelId) {
+        if (!modelId) {
+            this.error(&quot;unloadModel() - Argument expected: modelId&quot;);
+            return;
+        }
+        this._modelsExplorer.unloadModel(modelId);
+    }
+
+    /**
+     * Unloads all currently loaded models.
+     */
+    unloadAllModels() {
+        this._modelsExplorer.unloadAllModels();
+    }
+
+    /**
+     * Edits a model.
+     *
+     * Assumes that the project containing the model is currently loaded.
+     *
+     * @param {String} modelId ID of the model to edit. Must be the ID of one of the models in the currently loaded project.
+     */
+    editModel(modelId) {
+        this.fire(&quot;editModel&quot;, {
+            modelId: modelId
+        });
+    }
+
+    /**
+     * Deletes a model.
+     *
+     * Assumes that the project containing the model is currently loaded.
+     *
+     * @param {String} modelId ID of the model to delete. Must be the ID of one of the models in the currently loaded project.
+     */
+    deleteModel(modelId) {
+        this.fire(&quot;deleteModel&quot;, {
+            modelId: modelId
+        });
+    }
+
+    /**
+     * Adds a model.
+     *
+     */
+    addModel() {
+        this.fire(&quot;addModel&quot;, {});
+    }
+
+    /**
+     * Sets the viewer&apos;s background color.
+     *
+     * @param {Number[]} rgbColor Three-element array of RGB values, each in range ````[0..1]````.
+     */
+    setBackgroundColor(rgbColor) {
+        this.viewer.scene.canvas.canvas.style.background = &quot;rgba(&quot; + (rgbColor[0] * 255) + &quot;,&quot; + (rgbColor[1] * 255) + &quot;,&quot; + (rgbColor[2] * 255) + &quot;, 1.0)&quot;;
+    }
+
+    /**
+     * Sets where the colors for model objects will be loaded from.
+     *
+     * Options are:
+     *
+     * * &quot;model&quot; - (default) load colors from models, and
+     * * &quot;viewer&quot; - load colors from the viewer&apos;s inbuilt table of colors for IFC types.
+     *
+     * This is &quot;model&quot; by default.
+     *
+     * @param {String} source Where colors will be loaded from - &quot;model&quot; or &quot;viewer&quot;.
+     */
+    setObjectColorSource(source) {
+        switch (source) {
+            case &quot;model&quot;:
+                break;
+            case &quot;viewer&quot;:
+                break;
+            default:
+                source = &quot;model&quot;;
+                this.error(&quot;setObjectColorSource() - Unsupported value - accepted values are &apos;model&apos; and &apos;viewer&apos; - defaulting to &apos;model&apos;&quot;);
+                return;
+        }
+        this._objectColorSource = source;
+    }
+
+    /**
+     * Gets where the colors for model objects will be loaded from.
+     *
+     * This is &quot;model&quot; by default.
+     *
+     * @return {String} Where colors will be loaded from - &quot;model&quot; to get colors from the model, or &quot;viewer&quot; to get them from the viewer&apos;s built-in table of colors for IFC types.
+     */
+    getObjectColorSource() {
+        return this._objectColorSource || &quot;model&quot;;
+    }
+
+    /**
+     * Updates viewer UI state according to the properties in the given object.
+     *
+     * Note that, since some updates could be animated (e.g. flying the camera to fit objects to view) this
+     * method optionally takes a callback, which it invokes after updating the UI.
+     *
+     * Also, this method is not to be confused with {@link BIMViewer#setConfigs}, which is used to batch-update various configurations and user preferences on the viewer.
+     *
+     * See [Viewer States](https://xeokit.github.io/xeokit-bim-viewer/docs/#viewer_states) for the list of states that may be batch-updated with this method.
+     *
+     * @param {Object} viewerState Specifies the viewer UI state updates.
+     * @param {Function} done Callback invoked on successful update of the viewer states.
+     */
+    setViewerState(viewerState, done = () =&gt; {
+    }) {
+        if (viewerState.tabOpen) {
+            this.openTab(viewerState.tabOpen);
+        }
+        if (viewerState.expandObjectsTree) {
+            this._objectsExplorer.expandTreeViewToDepth(viewerState.expandObjectsTree);
+        }
+        if (viewerState.expandClassesTree) {
+            this._classesExplorer.expandTreeViewToDepth(viewerState.expandClassesTree);
+        }
+        if (viewerState.expandStoreysTree) {
+            this._storeysExplorer.expandTreeViewToDepth(viewerState.expandStoreysTree);
+        }
+        if (viewerState.setCamera) {
+            this.setCamera(viewerState.setCamera);
+        }
+        this._parseSelectedStorey(viewerState, () =&gt; {
+            this._parseThreeDMode(viewerState, () =&gt; {
+                done();
+            });
+        });
+    }
+
+    _parseSelectedStorey(viewerState, done) {
+        if (viewerState.selectedStorey) {
+            this.selectStorey(viewerState.selectedStorey);
+            done();
+        } else {
+            done();
+        }
+    }
+
+    _parseThreeDMode(viewerState, done) {
+        const activateThreeDMode = (viewerState.threeDActive !== false);
+        this.set3DEnabled(activateThreeDMode, done);
+    }
+
+    /**
+     * Highlights the given object in the tree views within the Objects, Classes and Storeys tabs.
+     *
+     * Also scrolls the object&apos;s node into view within each tree, then highlights it.
+     *
+     * De-highlights whatever node is currently highlighted in each of those trees.
+     *
+     * @param {String} objectId ID of the object
+     */
+    showObjectInExplorers(objectId) {
+        if (!objectId) {
+            this.error(&quot;showObjectInExplorers() - Argument expected: objectId&quot;);
+            return;
+        }
+        this._objectsExplorer.showNodeInTreeView(objectId);
+        this._classesExplorer.showNodeInTreeView(objectId);
+        this._storeysExplorer.showNodeInTreeView(objectId);
+    }
+
+    /**
+     * De-highlights the object previously highlighted with {@link BIMViewer#showObjectInExplorers}.
+     *
+     * This only de-highlights the node. If the node is currently scrolled into view, then the node will remain in view.
+     *
+     * For each tab, does nothing if a node is currently highlighted.
+     */
+    unShowObjectInExplorers() {
+        this._objectsExplorer.unShowNodeInTreeView();
+        this._classesExplorer.unShowNodeInTreeView();
+        this._storeysExplorer.unShowNodeInTreeView();
+    }
+
+    /**
+     * Sets whether or not the given objects are visible.
+     *
+     * @param {String[]} objectIds IDs of objects.
+     * @param {Boolean} visible True to set objects visible, false to set them invisible.
+     */
+    setObjectsVisible(objectIds, visible) {
+        this._withObjectsInSubtree(objectIds, (entity) =&gt; {
+            entity.visible = visible;
+        });
+    }
+
+    /**
+     * Sets the visibility of all objects.
+     *
+     * @param {Boolean} visible True to set objects visible, false to set them invisible.
+     */
+    setAllObjectsVisible(visible) {
+        if (visible) {
+            this.viewer.scene.setObjectsVisible(this.viewer.scene.objectIds, true);
+        } else {
+            this.viewer.scene.setObjectsVisible(this.viewer.scene.visibleObjectIds, false);
+        }
+    }
+
+    /**
+     * Sets whether or not the given objects are X-rayed.
+     *
+     * @param {String[]} objectIds IDs of objects.
+     * @param {Boolean} xrayed Whether or not to X-ray the objects.
+     */
+    setObjectsXRayed(objectIds, xrayed) {
+        this._withObjectsInSubtree(objectIds, (entity) =&gt; {
+            entity.xrayed = xrayed;
+        });
+    }
+
+    /**
+     * Sets whether or not all objects are X-rayed.
+     *
+     * @param {Boolean} xrayed Whether or not to set all objects X-rayed.
+     */
+    setAllObjectsXRayed(xrayed) {
+        if (xrayed) {
+            this.viewer.scene.setObjectsXRayed(this.viewer.scene.objectIds, true);
+        } else {
+            this.viewer.scene.setObjectsXRayed(this.viewer.scene.xrayedObjectIds, false);
+        }
+    }
+
+    /**
+     * Sets whether or not the given objects are selected.
+     *
+     * @param {String[]} objectIds IDs of objects.
+     * @param {Boolean} selected Whether or not to set the objects selected.
+     */
+    setObjectsSelected(objectIds, selected) {
+        this._withObjectsInSubtree(objectIds, (entity) =&gt; {
+            entity.selected = selected;
+        });
+    }
+
+    /**
+     * Sets whether or not all objects are selected.
+     *
+     * @param {Boolean} selected Whether or not to set all objects selected.
+     */
+    setAllObjectsSelected(selected) {
+        if (selected) {
+            this.viewer.scene.setObjectsSelected(this.viewer.scene.objectIds, true);
+        } else {
+            this.viewer.scene.setObjectsSelected(this.viewer.scene.selectedObjectIds, false);
+        }
+    }
+
+    _withObjectsInSubtree(objectIds, callback) {
+        if (!objectIds) {
+            this.error(&quot;Argument expected: objectIds&quot;);
+            return;
+        }
+        for (let i = 0, len = objectIds.length; i &lt; len; i++) {
+            const objectId = objectIds[i];
+            this.viewer.metaScene.withMetaObjectsInSubtree(objectId, (metaObject) =&gt; {
+                const entity = this.viewer.scene.objects[metaObject.id];
+                if (entity) {
+                    callback(entity);
+                }
+            });
+        }
+    }
+
+    /**
+     * Flies the camera to fit the given object in view.
+     *
+     * @param {String} objectId ID of the object
+     * @param {Function} done Callback invoked on completion
+     */
+    flyToObject(objectId, done) {
+        if (!objectId) {
+            this.error(&quot;flyToObject() - Argument expected: objectId&quot;);
+            return;
+        }
+        const viewer = this.viewer;
+        const scene = viewer.scene;
+        const objectIds = [];
+        this.viewer.metaScene.withMetaObjectsInSubtree(objectId, (metaObject) =&gt; {
+            if (scene.objects[metaObject.id]) {
+                objectIds.push(metaObject.id);
+            }
+        });
+        if (objectIds.length === 0) {
+            this.error(&quot;Object not found in viewer: &apos;&quot; + objectId + &quot;&apos;&quot;);
+            if (done) {
+                done();
+            }
+            return;
+        }
+        scene.setObjectsVisible(objectIds, true);
+        scene.setObjectsHighlighted(objectIds, true);
+        const aabb = scene.getAABB(objectIds);
+        viewer.cameraFlight.flyTo({
+            aabb: aabb
+        }, () =&gt; {
+            if (done) {
+                done();
+            }
+            setTimeout(function () {
+                scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+            }, 500);
+        });
+        viewer.cameraControl.pivotPos = math.getAABB3Center(aabb);
+    }
+
+    /**
+     * Flies the camera to fit the given objects in view.
+     *
+     * @param {String[]} objectIds IDs of the objects
+     * @param {Function} done Callback invoked on completion
+     */
+    viewFitObjects(objectIds, done) {
+        if (!objectIds) {
+            this.error(&quot;flyToObject() - Argument expected: objectIds&quot;);
+            return;
+        }
+        const viewer = this.viewer;
+        const scene = viewer.scene;
+
+        const entityIds = [];
+
+        for (var i = 0, len = objectIds.length; i &lt; len; i++) {
+            const objectId = objectIds[i];
+            this.viewer.metaScene.withMetaObjectsInSubtree(objectId, (metaObject) =&gt; {
+                if (scene.objects[metaObject.id]) {
+                    entityIds.push(metaObject.id);
+                }
+            });
+        }
+        if (entityIds.length === 0) {
+            if (done) {
+                done();
+            }
+            return;
+        }
+        scene.setObjectsVisible(entityIds, true);
+        scene.setObjectsHighlighted(entityIds, true);
+        const aabb = scene.getAABB(entityIds);
+        viewer.cameraFlight.flyTo({
+            aabb: aabb
+        }, () =&gt; {
+            if (done) {
+                done();
+            }
+            setTimeout(function () {
+                scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+            }, 500);
+        });
+        viewer.cameraControl.pivotPos = math.getAABB3Center(aabb);
+    }
+
+    /**
+     * Flies the camera to fit all objects in view.
+     *
+     * @param {Function} done Callback invoked on completion
+     */
+    viewFitAll(done) {
+        const viewer = this.viewer;
+        const scene = viewer.scene;
+        const aabb = scene.getAABB();
+        viewer.cameraFlight.flyTo({
+            aabb: aabb
+        }, () =&gt; {
+            if (done) {
+                done();
+            }
+        });
+        viewer.cameraControl.pivotPos = math.getAABB3Center(aabb);
+    }
+
+    /**
+     * Jumps the camera to fit the given object in view.
+     *
+     * @param {String} objectId ID of the object
+     */
+    jumpToObject(objectId) {
+        if (!objectId) {
+            this.error(&quot;jumpToObject() - Argument expected: objectId&quot;);
+            return;
+        }
+        const viewer = this.viewer;
+        const scene = viewer.scene;
+        const objectIds = [];
+        this.viewer.metaScene.withMetaObjectsInSubtree(objectId, (metaObject) =&gt; {
+            if (scene.objects[metaObject.id]) {
+                objectIds.push(metaObject.id);
+            }
+        });
+        if (objectIds.length === 0) {
+            this.error(&quot;Object not found in viewer: &apos;&quot; + objectId + &quot;&apos;&quot;);
+            return;
+        }
+        scene.setObjectsVisible(objectIds, true);
+        const aabb = scene.getAABB(objectIds);
+        viewer.cameraFlight.jumpTo({
+            aabb: aabb
+        });
+        viewer.cameraControl.pivotPos = math.getAABB3Center(aabb);
+    }
+
+    /**
+     * Sets the camera to the given position.
+     *
+     * @param {Number[]} [params.eye] Eye position.
+     * @param {Number[]} [params.look] Point of interest.
+     * @param {Number[]} [params.up] Direction of &quot;up&quot;.
+     */
+    setCamera(params) {
+        const viewer = this.viewer;
+        const scene = viewer.scene;
+        const camera = scene.camera;
+        if (params.eye) {
+            camera.eye = params.eye;
+        }
+        if (params.look) {
+            camera.look = params.look;
+        }
+        if (params.up) {
+            camera.up = params.up;
+        }
+    }
+
+    /**
+     * Fits the given models in view.
+     *
+     * @param {String[]} modelIds ID of the models.
+     * @param {Function} [done] Callback invoked on completion. Will be animated if this is given, otherwise will be instantaneous.
+     */
+    viewFitModels(modelIds, done) {
+        if (!modelIds) {
+            this.error(&quot;viewFitModels() - Argument expected: modelIds&quot;);
+            return;
+        }
+        const viewer = this.viewer;
+        const scene = viewer.scene;
+        const aabb = math.AABB3();
+        math.collapseAABB3(aabb);
+        for (var i = 0, len = modelIds.length; i &lt; len; i++) {
+            const modelId = modelIds[i];
+            const model = scene.models[modelId];
+            if (!model) {
+                this.error(&quot;Model not found in viewer: &apos;&quot; + modelId + &quot;&apos;&quot;);
+                continue;
+            }
+            model.visible = true;
+            model.highlighted = true;
+            math.expandAABB3(aabb, model.aabb);
+        }
+        if (done) {
+            viewer.cameraFlight.flyTo({
+                aabb: aabb
+            }, () =&gt; {
+                done();
+                setTimeout(function () {
+                    scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+                }, 500);
+            });
+        } else {
+            viewer.cameraFlight.jumpTo({
+                aabb: aabb
+            });
+            setTimeout(function () {
+                scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
+            }, 500);
+        }
+        viewer.cameraControl.pivotPos = math.getAABB3Center(aabb);
+    }
+
+    /**
+     * Opens the specified viewer tab.
+     *
+     * The available tabs are:
+     *
+     *  * &quot;models&quot; - the Models tab, which lists the models available within the currently loaded project,
+     *  * &quot;objects&quot; - the Objects tab, which contains a tree view for each loaded model, organized to indicate the containment hierarchy of their objects,
+     *  * &quot;classes&quot; - the Classes tab, which contains a tree view for each loaded model, with nodes grouped by IFC types of their objects, and
+     *  * &quot;storeys&quot; - the Storeys tab, which contains a tree view for each loaded model, with nodes grouped within ````IfcBuildingStoreys````, sub-grouped by their IFC types.
+     *
+     * @param {String} tabId ID of the tab to open - see method description.
+     */
+    openTab(tabId) {
+        if (!tabId) {
+            this.error(&quot;openTab() - Argument expected: tabId&quot;);
+            return;
+        }
+        const tabClass = &apos;xeokit-tab&apos;;
+        const activeClass = &apos;active&apos;;
+        let tabSelector;
+        switch (tabId) {
+            case &quot;models&quot;:
+                tabSelector = &quot;xeokit-modelsTab&quot;;
+                break;
+            case &quot;objects&quot;:
+                tabSelector = &quot;xeokit-objectsTab&quot;;
+                break;
+            case &quot;classes&quot;:
+                tabSelector = &quot;xeokit-classesTab&quot;;
+                break;
+            case &quot;storeys&quot;:
+                tabSelector = &quot;xeokit-storeysTab&quot;;
+                break;
+            default:
+                this.error(&quot;openTab() - tab not recognized: &apos;&quot; + tabId + &quot;&apos;&quot;);
+                return;
+        }
+        let tabs = this._explorerElement.querySelectorAll(&quot;.&quot; + tabClass);
+        let tab = this._explorerElement.querySelector(&quot;.&quot; + tabSelector);
+        for (let i = 0; i &lt; tabs.length; i++) {
+            let tabElement = tabs[i];
+            if (tabElement.isEqualNode(tab)) {
+                tabElement.classList.add(activeClass)
+            } else {
+                tabElement.classList.remove(activeClass)
+            }
+        }
+    }
+
+    /**
+     * Returns the ID of the currently open viewer tab.
+     *
+     * The available tabs are:
+     *
+     *  * &quot;models&quot; - the Models tab, which lists the models available within the currently loaded project,
+     *  * &quot;objects&quot; - the Objects tab, which contains a tree view for each loaded model, organized to indicate the containment hierarchy of their objects,
+     *  * &quot;classes&quot; - the Classes tab, which contains a tree view for each loaded model, with nodes grouped by IFC types of their objects, and
+     *  * &quot;storeys&quot; - the Storeys tab, which contains a tree view for each loaded model, with nodes grouped within ````IfcBuildingStoreys````, sub-grouped by their IFC types.
+     *  * &quot;none&quot; - no tab is open; this is unlikely, since one of the above tabs should be open at a any time, but here for robustness.
+     */
+    getOpenTab() {
+        function hasClass(element, className) {
+            if (!element) {
+                return false;
+            }
+            return (&quot; &quot; + element.className + &quot; &quot;).indexOf(&quot; &quot; + className + &quot; &quot;) &gt; -1;
+        }
+
+        const activeClass = &apos;active&apos;;
+        let modelsTab = this._explorerElement.querySelector(&quot;.xeokit-modelsTab&quot;);
+        if (hasClass(modelsTab, activeClass)) {
+            return &quot;models&quot;;
+        }
+        let objectsTab = this._explorerElement.querySelector(&quot;.xeokit-objectsTab&quot;);
+        if (hasClass(objectsTab, activeClass)) {
+            return &quot;objects&quot;;
+        }
+        let classesTab = this._explorerElement.querySelector(&quot;.xeokit-classesTab&quot;);
+        if (hasClass(classesTab, activeClass)) {
+            return &quot;classes&quot;;
+        }
+        let storeysTab = this._explorerElement.querySelector(&quot;.xeokit-storeysTab&quot;);
+        if (hasClass(storeysTab, activeClass)) {
+            return &quot;storeys&quot;;
+        }
+        return &quot;none&quot;;
+    }
+
+    /**
+     * Switches the viewer between 2D and 3D viewing modes.
+     *
+     * @param {Boolean} enabled Set true to switch into 3D mode, else false to switch into 2D mode.
+     * @param {Function} done Callback to invoke when switch complete. Supplying this callback causes an animated transition. Otherwise, the transition will be instant.
+     */
+    set3DEnabled(enabled, done) {
+        this._threeDMode.setActive(enabled, done);
+    }
+
+    /**
+     * Gets whether the viewer is in 3D or 2D viewing mode.
+     *
+     * @returns {boolean} True when in 3D mode, else false.
+     */
+    get3DEnabled() {
+        return this._threeDMode.getActive();
+    }
+
+
+    /**
+     * Sets whether the viewer is in orthographic viewing mode.
+     *
+     * The viewer is either in orthographic mode or perspective mode. The viewer is in perspective mode by default.
+     *
+     * @param {Boolean} enabled Set true to switch into ortho mode, else false to switch into perspective mode.
+     * @param {Function} done Callback to invoke when switch complete. Supplying this callback causes an animated transition. Otherwise, the transition will be instant.
+     */
+    setOrthoEnabled(enabled, done) {
+        this._orthoMode.setActive(enabled, done);
+    }
+
+    /**
+     * Gets whether the viewer is in orthographic viewing mode.
+     *
+     * The viewer is either in orthographic mode or perspective mode. The viewer is in perspective mode by default.
+     *
+     * @returns {boolean} True when in ortho mode, else false when in perspective mode.
+     */
+    getOrthoEnabled() {
+        return this._orthoMode.getActive();
+    }
+
+    /**
+     * Transitions the viewer into an isolated view of the given building storey.
+     *
+     * Does nothing and logs an error if no object of the given ID is in the viewer, or if the object is not an ````IfcBuildingStorey````.
+     *
+     * @param {String} storeyObjectId ID of an ````IfcBuildingStorey```` object.
+     * @param {Function} [done] Optional callback to invoke on completion. When provided, the transition will be animated, with the camera flying into position. Otherwise, the transition will be instant, with the camera jumping into position.
+     */
+    selectStorey(storeyObjectId, done) {
+        const metaScene = this.viewer.metaScene;
+        const storeyMetaObject = metaScene.metaObjects[storeyObjectId];
+        if (!storeyMetaObject) {
+            this.error(&quot;selectStorey() - Object is not found: &apos;&quot; + storeyObjectId + &quot;&apos;&quot;);
+            return;
+        }
+        if (storeyMetaObject.type !== &quot;IfcBuildingStorey&quot;) {
+            this.error(&quot;selectStorey() - Object is not an IfcBuildingStorey: &apos;&quot; + storeyObjectId + &quot;&apos;&quot;);
+            return;
+        }
+        this._storeysExplorer.selectStorey(storeyObjectId, done);
+    }
+
+    /**
+     * Saves viewer state to a BCF viewpoint.
+     *
+     * This does not save information about the project and model(s) that are currently loaded. When loading the viewpoint,
+     * the viewer will assume that the same project and models will be currently loaded (the BCF viewpoint specification
+     * does not contain that information).
+     *
+     * Note that xeokit&apos;s {@link Camera#look} is the **point-of-interest**, whereas the BCF ````camera_direction```` is a
+     * direction vector. Therefore, we save ````camera_direction```` as the vector from {@link Camera#eye} to {@link Camera#look}.
+     *
+     * @param {*} [options] Options for getting the viewpoint.
+     * @param {Boolean} [options.spacesVisible=false] Indicates whether ````IfcSpace```` types should be forced visible in the viewpoint.
+     * @param {Boolean} [options.openingsVisible=false] Indicates whether ````IfcOpening```` types should be forced visible in the viewpoint.
+     * @param {Boolean} [options.spaceBoundariesVisible=false] Indicates whether the boundaries of ````IfcSpace```` types should be visible in the viewpoint.
+     * @param {Boolean} [options.defaultInvisible=false] When ````true````, will save the default visibility of all objects
+     * as ````false````. This means that when we load the viewpoint again, and there are additional models loaded that
+     * were not saved in the viewpoint, those models will be hidden when we load the viewpoint, and that only the
+     * objects in the viewpoint will be visible.
+     * @returns {*} BCF JSON viewpoint object
+     * @example
+     *
+     * const viewpoint = bimViewer.saveBCFViewpoint({
+     *     spacesVisible: false,          // Default
+     *     spaceBoundariesVisible: false, // Default
+     *     openingsVisible: false         // Default
+     * });
+     *
+     * // viewpoint will resemble the following:
+     *
+     * {
+     *     perspective_camera: {
+     *         camera_view_point: {
+     *             x: 0.0,
+     *             y: 0.0,
+     *             z: 0.0
+     *         },
+     *         camera_direction: {
+     *             x: 1.0,
+     *             y: 1.0,
+     *             z: 2.0
+     *         },
+     *         camera_up_vector: {
+     *             x: 0.0,
+     *             y: 0.0,
+     *             z: 1.0
+     *         },
+     *         field_of_view: 90.0
+     *     },
+     *     lines: [],
+     *     clipping_planes: [{
+     *         location: {
+     *             x: 0.5,
+     *             y: 0.5,
+     *             z: 0.5
+     *         },
+     *         direction: {
+     *             x: 1.0,
+     *             y: 0.0,
+     *             z: 0.0
+     *         }
+     *     }],
+     *     bitmaps: [],
+     *     snapshot: {
+     *         snapshot_type: png,
+     *         snapshot_data: &quot;data:image/png;base64,......&quot;
+     *     },
+     *     components: {
+     *         visibility: {
+     *             default_visibility: false,
+     *             exceptions: [{
+     *                 ifc_guid: 4$cshxZO9AJBebsni$z9Yk,
+     *                 originating_system: xeokit.io,
+     *                 authoring_tool_id: xeokit/v1.0
+     *             }]
+     *        },
+     *         selection: [{
+     *            ifc_guid: &quot;4$cshxZO9AJBebsni$z9Yk&quot;,
+     *         }]
+     *     }
+     * }
+     */
+    saveBCFViewpoint(options) {
+        return this._bcfViewpointsPlugin.getViewpoint(options);
+    }
+
+    /**
+     * Sets viewer state to the given BCF viewpoint.
+     *
+     * This assumes that the viewer currently contains the same project and model(s) that were loaded at the time that the
+     * viewpoint was originally saved (the BCF viewpoint specification does not contain that information).
+     *
+     * Note that xeokit&apos;s {@link Camera#look} is the **point-of-interest**, whereas the BCF ````camera_direction```` is a
+     * direction vector. Therefore, when loading a BCF viewpoint, we set {@link Camera#look} to the absolute position
+     * obtained by offsetting the BCF ````camera_view_point````  along ````camera_direction````.
+     *
+     * When loading a viewpoint, we also have the option to find {@link Camera#look} as the closest point of intersection
+     * (on the surface of any visible and pickable {@link Entity}) with a 3D ray fired from ````camera_view_point```` in
+     * the direction of ````camera_direction````.
+     *
+     * @param {*} bcfViewpoint  BCF JSON viewpoint object or &quot;reset&quot; / &quot;RESET&quot; to reset the viewer, which clears SectionPlanes,
+     * shows default visible entities and restores camera to initial default position.
+     * @param {*} [options] Options for setting the viewpoint.
+     * @param {Boolean} [options.rayCast=true] When ````true```` (default), will attempt to set {@link Camera#look} to the closest
+     * point of surface intersection with a ray fired from the BCF ````camera_view_point```` in the direction of ````camera_direction````.
+     * @param {Boolean} [options.immediate] When ````true```` (default), immediately set camera position.
+     * @param {Boolean} [options.duration] Flight duration in seconds.  Overrides {@link CameraFlightAnimation#duration}.
+     */
+    loadBCFViewpoint(bcfViewpoint, options) {
+        if (!bcfViewpoint) {
+            this.error(&quot;loadBCFViewpoint() - Argument expected: bcfViewpoint&quot;);
+            return;
+        }
+        this._bcfViewpointsPlugin.setViewpoint(bcfViewpoint, options);
+    }
+
+    /**
+     * Resets the view.
+     *
+     * This resets object appearances (visibility, selection, highlight and X-ray), sets camera to
+     * default position, and removes section planes.
+     */
+    resetView() {
+        this._resetAction.reset();
+    }
+
+    /**
+     * Enables or disables the various buttons and controls throughout the viewer.
+     *
+     * This also makes various buttons appear disabled.
+     *
+     * @param {Boolean} enabled Whether or not to disable the controls.
+     */
+    setControlsEnabled(enabled) {
+
+        // Explorer
+
+        // Models tab is always enabled
+        this._objectsExplorer.setEnabled(enabled);
+        this._classesExplorer.setEnabled(enabled);
+        this._storeysExplorer.setEnabled(enabled);
+
+        // Toolbar
+
+        this._resetAction.setEnabled(enabled);
+        this._fitAction.setEnabled(enabled);
+        this._threeDMode.setEnabled(enabled);
+        this._orthoMode.setEnabled(enabled);
+        this._firstPersonMode.setEnabled(enabled);
+        this._queryTool.setEnabled(enabled);
+        this._hideTool.setEnabled(enabled);
+        this._selectionTool.setEnabled(enabled);
+        this._sectionTool.setEnabled(enabled);
+    }
+
+    /**
+     * Sets whether or not keyboard camera control is enabled.
+     *
+     * This is useful when we don&apos;t want key events over the canvas to clash with other UI elements outside the canvas.
+     *
+     * Default value is ````true````.
+     *
+     * @param {Boolean} enabled Set ````true```` to enable keyboard input.
+     */
+    setKeyboardEnabled(enabled) {
+        this.viewer.scene.input.keyboardEnabled = enabled;
+    }
+
+    /**
+     * Gets whether keyboard camera control is enabled.
+     *
+     * This is useful when we don&apos;t want key events over the canvas to clash with other UI elements outside the canvas.
+     *
+     * Default value is ````true````.
+     *
+     * @returns {Boolean} Returns ````true```` if keyboard input is enabled.
+     */
+    getKeyboardEnabled() {
+        return this.viewer.scene.input.keyboardEnabled;
+    }
+
+    /**
+     * Clears sections.
+     *
+     * Sections are the sliceing planes, that we use to section models in order to see interior structures.
+     */
+    clearSections() {
+        this._sectionTool.clear();
+    }
+
+
+    /**
+     * Inverts the direction of sections.
+     */
+    flipSections() {
+        this._sectionTool.flipSections();
+    }
+
+    /**
+     * returns the number of sections that currently exist.
+     *
+     * sections are the sliceing planes, that we use to slice models in order to see interior structures.
+     *
+     * @returns {Number} The number of sections.
+     */
+    getNumSections() {
+        return this._sectionTool.getNumSections();
+    }
+
+    /**
+     * Destroys the viewer, freeing all resources.
+     */
+    destroy() {
+        this.viewer.destroy();
+        this._bcfViewpointsPlugin.destroy();
+        this._canvasContextMenu.destroy();
+        this._objectContextMenu.destroy();
+    }
+}
+
+export {BIMViewer};</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

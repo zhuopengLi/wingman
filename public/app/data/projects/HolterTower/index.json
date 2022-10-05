@@ -1,0 +1,15 @@
+{
+  "id": "holterTower",
+  "name": "HolterTower",
+  "models": [
+    {
+      "id": "design",
+      "name": "Holter Tower"
+    }
+  ],
+  "viewerContent": {
+    "modelsLoaded": [
+      "design"
+    ]
+  }
+}
