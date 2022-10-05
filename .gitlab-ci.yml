@@ -13,7 +13,7 @@ pages:
   stage: 
     pages
   image:
-    name: alpine:latest
+    name: node:latest
     entrypoint: [""]
   script:
     - npm i -g surge
