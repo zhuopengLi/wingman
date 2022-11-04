@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@xeokit/xeokit-sdk": "1.5.3",
+    "bootstrap": "^5.2.2",
     "jsonfile": "^6.1.0",
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.13",

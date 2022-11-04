@@ -1,0 +1,154 @@
+<html lang="en" <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEW Wingman</title>
+    <base href=".">
+    <link rel="stylesheet" href="assets/css/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    </head>
+
+    <style>
+        * {
+            border: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        .bodyHeight {
+            min-height: calc(100vh-(var(--h1Height)+var(--h2Height)+var(--ftHeight))) !important;
+        }
+    </style>
+
+    <body>
+        <script>
+            const setMinHeight = () => {
+                const root = document.querySelector(':root');
+                const h1Height = document.getElementById("header1").clientHeight;
+                const h2Height = document.getElementById("header2").clientHeight;
+                const ftHeight = document.getElementById("footer").clientHeight;
+                root.style.setProperty('--h1Height', `${h1Height}px`);
+                root.style.setProperty('--h2Height', `${h2Height}px`);
+                root.style.setProperty('--ftHeight', `${ftHeight}px`);
+            }
+            window.addEventListener('DOMContentLoaded', setMinHeight);
+            window.addEventListener('resize', setMinHeight);
+        </script>
+        <script type="module" src="assets/js/index.js"></script>
+
+        <div class="container-fluid" id="header1">
+
+            <div class="row justify-content-between px-5">
+                <div class="col-8 justify-content-start align-items-end p-3">
+
+                    <!-- navbar brand -->
+                    <a href="" class="navbar-brand">
+                        <span class="text-secondary fst-italic fs-1 fw-bold">
+                            <i class="bi bi-clipboard2-pulse-fill"></i>
+                            Wingman
+                        </span>
+                    </a>
+
+                    <p class="badge rounded-pill text-bg-secondary fst-italic ">Demo | v1.0.4</p>
+
+                </div>
+
+                <div class="col-4 p-3 d-none d-sm-block text-secondary text-end">
+                    <p class="m-1">Location: 50.78N, 6.08E, Aachen, DE</p>
+                    <p class="m-1">Weather: Clouds, 11.51°C</p>
+                    <p class="m-1">14:42:43, Thu Nov 03 2022 (CET)</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="container-md" id="header2">
+            <div class="row justify-content-around mb-5 align-items-center">
+
+                <div class="col-2">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle  btn" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Project
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Aachen</a></li>
+                            <li><a class="dropdown-item" href="#">Waterlock</a></li>
+                            <li><a class="dropdown-item" href="#">Schependomlaan</a></li>
+                            <li><a class="dropdown-item" href="#">West Riverside Hospital</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <button class="nav-link active text-bg-secondary" aria-current="page"
+                                href="#">Pre-project</button>
+                        </li>
+                        <li class="nav-item text-secondary">
+                            <button class="nav-link">Construction</button>
+                        </li>
+                        <li class="nav-item text-secondary">
+                            <button class="nav-link">Operation</button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- body -->
+        <div class="container-fluid text-secondary bodyHeight">
+            <div class="row mx-5 mb-5">
+                <div class="col-md-2">
+                    <p>test</p>
+                </div>
+                <div class="col-md-8 ">
+
+                    <canvas id="myCanvas" class="bodyHeight"></canvas>
+                    <!-- <canvas id="myNavCubeCanvas"></canvas> -->
+
+                </div>
+                <div class="col-md-2">
+                    <p>test</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <div class="container-fluid text-bg-secondary max-vh-25" id="footer">
+
+            <div class="d-flex mx-5 px-5 py-3 justify-content-evenly align-items-center">
+                <span class="text-light">Presented by</span>
+                <img src="../images/Lemonade_Logo_4_transparent_white.png" alt="" width="10%">
+                <span class="text-light fst-italic">from</span>
+                <img src="../images/dc_logo.svg" alt="Lehrstuhl DC" width="10%">
+                <img src="../images/IP_logo_transparent.png" alt="Lehrstuhl IP" width="10%">
+                <span class="text-light">|</span>
+                <span class="text-light">Supported by</span>
+                <img src="../images/xeolabs_transparent.png" alt="Xeolabs" width="2%">
+                <img src="../images/itnrw_logo.png" alt="IT NRW" width="10%">
+            </div>
+        </div>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    </body>
+
+</html>
