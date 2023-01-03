@@ -1,0 +1,23 @@
+---
+import data from "../data/credits.json";
+---
+
+<footer>
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2>Presented by</h2>
+            <div class="logos-container">
+                {
+                    data.map((credit) => (
+                        <img
+                            src={credit.logo}
+                            alt={credit.name}
+                            width={credit.width}
+                            class="logo"
+                        />
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</footer>

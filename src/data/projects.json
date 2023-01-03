@@ -1,0 +1,317 @@
+[
+    {
+        "name": "aachen",
+        "literal": "Aachen",
+        "geo": 3247449,
+        "active": [
+            0,
+            1,
+            2
+        ],
+        "phases": [
+            {
+                "phase": "pre-project",
+                "enabled": true,
+                "loadFunc": "loadAachenPre()",
+                "xkt": [
+                    {
+                        "name": "buildings",
+                        "src": "./assets/projects/aachen/buildings.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/buildings.json"
+                    },
+                    {
+                        "name": "streets",
+                        "src": "./assets/projects/aachen/streets.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/streets.json"
+                    },
+                    {
+                        "name": "pipes",
+                        "src": "./assets/projects/aachen/pipes.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/pipes.json"
+                    }
+                ],
+                "cam": {
+                    "eye": [
+                        25,
+                        150,
+                        75
+                    ],
+                    "look": [
+                        0,
+                        5,
+                        0
+                    ],
+                    "up": [
+                        -0.01,
+                        0.99,
+                        0.039
+                    ]
+                }
+            },
+            {
+                "phase": "construction",
+                "enabled": true,
+                "loadFunc": "loadAachenCon()",
+                "xkt": [
+                    {
+                        "name": "buildings",
+                        "src": "./assets/projects/aachen/buildings.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/buildings.json"
+                    },
+                    {
+                        "name": "streets",
+                        "src": "./assets/projects/aachen/streets.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/streets.json"
+                    },
+                    {
+                        "name": "pipes",
+                        "src": "./assets/projects/aachen/pipes.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/pipes.json"
+                    },
+                    {
+                        "name": "sensor",
+                        "src": "./assets/projects/aachen/sensor.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/sensor.json"
+                    },
+                    {
+                        "name": "site",
+                        "src": "./assets/projects/aachen/site.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/site.json"
+                    }
+                ],
+                "cam": {
+                    "eye": [
+                        25,
+                        150,
+                        75
+                    ],
+                    "look": [
+                        0,
+                        5,
+                        0
+                    ],
+                    "up": [
+                        -0.01,
+                        0.99,
+                        0.039
+                    ]
+                }
+            },
+            {
+                "phase": "as-built",
+                "enabled": true,
+                "loadFunc": "loadAachenBuilt()",
+                "xkt": [
+                    {
+                        "name": "asbuilt",
+                        "src": "./assets/projects/aachen/asbuilt.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/asbuilt.json"
+                    },
+                    {
+                        "name": "buildings",
+                        "src": "./assets/projects/aachen/buildings.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/buildings.json"
+                    },
+                    {
+                        "name": "streets",
+                        "src": "./assets/projects/aachen/streets.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/streets.json"
+                    },
+                    {
+                        "name": "pipes",
+                        "src": "./assets/projects/aachen/pipes.xkt",
+                        "metaModelSrc": "./assets/projects/aachen/pipes.json"
+                    }
+                ],
+                "cam": {
+                    "eye": [
+                        25,
+                        150,
+                        75
+                    ],
+                    "look": [
+                        0,
+                        5,
+                        0
+                    ],
+                    "up": [
+                        -0.01,
+                        0.99,
+                        0.039
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "waterlock",
+        "literal": "Waterlock",
+        "geo": 2759661,
+        "active": [
+            1
+        ],
+        "phases": [
+            {
+                "phase": "pre-project",
+                "enabled": false
+            },
+            {
+                "phase": "construction",
+                "enabled": true,
+                "loadFunc": "loadWaterlock()",
+                "xkt": [
+                    {
+                        "name": "geometry",
+                        "src": "./assets/projects/waterLock/geometry.xkt",
+                        "metaModelSrc": "./assets/projects/waterLock/metadata.json"
+                    }
+                ],
+                "cam": {
+                    "eye": [
+                        25,
+                        150,
+                        75
+                    ],
+                    "look": [
+                        0,
+                        5,
+                        0
+                    ],
+                    "up": [
+                        -0.01,
+                        0.99,
+                        0.039
+                    ]
+                }
+            },
+            {
+                "phase": "as-built",
+                "enabled": false
+            }
+        ]
+    },
+    {
+        "name": "schependomlaan",
+        "literal": "Schependomlaan",
+        "geo": 2750053,
+        "active": [
+            2
+        ],
+        "phases": [
+            {
+                "phase": "pre-project",
+                "enabled": false
+            },
+            {
+                "phase": "construction",
+                "enabled": false
+            },
+            {
+                "phase": "as-built",
+                "enabled": true,
+                "loadFunc": "loadSchependomlaan()",
+                "xkt": [
+                    {
+                        "name": "geometry",
+                        "src": "./assets/projects/schependomlaan/geometry.xkt",
+                        "metaModelSrc": "./assets/projects/schependomlaan/metadata.json"
+                    }
+                ],
+                "cam": {
+                    "eye": [
+                        25,
+                        150,
+                        75
+                    ],
+                    "look": [
+                        0,
+                        5,
+                        0
+                    ],
+                    "up": [
+                        -0.01,
+                        0.99,
+                        0.039
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "hospital",
+        "literal": "West riverside hospital",
+        "geo": 5368361,
+        "active": [
+            2
+        ],
+        "phases": [
+            {
+                "phase": "pre-project",
+                "enabled": false
+            },
+            {
+                "phase": "construction",
+                "enabled": false
+            },
+            {
+                "phase": "as-built",
+                "enabled": true,
+                "loadFunc": "loadHospital()",
+                "xkt": [
+                    {
+                        "name": "architectural",
+                        "src": "./assets/projects/westRiversideHospital/architectural.xkt",
+                        "metaModelSrc": "./assets/projects/westRiversideHospital/architectural.json"
+                    },
+                    {
+                        "name": "electrical",
+                        "src": "./assets/projects/westRiversideHospital/electrical.xkt",
+                        "metaModelSrc": "./assets/projects/westRiversideHospital/electrical.json"
+                    },
+                    {
+                        "name": "firealarms",
+                        "src": "./assets/projects/westRiversideHospital/firealarms.xkt",
+                        "metaModelSrc": "./assets/projects/westRiversideHospital/firealarms.json"
+                    },
+                    {
+                        "name": "mechanical",
+                        "src": "./assets/projects/westRiversideHospital/mechanical.xkt",
+                        "metaModelSrc": "./assets/projects/westRiversideHospital/mechanical.json"
+                    },
+                    {
+                        "name": "plumbing",
+                        "src": "./assets/projects/westRiversideHospital/plumbing.xkt",
+                        "metaModelSrc": "./assets/projects/westRiversideHospital/plumbing.json"
+                    },
+                    {
+                        "name": "sprinklers",
+                        "src": "./assets/projects/westRiversideHospital/sprinklers.xkt",
+                        "metaModelSrc": "./assets/projects/westRiversideHospital/sprinklers.json"
+                    },
+                    {
+                        "name": "structure",
+                        "src": "./assets/projects/westRiversideHospital/structure.xkt",
+                        "metaModelSrc": "./assets/projects/westRiversideHospital/structure.json"
+                    }
+                ],
+                "cam": {
+                    "eye": [
+                        25,
+                        150,
+                        75
+                    ],
+                    "look": [
+                        0,
+                        5,
+                        0
+                    ],
+                    "up": [
+                        -0.01,
+                        0.99,
+                        0.039
+                    ]
+                }
+            }
+        ]
+    }
+]

@@ -1,0 +1,32 @@
+---
+import Button from "./Button.astro";
+import data from "../data/projects.json";
+---
+
+<section class="control-wrapper">
+    <div class="control-container">
+        <div class="projects">
+            <span>Project:</span>
+            <select name="" id="">
+                {
+                    data.map((p) => (
+                        <option
+                            value={p.name}
+                            id={`${p.name}-${p.phases[0].phase}`}
+                        >
+                            {p.literal}
+                        </option>
+                    ))
+                }
+            </select>
+        </div>
+
+        <div class="phases">
+            <Button text="Pre-Project" id="preBtn" style="muted" />
+            <Button text="Construction" id="conBtn" style="transparent" />
+            <Button text="Facility Mgmt." id="builtBtn" style="transparent" />
+        </div>
+    </div>
+</section>
+
+<script src="../js/control.js"></script>

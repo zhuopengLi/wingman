@@ -1,0 +1,62 @@
+---
+import { Icon } from "astro-icon";
+---
+
+<nav>
+    <div class="nav-wrapper">
+        <div class="container nav-container">
+            <div class="logo-container">
+                <Icon name="logo" class="logo" />
+                <div class="text">
+                    <h1>Wingman</h1>
+                    <span class="badge">Beta Testing | v1.04</span>
+                </div>
+            </div>
+
+            <div class="nav-end-container">
+                <button
+                    class="btn btn--menu"
+                    id="activity-btn"
+                    aria-expanded="false"
+                    aria-label="Open mobile status"
+                >
+                    <Icon name="fe:activity" width="30" />
+                </button>
+
+                <ul class="status-container">
+                    <li class="status" id="geo">Location: Loading...</li>
+                    <li class="status" id="weather">Weather: Loading...</li>
+                    <li class="status" id="time">...</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    import data from "../data/projects.json";
+    import * as clock from "../js/navbar/clock";
+    import { setWeather } from "../js/navbar/weather";
+    import * as menu from "../js/navbar/menu";
+
+    setWeather(0);
+
+    let project = document.querySelector("select");
+
+    project?.addEventListener("change", () => {
+        switch (project?.value) {
+            case "aachen":
+                setWeather(0);
+                break;
+            case "waterlock":
+                setWeather(1);
+                break;
+            case "schependomlaan":
+                setWeather(2);
+                break;
+            case "hospital":
+                setWeather(3);
+                break;
+        }
+    });
+</script>

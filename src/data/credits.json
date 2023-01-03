@@ -1,0 +1,17 @@
+[
+    {
+        "name":"Team Lemonade",
+        "logo":"/assets/img/lemon.png",
+        "width": 110
+    },
+    {
+        "name":"Design Computation, Department of Architecture, RWTH Aachen University",
+        "logo":"/assets/img/dc.svg",
+        "width": 130
+    },
+    {
+        "name":"Chair of Individualized Production in Architecture, Department of Architecture, RWTH Aachen University",
+        "logo":"/assets/img/ip.png",
+        "width": 150
+    }
+]
