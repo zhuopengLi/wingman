@@ -1,0 +1,115 @@
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <style>
+        * {
+            border: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navHeight: 100px;
+            --footHeight: 100px;
+        }
+
+        .minHeight {
+            min-height: calc(100vh - (var(--navHeight) + var(--footHeight)));
+            display: grid;
+            place-items: center;
+        }
+
+        body {
+            background: #424b52;
+            font-family: 'Rubik Mono One', sans-serif;
+            color: #111a21;
+        }
+
+        a:is(:active, :link, :visited) {
+            color: #111a21;
+            text-decoration: none;
+            transition: color 250ms ease-in-out;
+        }
+
+        a:is(:hover, :focus) {
+            outline-color: #111a21;
+            color: #919aa1;
+        }
+
+        nav {
+            background: #424b52;
+            box-shadow: 20px 20px 60px #384046;
+            display: grid;
+            place-items: center;
+        }
+
+        ul {
+            display: flex;
+            list-style: none;
+            gap: 3rem;
+            padding: 2rem 3rem;
+            font-size: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            padding: 2rem;
+        }
+
+        footer {
+            display: grid;
+            place-items: center;
+            background: #424b52;
+            box-shadow: -20px -20px 60px #4c565e;
+        }
+
+        p {
+            font-size: .8rem;
+            padding: 1rem 2rem;
+        }
+    </style>
+
+    <body>
+        <script>
+            function setMinHeight() {
+                const nav = document.querySelector('nav').clientHeight;
+                const footer = document.querySelector('footer').clientHeight;
+                const root = document.querySelector(':root');
+                root.style.setProperty('--navHeight', `${nav}px`);
+                root.style.setProperty('--footHeight', `${footer}px`);
+            }
+
+            window.addEventListener('DOMContentLoaded', setMinHeight);
+            window.addEventListener('resize', setMinHeight);
+        </script>
+        <nav>
+            <ul>
+                <li>
+                    <a href="#">Home</a>
+                </li>
+                <li>
+                    <a href="#">Blog</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="minHeight">
+            <div class="container">
+                <h1>Sample Homepage</h1>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2021 Coding in Public</p>
+        </footer>
+    </body>
+
+</html>
