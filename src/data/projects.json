@@ -12,7 +12,6 @@
             {
                 "phase": "pre-project",
                 "enabled": true,
-                "loadFunc": "loadAachenPre()",
                 "xkt": [
                     {
                         "name": "buildings",
@@ -51,7 +50,6 @@
             {
                 "phase": "construction",
                 "enabled": true,
-                "loadFunc": "loadAachenCon()",
                 "xkt": [
                     {
                         "name": "buildings",
@@ -100,7 +98,6 @@
             {
                 "phase": "as-built",
                 "enabled": true,
-                "loadFunc": "loadAachenBuilt()",
                 "xkt": [
                     {
                         "name": "asbuilt",
@@ -158,7 +155,6 @@
             {
                 "phase": "construction",
                 "enabled": true,
-                "loadFunc": "loadWaterlock()",
                 "xkt": [
                     {
                         "name": "geometry",
@@ -209,7 +205,6 @@
             {
                 "phase": "as-built",
                 "enabled": true,
-                "loadFunc": "loadSchependomlaan()",
                 "xkt": [
                     {
                         "name": "geometry",
@@ -256,7 +251,6 @@
             {
                 "phase": "as-built",
                 "enabled": true,
-                "loadFunc": "loadHospital()",
                 "xkt": [
                     {
                         "name": "architectural",

@@ -48,6 +48,7 @@ html,
 * {
     overflow: hidden;
 }
+
 body {
     font-family: "Inter", sans-serif;
     font-weight: 400;
@@ -242,7 +243,7 @@ main {
                 &:hover {
                     color: white;
                     cursor: pointer;
-                    background: hsl($bg-alt);
+                    background: hsl($bg);
                     padding-left: 2px;
                 }
             }
@@ -280,12 +281,16 @@ main {
 
             li {
                 display: grid;
-                grid-template-columns: 0.5fr 1fr;
-                word-break: break-all;
+                grid-template-columns: 0.6fr 1fr;
+                word-break: break-word;
                 padding: var(--size-1) 0;
 
                 span:first-of-type {
                     font-weight: var(--font-weight-6);
+                }
+
+                span:first-letter {
+                    text-transform: uppercase;
                 }
             }
         }
@@ -436,6 +441,7 @@ main {
                         background: $gradient;
                         background-clip: text;
                         color: transparent;
+                        padding-right: var(--size-2);
 
                         @media (--lt-md) {
                             font-size: var(--font-size-6);
@@ -445,7 +451,7 @@ main {
                     .badge {
                         display: block;
                         font-size: var(--font-size-00);
-                        font-weight: var(--font-weight-1);
+                        font-weight: var(--font-weight-4);
                         font-style: italic;
                         background: hsl($accent2);
                         color: white;

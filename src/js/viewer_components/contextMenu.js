@@ -1,7 +1,7 @@
 
 import { ContextMenu } from "@xeokit/xeokit-sdk";
 import { viewer } from "./viewer";
-import { treeView, treeViewContextMenu } from "./treeView"
+import { treeView } from "./treeView"
 
 export const canvasContextMenu = new ContextMenu({
     enabled: true,

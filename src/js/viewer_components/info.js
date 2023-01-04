@@ -1,10 +1,6 @@
 
 import { viewer } from "./viewer";
 import { models } from "../loader";
-// import metaAachen from "../../../public/assets/metadata/aachen.json"
-// import metaDutch from "../../../public/assets/metadata/schependomlaan.json"
-// import metaDam from "../../../public/assets/metadata/waterlock.json"
-// import metaKh from "../../../public/assets/metadata/westriversidehospital.json"
 
 var lastEntity = null;
 var lastColorize = null;
