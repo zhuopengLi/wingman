@@ -1,5 +1,5 @@
-@import "./reset.css";
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import './reset.css';
+@import 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap';
 
 @custom-media --lt-xxs (width <= 240px);
 @custom-media --lt-xs (width <= 260px);
@@ -44,12 +44,13 @@ $gradient: linear-gradient(315deg, hsl($accent1) 0%, hsl($accent3) 100%);
     }
 }
 
-html, * {
+html,
+* {
     overflow: hidden;
 }
 
 body {
-    font-family: "Inter", sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
     line-height: 1.4;
     max-width: 2000px;
@@ -80,6 +81,7 @@ body {
 
     &--muted {
         background: hsl($muted);
+        color: hsl($bg-alt);
     }
 
     &--transparent {
@@ -110,7 +112,7 @@ body {
             display: grid;
             place-items: center;
 
-            &[aria-expanded="true"] + .status-container {
+            &[aria-expanded='true'] + .status-container {
                 transform: translateY(-10%);
                 animation: var(--animation-slide-in-down) forwards;
             }
@@ -222,8 +224,20 @@ main {
                 }
             }
 
+            ul {
+                ul {
+                    padding: var(--size-2) 0;
+                    margin-left: var(--size-3);
+
+                    ul {
+                        padding: var(--size-2) 0;
+                        padding-left: var(--size-5);
+                    }
+                }
+            }
+
             a {
-                /* padding: 0 5px; */
+                padding: 0 var(--size-1);
                 .plus {
                     background: #ded;
                 }
@@ -452,7 +466,7 @@ main {
                     .badge {
                         display: block;
                         font-size: var(--font-size-00);
-                        font-weight: var(--font-weight-4);
+                        font-weight: 500;
                         font-style: italic;
                         background: hsl($accent2);
                         color: white;
@@ -521,7 +535,8 @@ main {
 
         h2 {
             font-size: var(--font-size-0);
-            font-weight: var(--font-weight-1);
+            font-weight: var(--font-weight-4);
+            padding-right: var(--size-2);
             font-style: italic;
             display: inline;
         }

@@ -14,5 +14,6 @@ module.exports = {
         require("postcss-advanced-variables"),
         require("postcss-conditionals"),
         require("postcss-import"),
+        require("postcss-import-url"),
     ]
 };
