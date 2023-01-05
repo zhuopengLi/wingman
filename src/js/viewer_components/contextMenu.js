@@ -12,20 +12,16 @@ export const canvasContextMenu = new ContextMenu({
         [
             {
                 title: "Hide All",
-                getEnabled: function (context) {
-                    return (context.viewer.scene.numVisibleObjects > 0);
-                },
-                doAction: function (context) {
-                    context.viewer.scene.setObjectsVisible(context.viewer.scene.visibleObjectIds, false);
-                }
+                getEnabled: context => context.viewer.scene.numVisibleObjects > 0,
+                doAction: context => context.viewer.scene.setObjectsVisible(context.viewer.scene.visibleObjectIds, false)
             },
             {
                 title: "Show All",
-                getEnabled: function (context) {
+                getEnabled: context => {
                     const scene = context.viewer.scene;
                     return (scene.numVisibleObjects < scene.numObjects);
                 },
-                doAction: function (context) {
+                doAction: context => {
                     const scene = context.viewer.scene;
                     scene.setObjectsVisible(scene.objectIds, true);
                     scene.setObjectsXRayed(scene.xrayedObjectIds, false);
@@ -36,7 +32,7 @@ export const canvasContextMenu = new ContextMenu({
         [
             {
                 title: "View Fit All",
-                doAction: function (context) {
+                doAction: context => {
                     context.viewer.cameraFlight.flyTo({
                         aabb: context.viewer.scene.getAABB()
                     });
@@ -51,13 +47,13 @@ export const objectContextMenu = new ContextMenu({
         [
             {
                 title: "View Fit",
-                doAction: function (context) {
+                doAction: context => {
                     const viewer = context.viewer;
                     const scene = viewer.scene;
                     const entity = context.entity;
                     viewer.cameraFlight.flyTo({
                         aabb: entity.aabb,
-                        duration: 0.5
+                        duration: 0.2
                     }, () => {
                         setTimeout(function () {
                             scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
@@ -67,7 +63,7 @@ export const objectContextMenu = new ContextMenu({
             },
             {
                 title: "View Fit All",
-                doAction: function (context) {
+                doAction: context => {
                     const scene = context.viewer.scene;
                     context.viewer.cameraFlight.flyTo({
                         projection: "perspective",
@@ -78,7 +74,7 @@ export const objectContextMenu = new ContextMenu({
             },
             {
                 title: "Show in Tree",
-                doAction: function (context) {
+                doAction: context => {
                     const objectId = context.entity.id;
                     context.treeViewPlugin.showNode(objectId);
                 }
@@ -87,7 +83,7 @@ export const objectContextMenu = new ContextMenu({
         [
             {
                 title: "X-Ray Others",
-                doAction: function (context) {
+                doAction: context => {
 
                     const entity = context.entity;
                     const viewer = context.viewer;
@@ -122,7 +118,7 @@ export const objectContextMenu = new ContextMenu({
                     scene.setObjectsXRayed(scene.objectIds, true);
                     scene.setObjectsSelected(scene.selectedObjectIds, false);
                     scene.setObjectsHighlighted(scene.highlightedObjectIds, false);
-                    metaObject.withMetaObjectsInSubtree((metaObject) => {
+                    metaObject.withMetaObjectsInSubtree(metaObject => {
                         const entity = scene.objects[metaObject.id];
                         if (entity) {
                             entity.xrayed = false;
@@ -132,10 +128,10 @@ export const objectContextMenu = new ContextMenu({
             },
             {
                 title: "Reset X-Ray",
-                getEnabled: function (context) {
+                getEnabled: context => {
                     return (context.viewer.scene.numXRayedObjects > 0);
                 },
-                doAction: function (context) {
+                doAction: context => {
                     context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
                     clearProperty();
                     lastEntity.colorize = lastColorize;

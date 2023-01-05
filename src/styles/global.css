@@ -44,8 +44,7 @@ $gradient: linear-gradient(315deg, hsl($accent1) 0%, hsl($accent3) 100%);
     }
 }
 
-html,
-* {
+html, * {
     overflow: hidden;
 }
 
@@ -260,9 +259,11 @@ main {
         .right-panel {
             &-container {
                 width: calc((100vw - 1200px) / 2);
+                min-width: var(--size-fluid-8);
                 background: hsl($bg-alt);
                 padding: var(--size-fluid-1);
                 color: hsl($text);
+                overflow: auto;
 
                 @media (--lt-md) {
                     display: none;
@@ -317,7 +318,7 @@ main {
 
         .nav-cube {
             position: absolute;
-            right: var(--size-fluid-8);
+            right: 15%;
 
             @media (--lt-md) {
                 right: -50px;

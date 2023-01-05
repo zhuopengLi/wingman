@@ -13,7 +13,7 @@ export const treeViewContextMenu = new ContextMenu({
         [
             {
                 title: "View Fit",
-                doAction: function (context) {
+                doAction: context => {
                     const scene = context.viewer.scene;
                     const objectIds = [];
                     context.treeViewPlugin.withNodeTree(context.treeViewNode, (treeViewNode) => {
@@ -36,7 +36,7 @@ export const treeViewContextMenu = new ContextMenu({
             },
             {
                 title: "View Fit All",
-                doAction: function (context) {
+                doAction: context => {
                     const scene = context.viewer.scene;
                     context.viewer.cameraFlight.flyTo({
                         projection: "perspective",
@@ -49,7 +49,7 @@ export const treeViewContextMenu = new ContextMenu({
         [
             {
                 title: "X-Ray Others",
-                doAction: function (context) {
+                doAction: context => {
                     var entity = context.treeViewNode;
                     const viewer = context.viewer;
                     const scene = viewer.scene;
@@ -92,10 +92,10 @@ export const treeViewContextMenu = new ContextMenu({
             },
             {
                 title: "Reset X-Ray",
-                getEnabled: function (context) {
+                getEnabled: context => {
                     return (context.viewer.scene.numXRayedObjects > 0);
                 },
-                doAction: function (context) {
+                doAction: context => {
                     context.viewer.scene.setObjectsXRayed(context.viewer.scene.xrayedObjectIds, false);
                     clearProperty();
                     lastEntity.colorize = lastColorize;
@@ -110,7 +110,7 @@ export const treeViewContextMenu = new ContextMenu({
 
 // Right-clicking on a tree node shows the context menu for that node
 
-treeView.on("contextmenu", (e) => {
+treeView.on("contextmenu", e => {
 
     treeViewContextMenu.context = { // Must set context before opening menu
         viewer: e.viewer,
@@ -124,7 +124,7 @@ treeView.on("contextmenu", (e) => {
 
 // Left-clicking on a tree node isolates that object in the 3D view
 
-treeView.on("nodeTitleClicked", (e) => {
+treeView.on("nodeTitleClicked", e => {
     const scene = viewer.scene;
     const entity = e.viewer.scene.objects[e.treeViewNode.objectId];
     const objectIds = [];
