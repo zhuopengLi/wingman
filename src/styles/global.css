@@ -49,6 +49,13 @@ html,
     overflow: hidden;
 }
 
+html {
+    max-height: 100vh;
+    max-width: 100vw;
+    height: 100vh;
+    width: 100vw;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     font-weight: 400;
@@ -69,6 +76,7 @@ body {
     cursor: pointer;
     display: grid;
     place-items: center;
+    text-align: center;
 
     &--primary {
         background: hsl($accent1);
@@ -82,6 +90,7 @@ body {
     &--muted {
         background: hsl($muted);
         color: hsl($bg-alt);
+        padding-inline: var(--size-2);
     }
 
     &--transparent {
@@ -122,10 +131,30 @@ body {
 
 /* MAIN */
 main {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr 11fr;
     align-items: center;
-    max-height: 730px;
+    align-self: stretch;
+
+    @media (--lt-md) {
+        grid-template-rows: 3fr 9fr;
+
+        @media (height <= 1000px) {
+            grid-template-rows: 1.5fr 10.5fr;
+        }
+
+        @media (height <= 700px) {
+            grid-template-rows: 2fr 10fr;
+        }
+
+        @media (height <= 600px) {
+            grid-template-rows: 2.5fr 9.5fr;
+        }
+
+        @media (height <= 550px) {
+            grid-template-rows: 3fr 9fr;
+        }
+    }
 }
 
 /* CONTROL */
@@ -133,33 +162,42 @@ main {
     &-wrapper {
         width: 100%;
         padding: var(--size-2) var(--size-fluid-2);
+        display: grid;
+        place-items: center;
+
+        @media (--lt-md) {
+            margin: var(--size-1) 0;
+        }
     }
 
     &-container {
         width: 100%;
         max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 15px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
 
         @media (--lt-md) {
-            flex-direction: column;
-            align-items: center;
+            gap: 10px;
         }
 
         .projects {
-            display: flex;
-            align-items: stretch;
+            display: grid;
+            grid-template-columns: 2fr 8fr;
+
+            @media (--lt-md) {
+                grid-column: span 2;
+                grid-template-columns: 3fr 7fr;
+            }
+
             span {
+                display: grid;
+                place-items: center;
+                width: 100%;
                 background: hsl($accent1);
                 padding: 0 var(--size-fluid-1);
                 border-radius: var(--radius-1) 0 0 var(--radius-1);
                 color: white;
                 font-size: var(--font-size-1);
-                display: flex;
-                align-items: center;
 
                 @media (--lt-md) {
                     padding: var(--size-1) var(--size-2);
@@ -168,11 +206,14 @@ main {
             }
 
             select {
+                display: grid;
+                place-items: center;
+
+                width: 100%;
                 background: hsl($text-alt);
                 border: none;
                 padding: 0 var(--size-fluid-1);
                 border-radius: 0 var(--radius-1) var(--radius-1) 0;
-                width: var(--size-fluid-8);
                 font-size: var(--font-size-1);
 
                 @media (--lt-md) {
@@ -183,12 +224,15 @@ main {
         }
 
         .phases {
-            display: flex;
+            justify-self: end;
+            display: grid;
             text-align: center;
-            gap: var(--size-fluid-1);
+            grid-template-columns: repeat(3, 1fr);
 
             @media (--lt-md) {
                 gap: none;
+                grid-column: span 2;
+                justify-self: stretch;
             }
         }
     }
@@ -197,10 +241,9 @@ main {
 /* BIM BOX */
 .bimbox {
     &-wrapper {
-        flex: 1;
         width: 100%;
+        height: 100%;
         display: flex;
-        max-height: 92%;
 
         .left-panel {
             &-container {
@@ -314,6 +357,7 @@ main {
     &-container {
         width: 100%;
         max-width: 1200px;
+        height: 100%;
 
         @media (--lt-md) {
             display: flex;
@@ -326,7 +370,7 @@ main {
 
             @media (--lt-md) {
                 max-width: 100vw;
-                height: clamp(40vh, 100%, 65vh);
+                height: 100%;
             }
         }
 
@@ -400,26 +444,47 @@ main {
 /* LAYOUT */
 .wrapper {
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1.5fr 9.5fr 1fr;
     height: 100vh;
-}
 
-.container {
-    width: 100%;
-    max-width: 1200px;
+    @media (--lt-lg) {
+        grid-template-rows: 1.5fr 10fr 1.5fr;
+    }
+
+    @media (--lt-md) {
+        grid-template-rows: 1fr 8fr 1fr;
+    }
+
+    @media (height <= 800px) {
+        grid-template-rows: 0fr 8fr 1fr;
+    }
 }
 
 /* NAV */
+nav {
+    display: grid;
+    place-items: center;
+}
+
 .nav {
     &-wrapper {
-        display: flex;
-        align-items: center;
+        width: 100%;
+        display: grid;
+        place-items: center;
         padding: var(--size-fluid-1);
+
+        @media (height <= 870px) {
+            padding: var(--size-1) var(--size-fluid-1) 0 var(--size-1);
+        }
+
+        @media (height <= 800px) {
+            display: none;
+        }
     }
 
     &-container {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 1fr auto;
         margin: auto;
         width: 95%;
         max-width: 1200px;
@@ -442,6 +507,7 @@ main {
                 align-items: center;
                 padding: 0px;
                 gap: 10px;
+                justify-self: start;
 
                 .text {
                     display: flex;
@@ -485,6 +551,7 @@ main {
     &-end-container {
         display: grid;
         place-items: center;
+        justify-self: end;
 
         .status-container {
             display: flex;
@@ -515,46 +582,29 @@ main {
 .footer {
     &-wrapper {
         max-width: 100%;
+        height: 100%;
         padding: var(--size-fluid-2);
+        display: grid;
+        place-items: center;
     }
 
     &-container {
-        width: 95%;
+        width: 100%;
         max-width: 1200px;
-        margin: auto;
         display: flex;
-        flex-direction: row;
         justify-content: center;
-        gap: 25px;
-
-        @media (--lt-md) {
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
+        align-items: center;
+        gap: 15px;
 
         h2 {
             font-size: var(--font-size-0);
             font-weight: var(--font-weight-4);
-            padding-right: var(--size-2);
+            padding-right: var(--size-1);
             font-style: italic;
             display: inline;
-        }
-
-        .logos-container {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 25px;
 
             @media (--lt-md) {
-                flex-direction: column;
-                align-items: center;
-                gap: 5px;
-            }
-
-            .logo {
-                object-fit: contain;
+                display: none;
             }
         }
     }
