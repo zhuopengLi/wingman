@@ -50,10 +50,8 @@ html,
 }
 
 html {
-    max-height: 100vh;
-    max-width: 100vw;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 }
 
 body {
@@ -64,7 +62,8 @@ body {
     margin: auto;
     background: hsl($bg);
     color: hsl($text);
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
@@ -117,6 +116,20 @@ body {
         color: white;
         display: none;
 
+        @media (--lt-lg) {
+            @media (height<= 600px) {
+
+                display: grid;
+                place-items: center;
+    
+                &[aria-expanded='true'] + .status-container {
+                    transform: translateY(-10%);
+                    animation: var(--animation-slide-in-down) forwards;
+                    z-index:500000;
+                }
+            }
+        }
+
         @media (--lt-md) {
             display: grid;
             place-items: center;
@@ -136,23 +149,32 @@ main {
     align-items: center;
     align-self: stretch;
 
-    @media (--lt-md) {
-        grid-template-rows: 3fr 9fr;
-
-        @media (height <= 1000px) {
+    
+    @media( --lt-lg){
+        @media(height<= 600px){
             grid-template-rows: 1.5fr 10.5fr;
         }
 
-        @media (height <= 700px) {
+        @media(height<= 400px){
             grid-template-rows: 2fr 10fr;
         }
+    }
+    
 
-        @media (height <= 600px) {
-            grid-template-rows: 2.5fr 9.5fr;
+    @media (--lt-md) {
+        grid-template-rows: 2fr 9fr;
+
+        @media(height<= 700px){
+            grid-template-rows: 2.5fr 9fr;
         }
 
-        @media (height <= 550px) {
-            grid-template-rows: 3fr 9fr;
+        @media(height<= 550px){
+            grid-template-rows: 4fr 9fr;
+        }
+        
+
+        @media(height<= 400px){
+            grid-template-rows: 4fr 9fr;
         }
     }
 }
@@ -247,7 +269,7 @@ main {
 
         .left-panel {
             &-container {
-                overflow: auto;
+                overflow: auto auto;
                 width: calc((100vw - 1200px) / 2);
                 height: 100%;
                 min-width: var(--size-fluid-8);
@@ -454,10 +476,6 @@ main {
     @media (--lt-md) {
         grid-template-rows: 1fr 8fr 1fr;
     }
-
-    @media (height <= 800px) {
-        grid-template-rows: 0fr 8fr 1fr;
-    }
 }
 
 /* NAV */
@@ -476,10 +494,6 @@ nav {
         @media (height <= 870px) {
             padding: var(--size-1) var(--size-fluid-1) 0 var(--size-1);
         }
-
-        @media (height <= 800px) {
-            display: none;
-        }
     }
 
     &-container {
@@ -495,7 +509,17 @@ nav {
         }
 
         .logo {
-            width: calc(var(--size-fluid-8) * 0.4);
+            width: var(--size-10);
+
+            @media (--lt-lg) {
+                @media (height <= 700px) {
+                    width: var(--size-8);
+                }
+
+                @media (height <= 550px) {
+                    display: none;
+                }
+            }
 
             @media (--lt-md) {
                 width: var(--size-8);
@@ -524,8 +548,18 @@ nav {
                         color: transparent;
                         padding-right: var(--size-2);
 
+                        @media (--lt-lg) {
+                            @media (height <= 700px) {
+                                font-size: calc(var(--font-size-6));
+                            }
+                        }
+
                         @media (--lt-md) {
                             font-size: var(--font-size-6);
+
+                            @media (height <= 500px) {
+                                font-size: calc(var(--font-size-5));
+                            }
                         }
                     }
 
@@ -561,6 +595,22 @@ nav {
             padding-right: 15px;
             gap: 0px;
             border-right: 3px solid hsl($text-alt);
+
+            @media (--lt-lg) {
+                @media (height <= 600px) {
+                    position: absolute;
+                    right: 0;
+                    left: 0;
+                    top: var(--size-fluid-6);
+                    border-right: none;
+                    border-bottom: 2px solid hsl($text-alt);
+                    background: hsl($bg);
+                    padding: var(--size-fluid-2);
+                    display: flex;
+                    align-items: center;
+                    transform: translateY(-200%);
+                }
+            }
 
             @media (--lt-md) {
                 position: absolute;
